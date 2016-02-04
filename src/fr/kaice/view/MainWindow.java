@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.KTablePanel;
+import fr.kaice.tools.DTablePanel;
 
 public class MainWindow extends JFrame{
 
@@ -16,8 +16,8 @@ public class MainWindow extends JFrame{
 		
 		this.setLayout(new BorderLayout());
 
-		this.add(new KTablePanel(model, model.getRawMatCollection()), BorderLayout.CENTER);
-		this.add(new KTablePanel(model, model.getSoldProdCollection()), BorderLayout.EAST);
+		this.add(new DTablePanel(model, model.getRawMatCollection()), BorderLayout.CENTER);
+		this.add(new DTablePanel(model, model.getSoldProdCollection()), BorderLayout.EAST);
 		
 		pack();
 		setVisible(true);

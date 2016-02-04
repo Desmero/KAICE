@@ -3,7 +3,7 @@ package fr.kaice.model.membre;
 import java.util.Calendar;
 import java.util.Date;
 
-import fr.kaice.tools.KFormat;
+import fr.kaice.tools.DFormat;
 
 /**
  * This class represent one member of the association.
@@ -242,7 +242,7 @@ public class Member {
 		sb.append(';');
 		sb.append(firstname);
 		sb.append(';');
-		sb.append(KFormat.DATE_FORMAT.format(birthDate));
+		sb.append(DFormat.DATE_FORMAT.format(birthDate));
 		sb.append(';');
 		sb.append(gender);
 		sb.append(';');

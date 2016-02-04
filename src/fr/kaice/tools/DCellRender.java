@@ -7,13 +7,13 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class KCellRender extends DefaultTableCellRenderer {
+public class DCellRender extends DefaultTableCellRenderer {
 
 	private Class<?> colClass;
 	private boolean editable;
 	private boolean totalLine;
 
-	public KCellRender(Class<?> colClass, boolean editable, boolean totalLine) {
+	public DCellRender(Class<?> colClass, boolean editable, boolean totalLine) {
 		super();
 		this.colClass = colClass;
 		this.editable = editable;
@@ -39,7 +39,7 @@ public class KCellRender extends DefaultTableCellRenderer {
 	}
 
 	private Color bluishColor(Color color) {
-		Color blueOrg = KColor.BLUE_ORG;
+		Color blueOrg = DColor.BLUE_ORG;
 		int r, g, b;
 		r = (int) Math.sqrt((Math.pow((double) blueOrg.getRed(), 2) + Math.pow(
 				(double) color.getRed(), 2)) / 2);
@@ -52,16 +52,16 @@ public class KCellRender extends DefaultTableCellRenderer {
 	}
 
 	protected Color getColor(JTable table, int row, int col, JLabel l) {
-		Color newCol = KColor.WHITE;
+		Color newCol = DColor.WHITE;
 
 		if (editable) {
-			newCol = KColor.WHITE;
+			newCol = DColor.WHITE;
 		} else {
-			newCol = KColor.LIGHT_GRAY;
+			newCol = DColor.LIGHT_GRAY;
 		}
 
 		if (totalLine && row + 1 == table.getRowCount()) {
-			newCol = KColor.GRAY;
+			newCol = DColor.GRAY;
 		}
 		return newCol;
 	}
@@ -70,7 +70,7 @@ public class KCellRender extends DefaultTableCellRenderer {
 		if (colClass == Double.class) {
 			try {
 				double val = Double.parseDouble(l.getText());
-				l.setText(KFormat.MONEY_FORMAT.format(val) + " €");
+				l.setText(DFormat.MONEY_FORMAT.format(val) + " €");
 			} catch (Exception e) {
 			}
 		}

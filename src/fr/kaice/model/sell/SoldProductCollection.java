@@ -14,18 +14,18 @@ import javax.swing.JTable;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.SoldProduct.prodType;
-import fr.kaice.tools.KTableModel;
+import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
 /**
  * This class represent the collection of all {@link SoldProduct}. It is also
- * implements {@link KTableModel}.
+ * implements {@link DTableModel}.
  * 
  * @author Raph
  * @version 2.0
  *
  */
-public class SoldProductCollection extends KTableModel {
+public class SoldProductCollection extends DTableModel {
 
 	private Map<Integer, SoldProduct> map;
 	private List<SoldProduct> alphabeticList;

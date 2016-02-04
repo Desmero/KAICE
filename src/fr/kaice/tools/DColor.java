@@ -2,7 +2,7 @@ package fr.kaice.tools;
 
 import java.awt.Color;
 
-public abstract class KColor {
+public abstract class DColor {
 
 	public static Color RED = new Color(255, 102, 102);
 	public static Color ORANGE = new Color(255, 178, 102);

@@ -12,18 +12,18 @@ import java.util.TreeSet;
 import javax.swing.JTable;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.KTableModel;
+import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
 /**
  * This class represent the collection of all {@link RawMaterial}. It is also
- * implements {@link KTableModel}.
+ * implements {@link DTableModel}.
  * 
  * @author Raph
  * @version 2.0
  *
  */
-public class RawMaterialCollection extends KTableModel {
+public class RawMaterialCollection extends DTableModel {
 
 	private Map<Integer, RawMaterial> map;
 	private List<RawMaterial> alphabeticList;

@@ -9,14 +9,14 @@ import javax.swing.table.AbstractTableModel;
  * @author Raph
  * @version 1.0
  */
-public abstract class KTableModel extends AbstractTableModel {
+public abstract class DTableModel extends AbstractTableModel {
 
 	protected String[] colNames;
 	protected Class<?>[] colClass;
 	protected Boolean[] colEdit;
 
-	public KCellRender getColumnModel(int col) {
-		return new KCellRender(colClass[col], colEdit[col], false);
+	public DCellRender getColumnModel(int col) {
+		return new DCellRender(colClass[col], colEdit[col], false);
 	}
 
 	@Override

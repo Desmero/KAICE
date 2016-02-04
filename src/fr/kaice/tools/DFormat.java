@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
  * @author Raph
  * @version 1.0
  */
-public abstract class KFormat {
+public abstract class DFormat {
 
 	/**
 	 * {@link SimpleDateFormat}, only date, French representation :

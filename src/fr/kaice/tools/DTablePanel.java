@@ -13,12 +13,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import fr.kaice.model.KaiceModel;
 
-public class KTablePanel extends JPanel implements Observer {
+public class DTablePanel extends JPanel implements Observer {
 
-	private KTableModel tableModel;
+	private DTableModel tableModel;
 	private JTable table;
 	
-	public KTablePanel (Observable obs, KTableModel tableModel) {
+	public DTablePanel (Observable obs, DTableModel tableModel) {
 		obs.addObserver(this);
 		
 		this.tableModel = tableModel;
