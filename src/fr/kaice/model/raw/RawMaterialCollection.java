@@ -51,7 +51,7 @@ public class RawMaterialCollection extends DTableModel {
 		if (map.containsKey(id)) {
 			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
 		}
-		map.put(getNewId(), mat);
+		map.put(id, mat);
 		updateAlphabeticalList();
 	}
 
@@ -63,8 +63,9 @@ public class RawMaterialCollection extends DTableModel {
 	 *            {@link String} - The name of the new {@link RawMaterial}.
 	 */
 	public void addNewRawMaterial(String product) {
-		RawMaterial newMaterial = new RawMaterial(product);
-		map.put(getNewId(), newMaterial);
+		int id = getNewId();
+		RawMaterial newMaterial = new RawMaterial(id, product);
+		map.put(id, newMaterial);
 		updateAlphabeticalList();
 	}
 
@@ -87,7 +88,7 @@ public class RawMaterialCollection extends DTableModel {
 			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
 		}
 		RawMaterial newMaterial = new RawMaterial(id, product, stock, alert, price);
-		map.put(getNewId(), newMaterial);
+		map.put(id, newMaterial);
 		updateAlphabeticalList();
 	}
 

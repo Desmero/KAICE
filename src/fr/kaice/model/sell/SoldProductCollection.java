@@ -53,7 +53,7 @@ public class SoldProductCollection extends DTableModel {
 		if (map.containsKey(id)) {
 			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
 		}
-		map.put(getNewId(), prod);
+		map.put(id, prod);
 		updateAlphabeticalList();
 	}
 
@@ -68,8 +68,9 @@ public class SoldProductCollection extends DTableModel {
 	 *            {@link prodType} - The type of the new {@link SoldProduct}.
 	 */
 	public void addNewSoldProduct(String product, int price, prodType type) {
-		SoldProduct newMaterial = new SoldProduct(product, price, type);
-		map.put(getNewId(), newMaterial);
+		int id = getNewId();
+		SoldProduct newMaterial = new SoldProduct(id, product, price, type);
+		map.put(id, newMaterial);
 		updateAlphabeticalList();
 	}
 

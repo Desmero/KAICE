@@ -35,15 +35,54 @@ public class PurchasedProduct {
 	 *            int - The number of the {@link RawMaterial} that contains the
 	 *            product.
 	 */
-	public PurchasedProduct(String name, int purchasedPrice, int rawId, int quantity, String store) {
-		// TODO auto-generate id.
-		this.id = 0;
+	public PurchasedProduct(int id, String name, int purchasedPrice, int rawId, int quantity) {
+		this.id = id;
 		this.name = name;
 		this.purchasedPrice = purchasedPrice;
 		// TODO getRawMaterial(int id);
 		// this.rawMat =
 		this.quantity = quantity;
 		this.numberBought = 0;
+	}
+
+	public int getPurchasedPrice() {
+		return purchasedPrice;
+	}
+
+	public void setPurchasedPrice(int purchasedPrice) {
+		this.purchasedPrice = purchasedPrice;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public int getNumberBought() {
+		return numberBought;
+	}
+
+	public void setNumberBought(int numberBought) {
+		this.numberBought = numberBought;
+	}
+
+	public int getTotalPrice() {
+		return getNumberBought() * getPurchasedPrice();
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public RawMaterial getRawMat() {
+		return rawMat;
 	}
 
 	/**

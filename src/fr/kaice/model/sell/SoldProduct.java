@@ -35,26 +35,7 @@ public class SoldProduct {
 	private prodType type;
 
 	/**
-	 * Simple constructor. This use a auto-generate id.
-	 * 
-	 * @param name
-	 *            {@link String} - The name of the product.
-	 * @param salePrice
-	 *            int - The sale price of the product.
-	 * @param type
-	 *            {@link prodType} - The type of the product.
-	 */
-	public SoldProduct(String name, int salePrice, prodType type) {
-		// TODO auto-generate id.
-		this.id = 0;
-		this.name = name;
-		this.salePrice = salePrice;
-		this.listRawMat = new HashMap<>();
-		this.type = type;
-	}
-
-	/**
-	 * Full constructor. This should only used for reading items.
+	 * SoldProduct constructor.
 	 * 
 	 * @param id
 	 *            int - The id of the product.

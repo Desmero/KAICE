@@ -28,9 +28,8 @@ public class RawMaterial {
 	 * 
 	 * @see String
 	 */
-	public RawMaterial(String name) {
-		// TODO Auto-generate id
-		this.id = 0;
+	public RawMaterial(int id, String name) {
+		this.id = id;
 		this.name = name;
 		this.stock = 0;
 		this.unitPrice = 0;
