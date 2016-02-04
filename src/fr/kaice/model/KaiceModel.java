@@ -1,7 +1,7 @@
 package fr.kaice.model;
 
 import java.util.Observable;
-
+import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.SoldProductCollection;
 
@@ -13,11 +13,12 @@ import fr.kaice.model.sell.SoldProductCollection;
  * @version 2.0
  *
  */
-public class KaiceModel extends Observable{
+public class KaiceModel extends Observable {
 
-	private RawMaterialCollection rawMatColl = new RawMaterialCollection(); 
+	private RawMaterialCollection rawMatColl = new RawMaterialCollection();
 	private SoldProductCollection soldProdColl = new SoldProductCollection();
-	
+	private PurchasedProductCollection purProdColl = new PurchasedProductCollection();
+
 	private static KaiceModel model = new KaiceModel();
 
 	/**
@@ -40,9 +41,13 @@ public class KaiceModel extends Observable{
 	public RawMaterialCollection getRawMatCollection() {
 		return rawMatColl;
 	}
-	
+
 	public SoldProductCollection getSoldProdCollection() {
 		return soldProdColl;
 	}
-	
+
+	public PurchasedProductCollection getPurchasedProdCollection() {
+		return purProdColl;
+	}
+
 }

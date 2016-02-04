@@ -18,6 +18,7 @@ public class MainWindow extends JFrame{
 
 		this.add(new DTablePanel(model, model.getRawMatCollection()), BorderLayout.CENTER);
 		this.add(new DTablePanel(model, model.getSoldProdCollection()), BorderLayout.EAST);
+		this.add(new DTablePanel(model, model.getPurchasedProdCollection()), BorderLayout.WEST);
 		
 		pack();
 		setVisible(true);
