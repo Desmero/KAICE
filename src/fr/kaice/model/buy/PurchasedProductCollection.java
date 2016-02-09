@@ -103,6 +103,7 @@ public class PurchasedProductCollection extends DTableModel{
 				return arg0.getName().compareTo(arg1.getName());
 			}
 		});
+		alphabeticList = newList;
 	}
 
 	public PurchasedProduct getProd(int id) {

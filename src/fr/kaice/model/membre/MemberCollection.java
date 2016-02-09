@@ -42,7 +42,7 @@ public class MemberCollection extends DTableModel {
 					+ " is already used.");
 		}
 		map.put(id, membre);
-		updateAlphabeticalList();
+		updateOrderedList();
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class MemberCollection extends DTableModel {
 				birthDate, phoneNumber, studies, mailStreet, mailPostalCode,
 				mailTown, eMail, newsLetter);
 		map.put(userId, newProduct);
-		updateAlphabeticalList();
+		updateOrderedList();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class MemberCollection extends DTableModel {
 	/**
 	 * Update the alphabetical sorted list.
 	 */
-	private void updateAlphabeticalList() {
+	private void updateOrderedList() {
 		ArrayList<Member> newList = new ArrayList<>(map.values());
 		newList.sort(new Comparator<Member>() {
 			@Override
@@ -104,6 +104,7 @@ public class MemberCollection extends DTableModel {
 				return Integer.min(arg0.getUserId(), arg1.getUserId());
 			}
 		});
+		ordredList = newList;
 	}
 
 	public Member getProd(int id) {

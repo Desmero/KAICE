@@ -117,6 +117,7 @@ public class RawMaterialCollection extends DTableModel {
 				return arg0.getName().compareTo(arg1.getName());
 			}
 		});
+		alphabeticList = newList;
 	}
 
 	public RawMaterial getMat(int id) {

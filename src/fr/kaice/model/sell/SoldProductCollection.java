@@ -120,6 +120,7 @@ public class SoldProductCollection extends DTableModel {
 				return arg0.getName().compareTo(arg1.getName());
 			}
 		});
+		alphabeticList = newList;
 	}
 
 	@Override

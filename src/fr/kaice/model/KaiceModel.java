@@ -18,10 +18,10 @@ import fr.kaice.model.sell.SoldProductCollection;
  */
 public class KaiceModel extends Observable {
 
-	private RawMaterialCollection rawMatColl = new RawMaterialCollection();
-	private SoldProductCollection soldProdColl = new SoldProductCollection();
-	private PurchasedProductCollection purProdColl = new PurchasedProductCollection();
-	private MemberCollection memColl = new MemberCollection();
+	private static RawMaterialCollection rawMatColl = new RawMaterialCollection();
+	private static SoldProductCollection soldProdColl = new SoldProductCollection();
+	private static PurchasedProductCollection purProdColl = new PurchasedProductCollection();
+	private static MemberCollection memColl = new MemberCollection();
 
 	private static KaiceModel model = new KaiceModel();
 
@@ -42,19 +42,19 @@ public class KaiceModel extends Observable {
 		return model;
 	}
 
-	public RawMaterialCollection getRawMatCollection() {
+	public static RawMaterialCollection getRawMatCollection() {
 		return rawMatColl;
 	}
 
-	public SoldProductCollection getSoldProdCollection() {
+	public static SoldProductCollection getSoldProdCollection() {
 		return soldProdColl;
 	}
 
-	public PurchasedProductCollection getPurchasedProdCollection() {
+	public static PurchasedProductCollection getPurchasedProdCollection() {
 		return purProdColl;
 	}
 
-	public MemberCollection getMemberCollection() {
+	public static MemberCollection getMemberCollection() {
 		return memColl;
 	}
 	
@@ -66,6 +66,11 @@ public class KaiceModel extends Observable {
 			year--;
 		}
 		return year;
+	}
+	
+	static public void update() {
+		model.setChanged();
+		model.notifyObservers();
 	}
 	
 }
