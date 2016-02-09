@@ -89,7 +89,6 @@ public class RawMaterialCollection extends DTableModel {
 		}
 		RawMaterial newMaterial = new RawMaterial(id, product, stock, alert, price);
 		map.put(id, newMaterial);
-		updateAlphabeticalList();
 	}
 
 	/**
@@ -109,7 +108,7 @@ public class RawMaterialCollection extends DTableModel {
 	/**
 	 * Update the alphabetical sorted list.
 	 */
-	private void updateAlphabeticalList() {
+	public void updateAlphabeticalList() {
 		ArrayList<RawMaterial> newList = new ArrayList<>(map.values());
 		newList.sort(new Comparator<RawMaterial>() {
 			@Override

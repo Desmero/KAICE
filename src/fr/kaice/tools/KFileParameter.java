@@ -19,4 +19,6 @@ public abstract class KFileParameter {
 	 */
 	public static String SEPARATOR_SEC = "|";
 	
+	public static String RAW_FILE_NAME = "Stock";
+	public static String MEMBERS_FILE_NAME = "Member";
 }

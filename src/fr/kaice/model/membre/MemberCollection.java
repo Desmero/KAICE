@@ -45,6 +45,15 @@ public class MemberCollection extends DTableModel {
 		updateOrderedList();
 	}
 
+	public void addReadMember(Member membre) {
+		int id = membre.getUserId();
+		if (map.containsKey(id)) {
+			throw new AlreadyUsedIdException("RawMaterial Id " + id
+					+ " is already used.");
+		}
+		map.put(id, membre);
+	}
+
 	/**
 	 * Create and store a {@link Member}.
 	 * 
@@ -93,15 +102,16 @@ public class MemberCollection extends DTableModel {
 		}
 		return id + 1;
 	}
+	
 	/**
-	 * Update the alphabetical sorted list.
+	 * Update the sorted list.
 	 */
-	private void updateOrderedList() {
+	public void updateOrderedList() {
 		ArrayList<Member> newList = new ArrayList<>(map.values());
 		newList.sort(new Comparator<Member>() {
 			@Override
 			public int compare(Member arg0, Member arg1) {
-				return Integer.min(arg0.getUserId(), arg1.getUserId());
+				return arg0.getUserId() - arg1.getUserId();
 			}
 		});
 		ordredList = newList;
