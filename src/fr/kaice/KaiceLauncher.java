@@ -19,10 +19,8 @@ public abstract class KaiceLauncher {
 
 	public static void main(String[] args) {
 		new MainWindow();
-		// Member m = new Member(150001, "Merkling", "Raph", true, new Date(), "00 00 00 00 00", "Info", "Adresse", "Code", "Nancy", "email@mail.com", true);
-		// MemberCollection col = KaiceModel.getMemberCollection();
-		// col.addMember(m);
 		Reader.readAll();
+		KaiceModel.update();
 	}
 
 }

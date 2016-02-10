@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.CellRendererPane;
+
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.buy.PurchasedProduct;
 import fr.kaice.model.buy.PurchasedProductCollection;
+import fr.kaice.tools.DCellRender;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -139,5 +142,5 @@ public class MemberCollection extends DTableModel {
 			return null;
 		}
 	}
-
+	
 }
