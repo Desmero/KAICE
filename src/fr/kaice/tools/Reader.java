@@ -191,20 +191,25 @@ public class Reader {
 			int id = 0;
 			int idMat = -1;
 			RawMaterial mat = null;
+			SoldProduct prod;
 			line = d.readLine();
 			while (line != null) {
 				data = line.split(KFileParameter.SEPARATOR);
-				mat = KaiceModel.getRawMatCollection().getMat(data[2]);
-				if (mat == null) {
-					idMat = -1;
-				} else {
-					idMat = mat.getId();
-				}
-				coll.addReadRawMaterial(id, data[0], Integer.parseInt(data[1]), SoldProduct.parstType(data[2]));
+				coll.addReadSoldProduct(id, data[0], Integer.parseInt(data[1]), SoldProduct.parstType(data[2]));
+				prod = KaiceModel.getSoldProdCollection().getSoldProduct(id);
 				id++;
 				
 				if (data.length > 3) {
 					rawMat = data[3].split(KFileParameter.SEPARATOR_SEC);
+					for (int i = 0; i < rawMat.length; i+=2) {
+						mat = KaiceModel.getRawMatCollection().getMat(rawMat[i]);
+						if (mat == null) {
+							idMat = -1;
+						} else {
+							idMat = mat.getId();
+						}
+						prod.setRawMaterial(idMat, Integer.parseInt(rawMat[i+1]));
+					}
 				}
 				
 				line = d.readLine();

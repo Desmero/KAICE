@@ -1,7 +1,5 @@
 package fr.kaice.view;
 
-import java.awt.BorderLayout;
-
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
@@ -16,10 +14,10 @@ public class MainWindow extends JFrame{
 		KaiceModel model = KaiceModel.getInstance();
 		
 		JTabbedPane jtb1 = new JTabbedPane();
-		jtb1.add("Raw", new DTablePanel(model, model.getRawMatCollection()));
-		jtb1.add("Sell", new DTablePanel(model, model.getSoldProdCollection()));
-		jtb1.add("Purchase", new DTablePanel(model, model.getPurchasedProdCollection()));
-		jtb1.add("Members", new DTablePanel(model, model.getMemberCollection()));
+		jtb1.add("Raw", new DTablePanel(model, KaiceModel.getRawMatCollection()));
+		jtb1.add("Sell", new PanelSellProduct());
+		jtb1.add("Purchase", new DTablePanel(model, KaiceModel.getPurchasedProdCollection()));
+		jtb1.add("Members", new DTablePanel(model, KaiceModel.getMemberCollection()));
 		
 		this.add(jtb1);
 

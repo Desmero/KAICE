@@ -87,12 +87,12 @@ public class SoldProductCollection extends DTableModel {
 	 * @param type
 	 *            {@link prodType} - The type of the {@link SoldProduct}.
 	 */
-	public void addReadRawMaterial(int id, String product, int price, prodType type) {
+	public void addReadSoldProduct(int id, String product, int price, prodType type) {
 		if (map.containsKey(id)) {
 			throw new AlreadyUsedIdException("SoldProduct Id " + id + " is already used.");
 		}
-		SoldProduct newMaterial = new SoldProduct(id, product, price, type);
-		map.put(getNewId(), newMaterial);
+		SoldProduct newProd = new SoldProduct(id, product, price, type);
+		map.put(getNewId(), newProd);
 		updateAlphabeticalList();
 	}
 
@@ -110,6 +110,10 @@ public class SoldProductCollection extends DTableModel {
 		return newId + 1;
 	}
 
+	public SoldProduct getSoldProduct(int id) {
+		return map.get(id);
+	}
+	
 	/**
 	 * Update the alphabetical sorted list.
 	 */

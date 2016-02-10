@@ -13,7 +13,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import fr.kaice.model.KaiceModel;
 
-public class DTablePanel extends JPanel implements Observer {
+public class DTablePanel extends JPanel implements Observer{
 
 	private DTableModel tableModel;
 	private JTable table;
@@ -49,6 +49,10 @@ public class DTablePanel extends JPanel implements Observer {
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
 		this.add(scrollPane);
+	}
+	
+	public int getSelectedRow() {
+		return table.getSelectedRow();
 	}
 	
 	@Override

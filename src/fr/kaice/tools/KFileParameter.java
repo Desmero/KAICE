@@ -17,7 +17,7 @@ public abstract class KFileParameter {
 	/**
 	 * {@link String} of the secondary separator used in files;
 	 */
-	public static String SEPARATOR_SEC = "|";
+	public static String SEPARATOR_SEC = "\\|";
 	
 	public static String RAW_FILE_NAME = "Stock";
 	public static String PURCH_FILE_NAME = "Articles Achete";

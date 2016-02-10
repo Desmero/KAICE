@@ -1,11 +1,14 @@
 package fr.kaice.model.sell;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
+import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.KFileParameter;
 
 /**
@@ -15,7 +18,7 @@ import fr.kaice.tools.KFileParameter;
  * @version 2.0
  *
  */
-public class SoldProduct {
+public class SoldProduct extends DTableModel {
 
 	/**
 	 * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
@@ -47,6 +50,9 @@ public class SoldProduct {
 	 *            {@link prodType} - The type of the product.
 	 */
 	public SoldProduct(int id, String name, int salePrice, prodType type) {
+		colNames = new String[] { "Id", "Nom", "Quentité utilisée", "Stock", "Prix" };
+		colClass = new Class[] { Integer.class, String.class, Integer.class, Integer.class, Double.class };
+		colEdit = new Boolean[] { false, false, true, false, false };
 		this.id = id;
 		this.name = name;
 		this.salePrice = salePrice;
@@ -148,7 +154,7 @@ public class SoldProduct {
 		}
 		return type;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -160,6 +166,32 @@ public class SoldProduct {
 		// TODO gérer la liste de matieres premieres
 		sb.append(KFileParameter.SEPARATOR);
 		return sb.toString();
+	}
+
+	@Override
+	public int getRowCount() {
+		return listRawMat.size();
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		ArrayList<Integer> list = new ArrayList<>(listRawMat.keySet());
+		int id = list.get(rowIndex);
+		RawMaterial mat = KaiceModel.getRawMatCollection().getMat(id);
+		switch (columnIndex) {
+		case 0:
+			return id;
+		case 1:
+			return mat.getName();
+		case 2:
+			return listRawMat.get(id);
+		case 3:
+			return mat.getStock();
+		case 4:
+			return DPriceConvert.intToDouble(mat.getUnitPrice());
+		default:
+			return null;
+		}
 	}
 
 }
