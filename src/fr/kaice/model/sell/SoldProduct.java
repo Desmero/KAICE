@@ -137,6 +137,18 @@ public class SoldProduct {
 		return 0;
 	}
 
+	public static prodType parstType(String arg0) {
+		prodType type;
+		if (arg0.equals("FOOD")) {
+			type = SoldProduct.prodType.FOOD;
+		} else if (arg0.equals("DRINK")) {
+			type = SoldProduct.prodType.DRINK;
+		} else {
+			type = SoldProduct.prodType.MISC;
+		}
+		return type;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

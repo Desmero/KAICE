@@ -20,5 +20,7 @@ public abstract class KFileParameter {
 	public static String SEPARATOR_SEC = "|";
 	
 	public static String RAW_FILE_NAME = "Stock";
+	public static String PURCH_FILE_NAME = "Articles Achete";
+	public static String SOLD_FILE_NAME = "Articles Vendus";
 	public static String MEMBERS_FILE_NAME = "Member";
 }

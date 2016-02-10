@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.SoldProduct.prodType;
+import fr.kaice.tools.DPriceConvert;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -112,7 +113,7 @@ public class SoldProductCollection extends DTableModel {
 	/**
 	 * Update the alphabetical sorted list.
 	 */
-	private void updateAlphabeticalList() {
+	public void updateAlphabeticalList() {
 		ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
 		newList.sort(new Comparator<SoldProduct>() {
 			@Override
@@ -136,11 +137,11 @@ public class SoldProductCollection extends DTableModel {
 		case 1:
 			return alphabeticList.get(rowIndex).getName();
 		case 2:
-			return alphabeticList.get(rowIndex).getSalePrice();
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getSalePrice());
 		case 3:
-			return alphabeticList.get(rowIndex).getBuyPrice();
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getBuyPrice());
 		case 4:
-			return alphabeticList.get(rowIndex).getProfit();
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getProfit());
 		case 5:
 			return alphabeticList.get(rowIndex).getQuantity();
 		default:

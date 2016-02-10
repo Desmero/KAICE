@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.kaice.tools.DPriceConvert;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -75,7 +76,6 @@ public class PurchasedProductCollection extends DTableModel{
 		}
 		PurchasedProduct newProduct = new PurchasedProduct(id, name, purchasedPrice, rawId, quantity);
 		map.put(id, newProduct);
-		updateAlphabeticalList();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class PurchasedProductCollection extends DTableModel{
 	/**
 	 * Update the alphabetical sorted list.
 	 */
-	private void updateAlphabeticalList() {
+	public void updateAlphabeticalList() {
 		ArrayList<PurchasedProduct> newList = new ArrayList<>(map.values());
 		newList.sort(new Comparator<PurchasedProduct>() {
 			@Override
@@ -123,11 +123,11 @@ public class PurchasedProductCollection extends DTableModel{
 		case 1:
 			return alphabeticList.get(rowIndex).getName();
 		case 2:
-			return alphabeticList.get(rowIndex).getPurchasedPrice();
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getPurchasedPrice());
 		case 3:
 			return alphabeticList.get(rowIndex).getNumberBought();
 		case 4:
-			return alphabeticList.get(rowIndex).getTotalPrice();
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getTotalPrice());
 		default:
 			return null;
 		}

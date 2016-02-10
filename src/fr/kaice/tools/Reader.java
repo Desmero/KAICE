@@ -11,16 +11,22 @@ import java.text.ParseException;
 import java.util.Date;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.buy.PurchasedProduct;
+import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.model.membre.Member;
 import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
+import fr.kaice.model.sell.SoldProduct;
+import fr.kaice.model.sell.SoldProductCollection;
 
 public class Reader {
 
 	public static void readAll() {
-		Reader.readUser(0);
+		readUser(0);
 		oldReadRawMaterial();
+		oldReadPurchasedProd();
+		oldReadSoldProd();
 	}
 
 	private static void oldReadRawMaterial() {
@@ -73,8 +79,134 @@ public class Reader {
 			line = d.readLine();
 			while (line != null) {
 				data = line.split(KFileParameter.SEPARATOR);
-				coll.addReadRawMaterial(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]), Integer.parseInt(data[3]),
-						Integer.parseInt(data[4]));
+				coll.addReadRawMaterial(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]),
+						Integer.parseInt(data[3]), Integer.parseInt(data[4]));
+				line = d.readLine();
+			}
+			coll.updateAlphabeticalList();
+			d.close();
+		} catch (FileNotFoundException e) {
+			File file = new File(fullPath);
+			try {
+				file.createNewFile();
+			} catch (IOException e1) {
+				e.printStackTrace();
+				e1.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void oldReadPurchasedProd() {
+		String fileName = KFileParameter.PURCH_FILE_NAME;
+		String fullPath = KFileParameter.REPOSITORY + "/" + fileName + "." + KFileParameter.EXTENSION;
+		try {
+			InputStream f = new FileInputStream(fullPath);
+			InputStreamReader isr = new InputStreamReader(f);
+			BufferedReader d = new BufferedReader(isr);
+
+			PurchasedProductCollection coll = KaiceModel.getPurchasedProdCollection();
+			String line;
+			String[] data;
+			int id = 0;
+			int idMat = -1;
+			RawMaterial mat = null;
+			line = d.readLine();
+			while (line != null) {
+				data = line.split(KFileParameter.SEPARATOR);
+				mat = KaiceModel.getRawMatCollection().getMat(data[2]);
+				if (mat == null) {
+					idMat = -1;
+				} else {
+					idMat = mat.getId();
+				}
+				coll.addReadPurchasedProduct(id, data[0], Integer.parseInt(data[1]), idMat, Integer.parseInt(data[3]));
+				id++;
+				line = d.readLine();
+			}
+			coll.updateAlphabeticalList();
+			d.close();
+		} catch (FileNotFoundException e) {
+			File file = new File(fullPath);
+			try {
+				file.createNewFile();
+			} catch (IOException e1) {
+				e.printStackTrace();
+				e1.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void readPurchasedProd() {
+		String fileName = KFileParameter.PURCH_FILE_NAME;
+		String fullPath = KFileParameter.REPOSITORY + "/" + fileName + "." + KFileParameter.EXTENSION;
+		try {
+			InputStream f = new FileInputStream(fullPath);
+			InputStreamReader isr = new InputStreamReader(f);
+			BufferedReader d = new BufferedReader(isr);
+
+			PurchasedProductCollection coll = KaiceModel.getPurchasedProdCollection();
+			String line;
+			String[] data;
+			line = d.readLine();
+			while (line != null) {
+				data = line.split(KFileParameter.SEPARATOR);
+				// coll.addReadPurchasedProduct(id, name, purchasedPrice, rawId,
+				// quantity);
+				line = d.readLine();
+			}
+			coll.updateAlphabeticalList();
+			d.close();
+		} catch (FileNotFoundException e) {
+			File file = new File(fullPath);
+			try {
+				file.createNewFile();
+			} catch (IOException e1) {
+				e.printStackTrace();
+				e1.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void oldReadSoldProd() {
+		String fileName = KFileParameter.SOLD_FILE_NAME;
+		String fullPath = KFileParameter.REPOSITORY + "/" + fileName + "." + KFileParameter.EXTENSION;
+		try {
+			InputStream f = new FileInputStream(fullPath);
+			InputStreamReader isr = new InputStreamReader(f);
+			BufferedReader d = new BufferedReader(isr);
+
+			SoldProductCollection coll = KaiceModel.getSoldProdCollection();
+			String line;
+			String[] data, rawMat;
+			
+			int id = 0;
+			int idMat = -1;
+			RawMaterial mat = null;
+			line = d.readLine();
+			while (line != null) {
+				data = line.split(KFileParameter.SEPARATOR);
+				mat = KaiceModel.getRawMatCollection().getMat(data[2]);
+				if (mat == null) {
+					idMat = -1;
+				} else {
+					idMat = mat.getId();
+				}
+				coll.addReadRawMaterial(id, data[0], Integer.parseInt(data[1]), SoldProduct.parstType(data[2]));
+				id++;
+				
+				if (data.length > 3) {
+					rawMat = data[3].split(KFileParameter.SEPARATOR_SEC);
+				}
+				
 				line = d.readLine();
 			}
 			coll.updateAlphabeticalList();

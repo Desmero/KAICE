@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import javax.swing.JTable;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.DPriceConvert;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -122,6 +123,15 @@ public class RawMaterialCollection extends DTableModel {
 	public RawMaterial getMat(int id) {
 		return map.get(id);
 	}
+
+	public RawMaterial getMat(String name) {
+		for (RawMaterial mat : alphabeticList) {
+			if (mat.getName().equals(name)) {
+				return mat;
+			}
+		}
+		return null;
+	}
 	
 	@Override
 	public int getRowCount() {
@@ -138,7 +148,7 @@ public class RawMaterialCollection extends DTableModel {
 		case 2:
 			return alphabeticList.get(rowIndex).getStock();
 		case 3:
-			return alphabeticList.get(rowIndex).getUnitPrice();
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getUnitPrice());
 		case 4:
 			return alphabeticList.get(rowIndex).getAlert();
 		default:
