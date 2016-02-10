@@ -1,5 +1,6 @@
 package fr.kaice.tools;
 
+import java.awt.BorderLayout;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
@@ -21,6 +22,7 @@ public class DTablePanel extends JPanel implements Observer{
 	public DTablePanel (Observable obs, DTableModel tableModel) {
 		obs.addObserver(this);
 		
+		this.setLayout(new BorderLayout());
 		this.tableModel = tableModel;
 		table = new JTable(tableModel);
 		table.addContainerListener(new ContainerListener() {
@@ -48,7 +50,7 @@ public class DTablePanel extends JPanel implements Observer{
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
-		this.add(scrollPane);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	public int getSelectedRow() {

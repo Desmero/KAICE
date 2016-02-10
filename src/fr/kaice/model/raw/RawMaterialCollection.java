@@ -68,6 +68,7 @@ public class RawMaterialCollection extends DTableModel {
 		RawMaterial newMaterial = new RawMaterial(id, product);
 		map.put(id, newMaterial);
 		updateAlphabeticalList();
+		KaiceModel.update();
 	}
 
 	/**

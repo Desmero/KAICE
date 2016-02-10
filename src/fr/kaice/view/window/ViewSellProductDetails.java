@@ -1,4 +1,4 @@
-package fr.kaice.view;
+package fr.kaice.view.window;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
