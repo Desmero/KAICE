@@ -34,7 +34,7 @@ public class RawMaterialCollection extends DTableModel {
 	public RawMaterialCollection() {
 		colNames = new String[] { "Id", "Nom", "Stock", "Prix", "Alert" };
 		colClass = new Class[] { Integer.class, String.class, Integer.class, Double.class, Integer.class };
-		colEdit = new Boolean[] { false, true, true, true, true };
+		colEdit = new Boolean[] { false, true, true, false, true };
 		map = new HashMap<>();
 		alphabeticList = new ArrayList<>();
 	}
