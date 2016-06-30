@@ -1,10 +1,6 @@
 package fr.kaice;
 
-import java.util.Date;
-
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.membre.Member;
-import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.tools.Reader;
 import fr.kaice.view.MainWindow;
 

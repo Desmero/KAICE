@@ -15,10 +15,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 
+import fr.kaice.model.KaiceModel;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.tools.CloseListener;
 import fr.kaice.tools.DFormat;
 import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DTablePanel;
 
 public class ViewSellProductDetails extends JDialog {
 
@@ -42,6 +44,8 @@ public class ViewSellProductDetails extends JDialog {
 				"Bénéfice : " + DFormat.MONEY_FORMAT.format(DPriceConvert.intToDouble(prod.getProfit())) + " €");
 		profit.setHorizontalAlignment(JLabel.CENTER);
 
+		DTablePanel table = new DTablePanel(KaiceModel.getInstance(), prod, 6);
+		
 		JTable tableMat = new JTable(prod);
 		JScrollPane scrollPaneMat = new JScrollPane(tableMat);
 		Dimension d = tableMat.getPreferredSize();
@@ -66,7 +70,7 @@ public class ViewSellProductDetails extends JDialog {
 		this.add(center, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);
 
-		center.add(scrollPaneMat, BorderLayout.NORTH);
+		center.add(table, BorderLayout.NORTH);
 //		center.add(scrollPaneSell, BorderLayout.CENTER);
 //		center.add(new HistoricSelector(sellProd), BorderLayout.SOUTH);
 

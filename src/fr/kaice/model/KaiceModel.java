@@ -58,7 +58,11 @@ public class KaiceModel extends Observable {
 		return memColl;
 	}
 	
-	static public int getActualYear() {
+	public static String getEMailList() {
+		return memColl.getEMailList();
+	}
+	
+	public static int getActualYear() {
 		Calendar cal = Calendar.getInstance();
 		int month = cal.get(Calendar.MONTH);
 		int year = cal.get(Calendar.YEAR) - 2000;
@@ -68,7 +72,8 @@ public class KaiceModel extends Observable {
 		return year;
 	}
 	
-	static public void update() {
+	// TODO tenter de mettre cette fonction private
+	public static void update() {
 		model.setChanged();
 		model.notifyObservers();
 	}

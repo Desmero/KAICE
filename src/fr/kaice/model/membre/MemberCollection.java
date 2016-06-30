@@ -7,12 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.CellRendererPane;
-
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.buy.PurchasedProduct;
-import fr.kaice.model.buy.PurchasedProductCollection;
-import fr.kaice.tools.DCellRender;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -143,4 +138,15 @@ public class MemberCollection extends DTableModel {
 		}
 	}
 	
+	public String getEMailList() {
+		StringBuilder sb = new StringBuilder();
+		for (Member u : ordredList) {
+			if (u.isNewsLetter() && u.isValidEmailAddress()) {
+				String eMail = u.getEMail();
+				sb.append(eMail + ";\n");
+			}
+		}
+		return sb.toString();
+	}
+
 }

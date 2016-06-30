@@ -5,6 +5,7 @@ import javax.swing.JTabbedPane;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.DTablePanel;
+import fr.kaice.view.panel.PanelEMailList;
 import fr.kaice.view.panel.PanelMember;
 import fr.kaice.view.panel.PanelPurcheseProduct;
 import fr.kaice.view.panel.PanelRawMaterial;
@@ -16,10 +17,11 @@ public class MainWindow extends JFrame{
 		super("KAICE v2.0");
 		
 		JTabbedPane jtb1 = new JTabbedPane();
-		jtb1.add("Raw", new PanelRawMaterial());
-		jtb1.add("Sell", new PanelSellProduct());
-		jtb1.add("Purchase", new PanelPurcheseProduct());
-		jtb1.add("Members", new PanelMember());
+		jtb1.add("Produits bruts", new PanelRawMaterial());
+		jtb1.add("Articles en vente", new PanelSellProduct());
+		jtb1.add("Articles achetés", new PanelPurcheseProduct());
+		jtb1.add("Membres", new PanelMember());
+		jtb1.add("E-Mails", new PanelEMailList());
 		
 		this.add(jtb1);
 
