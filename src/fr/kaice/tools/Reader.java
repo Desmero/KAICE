@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.buy.PurchasedProduct;
 import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.model.membre.Member;
 import fr.kaice.model.membre.MemberCollection;

@@ -10,9 +10,13 @@ import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.DTablePanel;
-import fr.kaice.view.window.ViewSellProductDetails;
 
 public class PanelRawMaterial extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public PanelRawMaterial() {
 		DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getRawMatCollection());

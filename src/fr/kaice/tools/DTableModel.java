@@ -11,6 +11,10 @@ import javax.swing.table.AbstractTableModel;
  */
 public abstract class DTableModel extends AbstractTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2400053798894698246L;
 	protected String[] colNames;
 	protected Class<?>[] colClass;
 	protected Boolean[] colEdit;

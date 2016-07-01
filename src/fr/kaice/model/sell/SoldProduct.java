@@ -21,6 +21,11 @@ import fr.kaice.tools.KFileParameter;
 public class SoldProduct extends DTableModel {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2422533674812971388L;
+
+	/**
 	 * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
 	 * or MISC.
 	 * 
@@ -123,7 +128,7 @@ public class SoldProduct extends DTableModel {
 	public int getBuyPrice() {
 		int price = 0;
 		int qtt;
-		RawMaterialCollection rmColl = KaiceModel.getInstance().getRawMatCollection();
+		RawMaterialCollection rmColl = KaiceModel.getRawMatCollection();
 		RawMaterial mat;
 		for (Integer id : listRawMat.keySet()) {
 			qtt = listRawMat.get(id);

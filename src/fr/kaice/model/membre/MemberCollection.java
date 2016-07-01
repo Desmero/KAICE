@@ -13,6 +13,10 @@ import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
 public class MemberCollection extends DTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6044679184177698933L;
 	private Map<Integer, Member> map;
 	private List<Member> ordredList;
 
@@ -143,7 +147,7 @@ public class MemberCollection extends DTableModel {
 		for (Member u : ordredList) {
 			if (u.isNewsLetter() && u.isValidEmailAddress()) {
 				String eMail = u.getEMail();
-				sb.append(eMail + ";\n");
+				sb.append(eMail + "\n");
 			}
 		}
 		return sb.toString();

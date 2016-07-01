@@ -12,6 +12,10 @@ import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
 public class PurchasedProductCollection extends DTableModel{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2451097704186666326L;
 	private Map<Integer, PurchasedProduct> map;
 	private List<PurchasedProduct> alphabeticList;
 

@@ -14,10 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import fr.kaice.model.KaiceModel;
-
 public class DTablePanel extends JPanel implements Observer{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5801882938131689389L;
 	private DTableModel tableModel;
 	private JTable table;
 	private JScrollPane scrollPane; 

@@ -12,6 +12,10 @@ import fr.kaice.model.KaiceModel;
 
 public class PanelEMailList extends JPanel implements Observer{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea emails;
 
 	public PanelEMailList() {

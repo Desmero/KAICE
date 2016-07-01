@@ -9,6 +9,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class DCellRender extends DefaultTableCellRenderer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8572022100345618236L;
 	private Class<?> colClass;
 	private boolean editable;
 	private boolean totalLine;

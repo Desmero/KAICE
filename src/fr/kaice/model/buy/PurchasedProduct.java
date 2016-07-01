@@ -1,7 +1,5 @@
 package fr.kaice.model.buy;
 
-import java.util.PrimitiveIterator;
-
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.KFileParameter;
 

@@ -8,10 +8,16 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.tools.DTablePanel;
-import fr.kaice.view.window.ViewSellProductDetails;
+import fr.kaice.view.window.WindowInform;
 
 public class PanelSellProduct extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public PanelSellProduct() {
 		DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getSoldProdCollection());
@@ -23,8 +29,8 @@ public class PanelSellProduct extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (table.getSelectedRow() != -1) {
-					new ViewSellProductDetails(
-							KaiceModel.getSoldProdCollection().getSoldProduct(table.getSelectedRow()));
+					SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(table.getSelectedRow());
+					new WindowInform("Article en vente : " + prod.getName(), false, new PanelSellProductDetails(prod));
 				}
 			}
 		});

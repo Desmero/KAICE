@@ -1,16 +1,10 @@
 package fr.kaice.model.raw;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.swing.JTable;
-
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.DPriceConvert;
 import fr.kaice.tools.DTableModel;
@@ -26,6 +20,10 @@ import fr.kaice.tools.exeption.AlreadyUsedIdException;
  */
 public class RawMaterialCollection extends DTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7226207712847437213L;
 	private Map<Integer, RawMaterial> map;
 	private List<RawMaterial> alphabeticList;
 

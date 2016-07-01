@@ -1,18 +1,10 @@
 package fr.kaice.model.sell;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.swing.JTable;
-
-import fr.kaice.model.KaiceModel;
-import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.SoldProduct.prodType;
 import fr.kaice.tools.DPriceConvert;
 import fr.kaice.tools.DTableModel;
@@ -28,6 +20,10 @@ import fr.kaice.tools.exeption.AlreadyUsedIdException;
  */
 public class SoldProductCollection extends DTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 662617276540275291L;
 	private Map<Integer, SoldProduct> map;
 	private List<SoldProduct> alphabeticList;
 
