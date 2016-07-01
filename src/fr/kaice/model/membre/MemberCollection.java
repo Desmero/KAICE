@@ -153,4 +153,30 @@ public class MemberCollection extends DTableModel {
 		return sb.toString();
 	}
 
+	public Member getMember(int id) {
+		Member mem = null;
+		for (Member m : ordredList) {
+			if (m.getUserId() == id) {
+				mem = m;
+				break;
+			}
+		}
+		return mem;
+	}
+	
+	public boolean isIdUsed(int id) {
+		boolean used = false;
+		for (Member m : ordredList) {
+			if (m.getUserId() == id) {
+				used = true;
+				break;
+			}
+		}
+		return used;
+	}
+
+	public int getMemberIdAtRow(int selectedRow) {
+		return ordredList.get(selectedRow).getUserId();
+	}
+	
 }

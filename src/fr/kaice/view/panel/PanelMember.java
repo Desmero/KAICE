@@ -1,11 +1,15 @@
 package fr.kaice.view.panel;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.DTablePanel;
+import fr.kaice.view.window.WindowInform;
 
 public class PanelMember extends JPanel {
 
@@ -20,8 +24,16 @@ public class PanelMember extends JPanel {
 		JPanel ctrl = new JPanel();
 
 		add.setEnabled(false);
-		view.setEnabled(false);
-		
+		view.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (table.getSelectedRow() != -1) {
+					int memberId = KaiceModel.getMemberCollection().getMemberIdAtRow(table.getSelectedRow());
+					new WindowInform("Adhenent", false, new PanelMemberDetails(memberId));
+				}
+			}
+		});
+
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);
