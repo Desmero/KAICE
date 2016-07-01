@@ -137,7 +137,7 @@ public class SoldProductCollection extends DTableModel {
 		case 1:
 			return alphabeticList.get(rowIndex).getName();
 		case 2:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getSalePrice());
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getPrice());
 		case 3:
 			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getBuyPrice());
 		case 4:

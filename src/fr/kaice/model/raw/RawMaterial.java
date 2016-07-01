@@ -1,5 +1,6 @@
 package fr.kaice.model.raw;
 
+import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
 
 /**
@@ -9,7 +10,7 @@ import fr.kaice.tools.KFileParameter;
  * @version 2.0
  * 
  */
-public class RawMaterial {
+public class RawMaterial implements GenericProduct {
 
 	private final int id;
 	private String name;
@@ -93,7 +94,7 @@ public class RawMaterial {
 		return id;
 	}
 
-	public int getUnitPrice() {
+	public int getPrice() {
 		return unitPrice;
 	}
 

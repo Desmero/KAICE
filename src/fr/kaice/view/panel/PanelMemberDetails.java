@@ -212,7 +212,6 @@ public class PanelMemberDetails extends JPanel {
 		Member m = KaiceModel.getMemberCollection().getMember(memId);
 		// TODO table model ...
 
-		gender = m.isMale();
 		pBirth.removeAll();
 		pGender.removeAll();
 		if (edition) {
@@ -238,6 +237,7 @@ public class PanelMemberDetails extends JPanel {
 		tel.setEditable(edition);
 
 		if (m != null) {
+			gender = m.isMale();
 			name.setText(m.getName());
 			firstname.setText(m.getFirstname());
 			Calendar cal = Calendar.getInstance();

@@ -147,7 +147,7 @@ public class RawMaterialCollection extends DTableModel {
 		case 2:
 			return alphabeticList.get(rowIndex).getStock();
 		case 3:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getUnitPrice());
+			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getPrice());
 		case 4:
 			return alphabeticList.get(rowIndex).getAlert();
 		default:

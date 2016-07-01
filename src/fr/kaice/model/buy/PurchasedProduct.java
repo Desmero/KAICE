@@ -1,6 +1,7 @@
 package fr.kaice.model.buy;
 
 import fr.kaice.model.raw.RawMaterial;
+import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
 
 /**
@@ -10,7 +11,7 @@ import fr.kaice.tools.KFileParameter;
  * @version 2.0
  *
  */
-public class PurchasedProduct {
+public class PurchasedProduct implements GenericProduct {
 
 	private int id;
 	private String name;
@@ -43,7 +44,7 @@ public class PurchasedProduct {
 		this.numberBought = 0;
 	}
 
-	public int getPurchasedPrice() {
+	public int getPrice() {
 		return purchasedPrice;
 	}
 
@@ -68,7 +69,7 @@ public class PurchasedProduct {
 	}
 
 	public int getTotalPrice() {
-		return getNumberBought() * getPurchasedPrice();
+		return getNumberBought() * getPrice();
 	}
 	
 	public int getId() {

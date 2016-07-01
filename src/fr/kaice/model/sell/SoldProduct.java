@@ -9,6 +9,7 @@ import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.tools.DPriceConvert;
 import fr.kaice.tools.DTableModel;
+import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
 
 /**
@@ -18,7 +19,7 @@ import fr.kaice.tools.KFileParameter;
  * @version 2.0
  *
  */
-public class SoldProduct extends DTableModel {
+public class SoldProduct extends DTableModel implements GenericProduct {
 
 	/**
 	 * 
@@ -109,7 +110,7 @@ public class SoldProduct extends DTableModel {
 		this.name = name;
 	}
 
-	public int getSalePrice() {
+	public int getPrice() {
 		return salePrice;
 	}
 
@@ -133,7 +134,7 @@ public class SoldProduct extends DTableModel {
 		for (Integer id : listRawMat.keySet()) {
 			qtt = listRawMat.get(id);
 			mat = rmColl.getMat(id);
-			price += qtt * mat.getUnitPrice();
+			price += qtt * mat.getPrice();
 		}
 		return price;
 	}
@@ -193,7 +194,7 @@ public class SoldProduct extends DTableModel {
 		case 3:
 			return mat.getStock();
 		case 4:
-			return DPriceConvert.intToDouble(mat.getUnitPrice());
+			return DPriceConvert.intToDouble(mat.getPrice());
 		default:
 			return null;
 		}
