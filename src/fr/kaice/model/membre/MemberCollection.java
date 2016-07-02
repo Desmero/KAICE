@@ -18,7 +18,7 @@ public class MemberCollection extends DTableModel {
 	 */
 	private static final long serialVersionUID = -6044679184177698933L;
 	private Map<Integer, Member> map;
-	private List<Member> ordredList;
+	private List<Member> orderedList;
 
 	/**
 	 * Construct a {@link MemberCollection}.
@@ -28,7 +28,7 @@ public class MemberCollection extends DTableModel {
 		colClass = new Class[] { Integer.class, String.class, String.class };
 		colEdit = new Boolean[] { false, false, false };
 		map = new HashMap<>();
-		ordredList = new ArrayList<>();
+		orderedList = new ArrayList<>();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class MemberCollection extends DTableModel {
 		add *= 10000;
 		id += add;
 
-		for (Member u : ordredList) {
+		for (Member u : orderedList) {
 			id = Integer.max(id, u.getUserId());
 		}
 		return id + 1;
@@ -116,7 +116,7 @@ public class MemberCollection extends DTableModel {
 				return arg0.getUserId() - arg1.getUserId();
 			}
 		});
-		ordredList = newList;
+		orderedList = newList;
 	}
 
 	public Member getProd(int id) {
@@ -132,11 +132,11 @@ public class MemberCollection extends DTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return ordredList.get(rowIndex).getUserId();
+			return orderedList.get(rowIndex).getUserId();
 		case 1:
-			return ordredList.get(rowIndex).getName();
+			return orderedList.get(rowIndex).getName();
 		case 2:
-			return ordredList.get(rowIndex).getFirstname();
+			return orderedList.get(rowIndex).getFirstname();
 		default:
 			return null;
 		}
@@ -144,7 +144,7 @@ public class MemberCollection extends DTableModel {
 	
 	public String getEMailList() {
 		StringBuilder sb = new StringBuilder();
-		for (Member u : ordredList) {
+		for (Member u : orderedList) {
 			if (u.isNewsLetter() && u.isValidEmailAddress()) {
 				String eMail = u.getEMail();
 				sb.append(eMail + "\n");
@@ -155,7 +155,7 @@ public class MemberCollection extends DTableModel {
 
 	public Member getMember(int id) {
 		Member mem = null;
-		for (Member m : ordredList) {
+		for (Member m : orderedList) {
 			if (m.getUserId() == id) {
 				mem = m;
 				break;
@@ -166,7 +166,7 @@ public class MemberCollection extends DTableModel {
 	
 	public boolean isIdUsed(int id) {
 		boolean used = false;
-		for (Member m : ordredList) {
+		for (Member m : orderedList) {
 			if (m.getUserId() == id) {
 				used = true;
 				break;
@@ -176,7 +176,7 @@ public class MemberCollection extends DTableModel {
 	}
 
 	public int getMemberIdAtRow(int selectedRow) {
-		return ordredList.get(selectedRow).getUserId();
+		return orderedList.get(selectedRow).getUserId();
 	}
 	
 }

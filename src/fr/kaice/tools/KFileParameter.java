@@ -23,4 +23,5 @@ public abstract class KFileParameter {
 	public static String PURCH_FILE_NAME = "Articles Achete";
 	public static String SOLD_FILE_NAME = "Articles Vendus";
 	public static String MEMBERS_FILE_NAME = "Member";
+	public static String HISTORIC = "Historique";
 }

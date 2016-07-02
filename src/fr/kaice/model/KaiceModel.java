@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Observable;
 
 import fr.kaice.model.buy.PurchasedProductCollection;
+import fr.kaice.model.historic.Historic;
 import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.SoldProductCollection;
@@ -22,7 +23,8 @@ public class KaiceModel extends Observable {
 	private static SoldProductCollection soldProdColl = new SoldProductCollection();
 	private static PurchasedProductCollection purProdColl = new PurchasedProductCollection();
 	private static MemberCollection memColl = new MemberCollection();
-
+	private static Historic hist = new Historic();
+	
 	private static KaiceModel model = new KaiceModel();
 
 	/**
@@ -56,6 +58,10 @@ public class KaiceModel extends Observable {
 
 	public static MemberCollection getMemberCollection() {
 		return memColl;
+	}
+	
+	public static Historic getHistoric() {
+		return hist;
 	}
 	
 	public static String getEMailList() {

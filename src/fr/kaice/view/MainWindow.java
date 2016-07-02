@@ -3,6 +3,7 @@ package fr.kaice.view;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import fr.kaice.view.panel.PanelHistoric;
 import fr.kaice.view.panel.PanelMember;
 import fr.kaice.view.panel.PanelPurcheseProduct;
 import fr.kaice.view.panel.PanelRawMaterial;
@@ -24,6 +25,7 @@ public class MainWindow extends JFrame{
 		jtb1.add("Articles achetés", new PanelPurcheseProduct());
 		jtb1.add("Membres", new PanelMember());
 //		jtb1.add("E-Mails", new PanelEMailList());
+		jtb1.add("Historic", new PanelHistoric());
 		
 		this.add(jtb1);
 

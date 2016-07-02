@@ -12,6 +12,9 @@ import java.util.Date;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.buy.PurchasedProductCollection;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Historic;
+import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.membre.Member;
 import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.model.raw.RawMaterial;
@@ -26,6 +29,7 @@ public class Reader {
 		oldReadRawMaterial();
 		oldReadPurchasedProd();
 		oldReadSoldProd();
+		oldReadHistoric();
 	}
 
 	private static void oldReadRawMaterial() {
@@ -186,7 +190,7 @@ public class Reader {
 			SoldProductCollection coll = KaiceModel.getSoldProdCollection();
 			String line;
 			String[] data, rawMat;
-			
+
 			int id = 0;
 			int idMat = -1;
 			RawMaterial mat = null;
@@ -197,20 +201,20 @@ public class Reader {
 				coll.addReadSoldProduct(id, data[0], Integer.parseInt(data[1]), SoldProduct.parstType(data[2]));
 				prod = KaiceModel.getSoldProdCollection().getSoldProduct(id);
 				id++;
-				
+
 				if (data.length > 3) {
 					rawMat = data[3].split(KFileParameter.SEPARATOR_SEC);
-					for (int i = 0; i < rawMat.length; i+=2) {
+					for (int i = 0; i < rawMat.length; i += 2) {
 						mat = KaiceModel.getRawMatCollection().getMat(rawMat[i]);
 						if (mat == null) {
 							idMat = -1;
 						} else {
 							idMat = mat.getId();
 						}
-						prod.setRawMaterial(idMat, Integer.parseInt(rawMat[i+1]));
+						prod.setRawMaterial(idMat, Integer.parseInt(rawMat[i + 1]));
 					}
 				}
-				
+
 				line = d.readLine();
 			}
 			coll.updateAlphabeticalList();
@@ -268,6 +272,53 @@ public class Reader {
 				e1.printStackTrace();
 			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void oldReadHistoric() {
+		String fileName = KFileParameter.HISTORIC + 15;
+		String fullPath = KFileParameter.REPOSITORY + "/" + fileName + "." + KFileParameter.EXTENSION;
+		try {
+			InputStream f = new FileInputStream(fullPath);
+			InputStreamReader isr = new InputStreamReader(f);
+			BufferedReader d = new BufferedReader(isr);
+
+			Historic hist = KaiceModel.getHistoric();
+			Transaction tran;	
+			ArchivedProduct prod;
+			String line;
+			String[] data, subData;
+			line = d.readLine();
+			while (line != null) {
+				data = line.split(KFileParameter.SEPARATOR);
+				
+				tran = new Transaction(Integer.parseInt(data[0]), null, Integer.parseInt(data[1]), Integer.parseInt(data[2]), DFormat.FULL_DATE_FORMAT.parse(data[3]));
+				subData = data[4].split(KFileParameter.SEPARATOR_SEC);
+				for (int i = 0; i < subData.length; i+=2) {
+					prod = new ArchivedProduct(subData[i], Integer.parseInt(subData[i+1]), 0);
+					tran.addArchivedProduct(prod);
+				}
+				hist.addTransaction(tran);
+				line = d.readLine();
+			}
+			d.close();
+		} catch (FileNotFoundException e) {
+			File file = new File(fullPath);
+			try {
+				file.createNewFile();
+			} catch (IOException e1) {
+				e.printStackTrace();
+				e1.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
