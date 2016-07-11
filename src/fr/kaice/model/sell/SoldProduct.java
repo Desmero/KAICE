@@ -7,7 +7,7 @@ import java.util.Map;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
-import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DMonetarySpinner;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
@@ -145,8 +145,11 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 	}
 
 	public int getQuantity() {
-		// TODO Auto-generated method stub
-		return 0;
+		int qtty = Integer.MAX_VALUE;
+		for (Integer id : listRawMat.keySet()) {
+			qtty = Integer.min(qtty, (KaiceModel.getRawMatCollection().getMat(id).getStock() / listRawMat.get(id)));
+		}
+		return qtty;
 	}
 
 	public static prodType parstType(String arg0) {
@@ -194,7 +197,7 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 		case 3:
 			return mat.getStock();
 		case 4:
-			return DPriceConvert.intToDouble(mat.getPrice());
+			return DMonetarySpinner.intToDouble(mat.getPrice());
 		default:
 			return null;
 		}

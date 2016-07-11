@@ -20,6 +20,7 @@ import com.toedter.calendar.JDateChooser;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.membre.Member;
+import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.tools.DFormat;
 import fr.kaice.tools.IdSpinner;
 
@@ -52,9 +53,17 @@ public class PanelMemberDetails extends JPanel {
 	private JButton editValid;
 
 	public PanelMemberDetails(int memberId) {
-
-		int col = 10;
 		edition = false;
+		construct(memberId);
+	}
+
+	public PanelMemberDetails(int memberId, boolean edition) {
+		this.edition = edition;
+		construct(memberId);
+	}
+
+	private void construct(int memberId) {
+		int col = 10;
 
 		id = new IdSpinner();
 		id.setValue(memberId);
@@ -73,7 +82,7 @@ public class PanelMemberDetails extends JPanel {
 		birthDate = new JDateChooser(new Date(), "dd/MM/yyyy");
 		pBirth.add(lBirthDate);
 
-		gender = KaiceModel.getMemberCollection().getMember(memberId).isMale();
+		gender = true;
 		pGender = new JPanel(new GridLayout(1, 1));
 		lGender = new JLabel();
 		bGender = new JButton();
@@ -169,16 +178,19 @@ public class PanelMemberDetails extends JPanel {
 		// tableModel.setId(newId);
 		if (KaiceModel.getMemberCollection().isIdUsed(newId)) {
 			gender = KaiceModel.getMemberCollection().getMember(newId).isMale();
-			edit.setEnabled(true);
 		} else {
 			gender = true;
-			edit.setEnabled(false);
 		}
 		update();
 	}
 
 	private void editProfil() {
-		Member u = KaiceModel.getMemberCollection().getMember(id.getValue());
+		MemberCollection col = KaiceModel.getMemberCollection();
+		Member u = col.getMember(id.getValue());
+		if (u == null) {
+			u = new Member(id.getValue());
+			col.addMember(u);
+		}
 		u.setName(name.getText());
 		u.setFirstname(firstname.getText());
 		u.setBirthDate(birthDate.getDate());
@@ -193,7 +205,6 @@ public class PanelMemberDetails extends JPanel {
 		// TODO write file
 		// Model.getInstance().writeAllUSers();
 		// Model.getInstance().update();
-
 	}
 
 	private void updateGender() {
@@ -221,7 +232,11 @@ public class PanelMemberDetails extends JPanel {
 		} else {
 			pBirth.add(lBirthDate);
 			pGender.add(lGender);
-			edit.setText("Éditer");
+			if (m == null) {
+				edit.setText("Ajouter");
+			} else {
+				edit.setText("Éditer");
+			}
 		}
 		editValid.setVisible(edition);
 

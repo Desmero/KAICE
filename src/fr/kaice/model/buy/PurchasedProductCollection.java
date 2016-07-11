@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DMonetarySpinner;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -127,11 +127,11 @@ public class PurchasedProductCollection extends DTableModel{
 		case 1:
 			return alphabeticList.get(rowIndex).getName();
 		case 2:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getPrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPrice());
 		case 3:
 			return alphabeticList.get(rowIndex).getNumberBought();
 		case 4:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getTotalPrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getTotalPrice());
 		default:
 			return null;
 		}

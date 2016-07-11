@@ -294,7 +294,7 @@ public class Reader {
 			while (line != null) {
 				data = line.split(KFileParameter.SEPARATOR);
 				
-				tran = new Transaction(Integer.parseInt(data[0]), null, Integer.parseInt(data[1]), Integer.parseInt(data[2]), DFormat.FULL_DATE_FORMAT.parse(data[3]));
+				tran = new Transaction(Integer.parseInt(data[0]), DFunction.randomEnum(Transaction.transactionType.class), Integer.parseInt(data[1]), Integer.parseInt(data[2]), DFormat.FULL_DATE_FORMAT.parse(data[3]));
 				subData = data[4].split(KFileParameter.SEPARATOR_SEC);
 				for (int i = 0; i < subData.length; i+=2) {
 					prod = new ArchivedProduct(subData[i], Integer.parseInt(subData[i+1]), 0);

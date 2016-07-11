@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.Transaction;
 import fr.kaice.tools.DTablePanel;
 import fr.kaice.view.window.WindowInform;
 
@@ -24,7 +25,15 @@ public class PanelHistoric extends JPanel {
 		JPanel ctrl = new JPanel();
 
 		add.setEnabled(false);
-		view.setEnabled(false);
+		view.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (table.getSelectedRow() != -1) {
+					Transaction tran = KaiceModel.getHistoric().getTransaction(table.getSelectedRow());
+					new WindowInform("Transaction", false, new PanelTransaction(tran));
+				}
+			}
+		});
 
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);

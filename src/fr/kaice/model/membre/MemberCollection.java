@@ -40,8 +40,7 @@ public class MemberCollection extends DTableModel {
 	public void addMember(Member membre) {
 		int id = membre.getUserId();
 		if (map.containsKey(id)) {
-			throw new AlreadyUsedIdException("RawMaterial Id " + id
-					+ " is already used.");
+			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
 		}
 		map.put(id, membre);
 		updateOrderedList();
@@ -50,8 +49,7 @@ public class MemberCollection extends DTableModel {
 	public void addReadMember(Member membre) {
 		int id = membre.getUserId();
 		if (map.containsKey(id)) {
-			throw new AlreadyUsedIdException("RawMaterial Id " + id
-					+ " is already used.");
+			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
 		}
 		map.put(id, membre);
 	}
@@ -72,17 +70,14 @@ public class MemberCollection extends DTableModel {
 	 * @param eMail
 	 * @param newsLetter
 	 */
-	public void addReadMember(int userId, String name, String firstname,
-			boolean gender, Date birthDate, String phoneNumber, String studies,
-			String mailStreet, String mailPostalCode, String mailTown,
-			String eMail, boolean newsLetter) {
+	public void addReadMember(int userId, String name, String firstname, boolean gender, Date birthDate,
+			String phoneNumber, String studies, String mailStreet, String mailPostalCode, String mailTown, String eMail,
+			boolean newsLetter) {
 		if (map.containsKey(userId)) {
-			throw new AlreadyUsedIdException("RawMaterial Id " + userId
-					+ " is already used.");
+			throw new AlreadyUsedIdException("RawMaterial Id " + userId + " is already used.");
 		}
-		Member newProduct = new Member(userId, name, firstname, gender,
-				birthDate, phoneNumber, studies, mailStreet, mailPostalCode,
-				mailTown, eMail, newsLetter);
+		Member newProduct = new Member(userId, name, firstname, gender, birthDate, phoneNumber, studies, mailStreet,
+				mailPostalCode, mailTown, eMail, newsLetter);
 		map.put(userId, newProduct);
 		updateOrderedList();
 	}
@@ -104,7 +99,7 @@ public class MemberCollection extends DTableModel {
 		}
 		return id + 1;
 	}
-	
+
 	/**
 	 * Update the sorted list.
 	 */
@@ -141,7 +136,7 @@ public class MemberCollection extends DTableModel {
 			return null;
 		}
 	}
-	
+
 	public String getEMailList() {
 		StringBuilder sb = new StringBuilder();
 		for (Member u : orderedList) {
@@ -154,29 +149,23 @@ public class MemberCollection extends DTableModel {
 	}
 
 	public Member getMember(int id) {
-		Member mem = null;
-		for (Member m : orderedList) {
-			if (m.getUserId() == id) {
-				mem = m;
-				break;
-			}
-		}
-		return mem;
+		/*
+		 * Member mem = null; for (Member m : orderedList) { if (m.getUserId()
+		 * == id) { mem = m; break; } }
+		 */
+		return map.get(id);
 	}
-	
+
 	public boolean isIdUsed(int id) {
-		boolean used = false;
-		for (Member m : orderedList) {
-			if (m.getUserId() == id) {
-				used = true;
-				break;
-			}
-		}
-		return used;
+		/*
+		 * boolean used = false; for (Member m : orderedList) { if
+		 * (m.getUserId() == id) { used = true; break; } }
+		 */
+		return map.containsKey(id);
 	}
 
 	public int getMemberIdAtRow(int selectedRow) {
 		return orderedList.get(selectedRow).getUserId();
 	}
-	
+
 }

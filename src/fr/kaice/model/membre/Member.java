@@ -26,7 +26,21 @@ public class Member {
 	private String mailTown;
 	private String eMail;
 	private boolean newsLetter;
-	private int account;
+
+	public Member(int userId) {
+		this.userId = userId;
+		this.name = "[Nom]";
+		this.firstname = "[Prenom]";
+		this.gender = true;
+		this.birthDate = new Date();
+		this.phoneNumber = "XX XX XX XX XX";
+		this.studies = "[Études]";
+		this.mailStreet = "[Rue]";
+		this.mailPostalCode = "[Code postal]";
+		this.mailTown = "[Commune]";
+		this.eMail = "[Adresse e-mail]";
+		this.newsLetter = false;
+	}
 
 	/**
 	 * Simple constructor. For the gender : true = male, false = female.
@@ -96,7 +110,6 @@ public class Member {
 			this.eMail = "[Adresse e-mail]";
 		}
 		this.newsLetter = newsLetter;
-		this.account = 0;
 	}
 
 	public int getUserId() {
@@ -193,18 +206,6 @@ public class Member {
 
 	public void setNewsLetter(boolean newsLetter) {
 		this.newsLetter = newsLetter;
-	}
-
-	public int getAccount() {
-		return account;
-	}
-
-	public void creditAccount(int credit) {
-		account += credit;
-	}
-
-	public void debitAccount(int debit) {
-		account -= debit;
 	}
 
 	/**

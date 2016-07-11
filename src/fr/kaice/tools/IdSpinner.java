@@ -7,6 +7,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
+import org.hamcrest.core.IsSame;
+
 import fr.kaice.model.KaiceModel;
 
 public class IdSpinner extends JSpinner {
@@ -15,9 +17,19 @@ public class IdSpinner extends JSpinner {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public IdSpinner(int value) {
+		super(new SpinnerNumberModel(0, 0, null, 1));
+		construct();
+		setValue(value);
+	}
 	
 	public IdSpinner() {
 		super(new SpinnerNumberModel(0, 0, null, 1));
+		construct();
+	}
+	
+	private void construct() {
 		JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor)this.getEditor();
 		JTextField textField = editor.getTextField();
 		textField.addFocusListener( new FocusAdapter()

@@ -1,5 +1,8 @@
 package fr.kaice.model.raw;
 
+import java.awt.Color;
+
+import fr.kaice.tools.DColor;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
 
@@ -112,6 +115,18 @@ public class RawMaterial implements GenericProduct {
 		sb.append(name);
 		sb.append(KFileParameter.SEPARATOR);
 		return sb.toString();
+	}
+
+	public Color getColor() {
+		Color col = DColor.WHITE;
+		if (stock < 0) {
+			col = DColor.GRAY;
+		} else if (stock == 0) {
+			col = DColor.RED;
+		} else if (stock < alert){
+			col = DColor.ORANGE;
+		}
+		return col;
 	}
 
 }

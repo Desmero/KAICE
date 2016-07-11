@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import fr.kaice.model.sell.SoldProduct.prodType;
-import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DMonetarySpinner;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -64,11 +64,12 @@ public class SoldProductCollection extends DTableModel {
 	 * @param type
 	 *            {@link prodType} - The type of the new {@link SoldProduct}.
 	 */
-	public void addNewSoldProduct(String product, int price, prodType type) {
+	public SoldProduct addNewSoldProduct(String product, int price, prodType type) {
 		int id = getNewId();
 		SoldProduct newMaterial = new SoldProduct(id, product, price, type);
 		map.put(id, newMaterial);
 		updateAlphabeticalList();
+		return newMaterial;
 	}
 
 	/**
@@ -137,11 +138,11 @@ public class SoldProductCollection extends DTableModel {
 		case 1:
 			return alphabeticList.get(rowIndex).getName();
 		case 2:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getPrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPrice());
 		case 3:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getBuyPrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getBuyPrice());
 		case 4:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getProfit());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getProfit());
 		case 5:
 			return alphabeticList.get(rowIndex).getQuantity();
 		default:

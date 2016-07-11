@@ -1,5 +1,7 @@
 package fr.kaice.tools;
 
+import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -18,9 +20,14 @@ public abstract class DTableModel extends AbstractTableModel {
 	protected String[] colNames;
 	protected Class<?>[] colClass;
 	protected Boolean[] colEdit;
+	protected boolean totalLine;
 
+	public DTableModel() {
+		totalLine = false;
+	}
+	
 	public DCellRender getColumnModel(int col) {
-		return new DCellRender(colClass[col], colEdit[col], false);
+		return new DCellRender(colClass[col], colEdit[col], totalLine);
 	}
 
 	@Override

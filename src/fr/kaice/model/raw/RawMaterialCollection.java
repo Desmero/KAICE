@@ -1,12 +1,14 @@
 package fr.kaice.model.raw;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DCellRender;
+import fr.kaice.tools.DMonetarySpinner;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 
@@ -24,8 +26,8 @@ public class RawMaterialCollection extends DTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = 7226207712847437213L;
-	private Map<Integer, RawMaterial> map;
-	private List<RawMaterial> alphabeticList;
+	protected Map<Integer, RawMaterial> map;
+	protected List<RawMaterial> alphabeticList;
 
 	/**
 	 * Construct a {@link RawMaterialCollection}.
@@ -64,8 +66,7 @@ public class RawMaterialCollection extends DTableModel {
 	public void addNewRawMaterial(String product) {
 		int id = getNewId();
 		RawMaterial newMaterial = new RawMaterial(id, product);
-		map.put(id, newMaterial);
-		updateAlphabeticalList();
+		addRawMaterial(newMaterial);
 		KaiceModel.update();
 	}
 
@@ -88,7 +89,7 @@ public class RawMaterialCollection extends DTableModel {
 			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
 		}
 		RawMaterial newMaterial = new RawMaterial(id, product, stock, alert, price);
-		map.put(id, newMaterial);
+		addRawMaterial(newMaterial);
 	}
 
 	/**
@@ -119,6 +120,10 @@ public class RawMaterialCollection extends DTableModel {
 		alphabeticList = newList;
 	}
 
+	public Color getRowColor(int row) {
+		return alphabeticList.get(row).getColor();
+	}
+	
 	public RawMaterial getMat(int id) {
 		return map.get(id);
 	}
@@ -130,6 +135,15 @@ public class RawMaterialCollection extends DTableModel {
 			}
 		}
 		return null;
+	}
+	
+	public RawMaterial[] getAllRawMaterial() {
+		RawMaterial[] tab = new RawMaterial[alphabeticList.size()];
+		int i = 0;
+		for (RawMaterial mat : alphabeticList) {
+			tab[i++] = mat;
+		}
+		return tab;
 	}
 	
 	@Override
@@ -147,12 +161,20 @@ public class RawMaterialCollection extends DTableModel {
 		case 2:
 			return alphabeticList.get(rowIndex).getStock();
 		case 3:
-			return DPriceConvert.intToDouble(alphabeticList.get(rowIndex).getPrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPrice());
 		case 4:
 			return alphabeticList.get(rowIndex).getAlert();
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	public DCellRender getColumnModel(int col) {
+		if (col == 2) {
+			return new CellRenderRawMaterial(colClass[col], colEdit[col], totalLine);
+		}
+		return new DCellRender(colClass[col], colEdit[col], totalLine);
 	}
 
 }

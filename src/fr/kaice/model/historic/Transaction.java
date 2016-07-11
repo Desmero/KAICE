@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.membre.Member;
-import fr.kaice.tools.DPriceConvert;
+import fr.kaice.tools.DColor;
+import fr.kaice.tools.DMonetarySpinner;
 import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.GenericProduct;
 
@@ -20,7 +22,7 @@ public class Transaction extends DTableModel {
 	private static final long serialVersionUID = 1L;
 	private List<ArchivedProduct> productList;
 
-	private static enum transactionType {
+	public static enum transactionType {
 		SELL, BUY, ADD, SUB, CANCEL, INS
 	};
 
@@ -66,6 +68,29 @@ public class Transaction extends DTableModel {
 		return date;
 	}
 
+	public Color getColor() {
+		return getTypeColor(type);
+	}
+	
+	public static Color getTypeColor(transactionType type) {
+		switch (type) {
+		case SELL:
+			return DColor.GREEN;
+		case CANCEL:
+			return DColor.ORANGE;
+		case BUY:
+			return DColor.BLUE;
+		case ADD:
+			return DColor.CYAN;
+		case SUB:
+			return DColor.RED;
+		case INS:
+			return DColor.YELLOW;
+		default:
+			return DColor.GRAY;
+		}
+	}
+	
 	@Override
 	public int getRowCount() {
 		return productList.size();
@@ -87,9 +112,9 @@ public class Transaction extends DTableModel {
 			case 2:
 				return prod.getQuantity();
 			case 3:
-				return DPriceConvert.intToDouble(prod.getPrice());
+				return DMonetarySpinner.intToDouble(prod.getPrice());
 			case 4:
-				return DPriceConvert.intToDouble(prod.getQuantity() * prod.getPrice());
+				return DMonetarySpinner.intToDouble(prod.getQuantity() * prod.getPrice());
 			default:
 				break;
 			}

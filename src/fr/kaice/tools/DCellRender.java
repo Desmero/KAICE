@@ -25,12 +25,11 @@ public class DCellRender extends DefaultTableCellRenderer {
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int col) {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+			int row, int col) {
 
-		JLabel l = (JLabel) super.getTableCellRendererComponent(table, value,
-				isSelected, hasFocus, row, col);
-		
+		JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
 		Color newCol = getColor(table, row, col, l);
 
 		if (table.isCellSelected(row, col)) {
@@ -43,29 +42,20 @@ public class DCellRender extends DefaultTableCellRenderer {
 	}
 
 	private Color bluishColor(Color color) {
-		Color blueOrg = DColor.BLUE_ORG;
-		int r, g, b;
-		r = (int) Math.sqrt((Math.pow((double) blueOrg.getRed(), 2) + Math.pow(
-				(double) color.getRed(), 2)) / 2);
-		g = (int) Math.sqrt((Math.pow((double) blueOrg.getGreen(), 2) + Math
-				.pow((double) color.getGreen(), 2)) / 2);
-		b = (int) Math.sqrt((Math.pow((double) blueOrg.getBlue(), 2) + Math
-				.pow((double) color.getBlue(), 2)) / 2);
-		color = new Color(r, g, b);
-		return color;
+		return DFunction.colorfusion(DColor.BLUE_SELECTION, color);
 	}
 
 	protected Color getColor(JTable table, int row, int col, JLabel l) {
 		Color newCol = DColor.WHITE;
 
-		if (editable) {
-			newCol = DColor.WHITE;
-		} else {
-			newCol = DColor.LIGHT_GRAY;
-		}
-
 		if (totalLine && row + 1 == table.getRowCount()) {
 			newCol = DColor.GRAY;
+		} else {
+			if (editable) {
+				newCol = DColor.WHITE;
+			} else {
+				newCol = DColor.LIGHT_GRAY;
+			}
 		}
 		return newCol;
 	}

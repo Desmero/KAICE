@@ -24,7 +24,12 @@ public class PanelSellProduct extends JPanel {
 		JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
 		JPanel ctrl = new JPanel();
 
-		add.setEnabled(false);
+		add.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new WindowInform("Nouvelle article", false, new PanelNewSellProduct());
+			}
+		});
 		view.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

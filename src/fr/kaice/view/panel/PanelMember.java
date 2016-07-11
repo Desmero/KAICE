@@ -23,7 +23,13 @@ public class PanelMember extends JPanel {
 		JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
 		JPanel ctrl = new JPanel();
 
-		add.setEnabled(false);
+		add.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int memberId = KaiceModel.getMemberCollection().getNewId();
+				new WindowInform("Adhenent", false, new PanelMemberDetails(memberId, true));
+			}
+		});
 		view.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

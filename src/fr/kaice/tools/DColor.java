@@ -15,6 +15,6 @@ public abstract class DColor {
 	public static Color LIGHT_GRAY = new Color(224, 224, 224);
 	public static Color GRAY = new Color(160, 160, 160);
 	
-	public static Color BLUE_ORG = new Color(109, 163, 220);
+	public static Color BLUE_SELECTION = new Color(109, 163, 220);
 
 }
