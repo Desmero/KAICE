@@ -1,19 +1,12 @@
 package fr.kaice.view.panel;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Label;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.management.monitor.MonitorSettingException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,20 +14,14 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.Border;
-
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
-import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.CompoCollection;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.model.sell.SoldProduct.prodType;
-import fr.kaice.tools.generic.CloseListener;
 import fr.kaice.tools.generic.DMonetarySpinner;
-import fr.kaice.tools.generic.DTableModel;
 import fr.kaice.tools.generic.DTablePanel;
 
 public class PanelNewSellProduct extends JPanel {

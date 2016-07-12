@@ -5,6 +5,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import fr.kaice.model.KaiceModel;
+import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.sell.SoldProduct.prodType;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DMonetarySpinner;
@@ -132,22 +135,39 @@ public class SoldProductCollection extends DTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		SoldProduct prod = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			return alphabeticList.get(rowIndex).getId();
+			return prod.getId();
 		case 1:
-			return alphabeticList.get(rowIndex).getName();
+			return prod.getName();
 		case 2:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPrice());
+			return DMonetarySpinner.intToDouble(prod.getPrice());
 		case 3:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getBuyPrice());
+			return DMonetarySpinner.intToDouble(prod.getBuyPrice());
 		case 4:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getProfit());
+			return DMonetarySpinner.intToDouble(prod.getProfit());
 		case 5:
-			return alphabeticList.get(rowIndex).getQuantity();
+			return prod.getQuantity();
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		SoldProduct prod = alphabeticList.get(rowIndex);
+		switch (columnIndex) {
+		case 1:
+			prod.setName((String) aValue);
+			break;
+		case 2:
+			prod.setSalePrice(DMonetarySpinner.doubleToInt((double) aValue));
+			break;
+		default:
+			break;
+		}
+		KaiceModel.update();
 	}
 
 }

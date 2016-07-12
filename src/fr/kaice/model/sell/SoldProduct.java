@@ -154,10 +154,13 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 		return 0;
 	}
 
-	public int getQuantity() {
+	public Integer getQuantity() {
 		int qtty = Integer.MAX_VALUE;
 		for (Integer id : listRawMat.keySet()) {
 			qtty = Integer.min(qtty, (KaiceModel.getRawMatCollection().getMat(id).getStock() / listRawMat.get(id)));
+		}
+		if (qtty == Integer.MAX_VALUE) {
+			return null;
 		}
 		return qtty;
 	}
@@ -212,5 +215,4 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 			return null;
 		}
 	}
-
 }
