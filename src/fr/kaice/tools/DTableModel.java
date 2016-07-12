@@ -25,7 +25,7 @@ public abstract class DTableModel extends AbstractTableModel {
 	public DTableModel() {
 		totalLine = false;
 	}
-	
+
 	public DCellRender getColumnModel(int col) {
 		return new DCellRender(colClass[col], colEdit[col], totalLine);
 	}
@@ -47,6 +47,9 @@ public abstract class DTableModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		if (totalLine && rowIndex == getRowCount() - 1) {
+			return false;
+		}
 		return colEdit[columnIndex];
 	}
 

@@ -101,8 +101,7 @@ public class RawMaterial implements GenericProduct {
 		return unitPrice;
 	}
 
-	@Override
-	public String toString() {
+	public String toSaveString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(id);
 		sb.append(KFileParameter.SEPARATOR);
@@ -117,6 +116,10 @@ public class RawMaterial implements GenericProduct {
 		return sb.toString();
 	}
 
+	public String toString() {
+		return name;
+	}
+	
 	public Color getColor() {
 		Color col = DColor.WHITE;
 		if (stock < 0) {

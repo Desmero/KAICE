@@ -1,17 +1,23 @@
 package fr.kaice.view.panel;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.management.monitor.MonitorSettingException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,26 +52,24 @@ public class PanelNewSellProduct extends JPanel {
 		JScrollPane spListRaw = new JScrollPane(list);
 		tmCompo = new CompoCollection();
 		DTablePanel compos = new DTablePanel(KaiceModel.getInstance(), tmCompo);
-		// JTable tableCompo = new JTable(tmCompo);
-		// JScrollPane spCompo = new JScrollPane(tableCompo);
-
-		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-		/*
-		tableCompo.addContainerListener(new ContainerListener() {
-			@Override
-			public void componentRemoved(ContainerEvent e) {
-			}
-
-			@Override
-			public void componentAdded(ContainerEvent e) {
-				JTextField text = (JTextField) e.getChild();
-				text.setText(null);
-			}
-		});
-		*/
 
 		RawMaterial[] items = KaiceModel.getRawMatCollection().getAllRawMaterial();
+
+		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if (e.getClickCount() ==2) {
+					int[] val = list.getSelectedIndices();
+					for (int v : val) {
+						tmCompo.addRawMaterial(items[v]);
+					}
+					update();
+				}
+			}
+		});
+		
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -99,7 +103,7 @@ public class PanelNewSellProduct extends JPanel {
 		type.addItem(SoldProduct.prodType.FOOD);
 		type.addItem(SoldProduct.prodType.MISC);
 		type.setSelectedItem(SoldProduct.prodType.MISC);
-
+		
 		JPanel param = new JPanel();
 		JPanel ctrl = new JPanel();
 		JPanel compo = new JPanel(new BorderLayout());
@@ -124,8 +128,18 @@ public class PanelNewSellProduct extends JPanel {
 		compo.add(ctrlCompo, BorderLayout.WEST);
 		compo.add(compos, BorderLayout.CENTER);
 
-		ctrlCompo.add(add);
-		ctrlCompo.add(rem);
+		JPanel pAdd = new JPanel();
+		pAdd.add(add);
+		JPanel pRem = new JPanel();
+		pRem.add(rem);
+		
+		ctrlCompo.setLayout(new GridLayout(10, 1));
+		ctrlCompo.add(new JLabel(""));
+		ctrlCompo.add(new JLabel(""));
+		ctrlCompo.add(new JLabel(""));
+		ctrlCompo.add(new JLabel(""));
+		ctrlCompo.add(pAdd);
+		ctrlCompo.add(pRem);
 	}
 
 	void update() {

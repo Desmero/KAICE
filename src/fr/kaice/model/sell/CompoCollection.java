@@ -30,7 +30,13 @@ public class CompoCollection extends DTableModel {
 	}
 
 	public void addRawMaterial(RawMaterial mat) {
-		composition.put(mat.getId(), 1);
+		Integer oldNum = composition.get(mat.getId());
+		if (oldNum != null) {
+			composition.put(mat.getId(), oldNum + 1);
+		} else {
+			composition.put(mat.getId(), 1);
+		}
+		KaiceModel.update();
 	}
 
 	public void setRawMaterial(RawMaterial mat, int number) {
@@ -50,6 +56,25 @@ public class CompoCollection extends DTableModel {
 		composition.remove(list.get(select));
 	}
 
+	public int getTotalPrice() {
+		int price = 0;
+		ArrayList<Integer> list = new ArrayList<>(composition.keySet());
+		for (int id : list) {
+			RawMaterial mat = KaiceModel.getRawMatCollection().getMat(id);
+			price += mat.getPrice() * composition.get(id);
+		}
+		return price;
+	}
+
+	public int getNumberCompo() {
+		int qttytotal = 0;
+		ArrayList<Integer> list = new ArrayList<>(composition.values());
+		for (int qtty : list) {
+			qttytotal += qtty;
+		}
+		return qttytotal;
+	}
+
 	@Override
 	public int getRowCount() {
 		return composition.size() + 1;
@@ -66,8 +91,8 @@ public class CompoCollection extends DTableModel {
 			case 1:
 				return KaiceModel.getRawMatCollection().getMat(id).getName();
 			case 2:
-				int prive = KaiceModel.getRawMatCollection().getMat(id).getPrice();
-				return DMonetarySpinner.intToDouble(prive);
+				int price = KaiceModel.getRawMatCollection().getMat(id).getPrice();
+				return DMonetarySpinner.intToDouble(price);
 			case 3:
 				return composition.get(id);
 			default:
@@ -80,13 +105,24 @@ public class CompoCollection extends DTableModel {
 			case 1:
 				return "Total :";
 			case 2:
-				return 0;
+				int price = getTotalPrice();
+				return DMonetarySpinner.intToDouble(price);
 			case 3:
-				return 0;
+				return getNumberCompo();
 			default:
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		if (rowIndex != getColumnCount() - 1) {
+			ArrayList<Integer> list = new ArrayList<>(composition.keySet());
+			int id = list.get(rowIndex);
+			composition.put(id, (Integer) aValue);
+		}
+		KaiceModel.update();
 	}
 
 	public RawMaterial[] getAllRawMaterial() {

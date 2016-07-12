@@ -34,7 +34,17 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 	 *
 	 */
 	public enum prodType {
-		FOOD, DRINK, MISC
+		FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
+
+		private String name;
+
+		private prodType(String name) {
+			this.name = name;
+		}
+
+		public String toString() {
+			return name;
+		}
 	};
 
 	private int id;
