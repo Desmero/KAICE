@@ -137,6 +137,10 @@ public class RawMaterialCollection extends DTableModel {
 		return null;
 	}
 
+	public int getIdAtRow(int row) {
+		return alphabeticList.get(row).getId();
+	}
+	
 	public RawMaterial[] getAllRawMaterial() {
 		RawMaterial[] tab = new RawMaterial[alphabeticList.size()];
 		int i = 0;

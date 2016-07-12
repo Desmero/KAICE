@@ -26,6 +26,10 @@ import fr.kaice.tools.generic.DTablePanel;
 
 public class PanelNewSellProduct extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CompoCollection tmCompo;
 
 	public PanelNewSellProduct() {
