@@ -21,6 +21,8 @@ import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.model.sell.SoldProductCollection;
+import fr.kaice.tools.generic.DFormat;
+import fr.kaice.tools.generic.DFunction;
 
 public class Reader {
 

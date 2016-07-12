@@ -7,10 +7,10 @@ import java.util.Map;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 
 /**
  * This class represent one kind of sold product

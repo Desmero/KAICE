@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.Transaction;
-import fr.kaice.tools.DFormat;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTablePanel;
+import fr.kaice.tools.generic.DFormat;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTablePanel;
 
 public class PanelTransaction extends JPanel {
 

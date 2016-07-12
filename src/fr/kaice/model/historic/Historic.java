@@ -3,10 +3,10 @@ package fr.kaice.model.historic;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.kaice.tools.DCellRender;
-import fr.kaice.tools.DFormat;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTableModel;
+import fr.kaice.tools.generic.DCellRender;
+import fr.kaice.tools.generic.DFormat;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 
 public class Historic extends DTableModel {
 

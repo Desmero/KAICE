@@ -1,4 +1,4 @@
-package fr.kaice.tools;
+package fr.kaice.tools.generic;
 
 import javax.swing.SpinnerNumberModel;
 

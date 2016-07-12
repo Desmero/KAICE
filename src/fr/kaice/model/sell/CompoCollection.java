@@ -8,9 +8,9 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.CellRenderRawMaterial;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
-import fr.kaice.tools.DCellRender;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTableModel;
+import fr.kaice.tools.generic.DCellRender;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 
 public class CompoCollection extends DTableModel {
 

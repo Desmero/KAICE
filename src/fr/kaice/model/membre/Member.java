@@ -3,7 +3,7 @@ package fr.kaice.model.membre;
 import java.util.Calendar;
 import java.util.Date;
 
-import fr.kaice.tools.DFormat;
+import fr.kaice.tools.generic.DFormat;
 
 /**
  * This class represent one member of the association.

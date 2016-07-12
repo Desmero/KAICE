@@ -5,7 +5,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.DTablePanel;
+import fr.kaice.tools.generic.DTablePanel;
 
 public class PanelPurcheseProduct extends JPanel {
 

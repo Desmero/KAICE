@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.DCellRender;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
+import fr.kaice.tools.generic.DCellRender;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 
 /**
  * This class represent the collection of all {@link RawMaterial}. It is also

@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.Transaction;
-import fr.kaice.tools.DTablePanel;
+import fr.kaice.tools.generic.DTablePanel;
 import fr.kaice.view.window.WindowInform;
 
 public class PanelHistoric extends JPanel {

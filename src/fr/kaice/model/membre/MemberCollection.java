@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
+import fr.kaice.tools.generic.DTableModel;
 
 public class MemberCollection extends DTableModel {
 

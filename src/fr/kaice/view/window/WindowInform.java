@@ -8,7 +8,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import fr.kaice.tools.CloseListener;
+
+import fr.kaice.tools.generic.CloseListener;
 
 public class WindowInform extends JDialog{
 

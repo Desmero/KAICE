@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.sell.SoldProduct;
-import fr.kaice.tools.DTablePanel;
+import fr.kaice.tools.generic.DTablePanel;
 import fr.kaice.view.window.WindowInform;
 
 public class PanelSellProduct extends JPanel {

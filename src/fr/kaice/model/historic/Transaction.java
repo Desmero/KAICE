@@ -9,10 +9,10 @@ import java.util.Random;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.membre.Member;
-import fr.kaice.tools.DColor;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTableModel;
 import fr.kaice.tools.GenericProduct;
+import fr.kaice.tools.generic.DColor;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 
 public class Transaction extends DTableModel {
 

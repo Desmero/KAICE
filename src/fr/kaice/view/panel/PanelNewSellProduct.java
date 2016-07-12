@@ -32,10 +32,10 @@ import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.CompoCollection;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.model.sell.SoldProduct.prodType;
-import fr.kaice.tools.CloseListener;
-import fr.kaice.tools.DMonetarySpinner;
-import fr.kaice.tools.DTableModel;
-import fr.kaice.tools.DTablePanel;
+import fr.kaice.tools.generic.CloseListener;
+import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.tools.generic.DTablePanel;
 
 public class PanelNewSellProduct extends JPanel {
 

@@ -1,4 +1,4 @@
-package fr.kaice.tools;
+package fr.kaice.tools.generic;
 
 import java.util.ArrayList;
 

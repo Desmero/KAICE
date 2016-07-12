@@ -6,8 +6,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.DCellRender;
-import fr.kaice.tools.DFunction;
+import fr.kaice.tools.generic.DCellRender;
+import fr.kaice.tools.generic.DFunction;
 
 public class CellRenderTransaction extends DCellRender {
 

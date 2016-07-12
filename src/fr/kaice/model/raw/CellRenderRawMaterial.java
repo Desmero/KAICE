@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.DCellRender;
+import fr.kaice.tools.generic.DCellRender;
 
 public class CellRenderRawMaterial extends DCellRender {
 

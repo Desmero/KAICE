@@ -2,9 +2,9 @@ package fr.kaice.model.raw;
 
 import java.awt.Color;
 
-import fr.kaice.tools.DColor;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
+import fr.kaice.tools.generic.DColor;
 
 /**
  * This class represent one kind of basic item.

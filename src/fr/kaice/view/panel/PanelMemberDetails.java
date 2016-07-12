@@ -21,8 +21,8 @@ import com.toedter.calendar.JDateChooser;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.membre.Member;
 import fr.kaice.model.membre.MemberCollection;
-import fr.kaice.tools.DFormat;
 import fr.kaice.tools.IdSpinner;
+import fr.kaice.tools.generic.DFormat;
 
 public class PanelMemberDetails extends JPanel {
 
