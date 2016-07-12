@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
+import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableModel;
 
@@ -121,19 +122,36 @@ public class PurchasedProductCollection extends DTableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		PurchasedProduct prod = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			return alphabeticList.get(rowIndex).getId();
+			return prod.getId();
 		case 1:
-			return alphabeticList.get(rowIndex).getName();
+			return prod.getName();
 		case 2:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPrice());
+			return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
 		case 3:
-			return alphabeticList.get(rowIndex).getNumberBought();
+			return prod.getNumberBought();
 		case 4:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getTotalPrice());
+			return DMonetarySpinner.intToDouble(prod.getTotalPrice());
 		default:
 			return null;
+		}
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		PurchasedProduct prod = alphabeticList.get(rowIndex);
+		switch (columnIndex) {
+		case 1:
+			prod.setName((String) aValue);
+			break;
+		case 2:
+			prod.setPurchasedPrice(DMonetarySpinner.doubleToInt((double) aValue));
+			break;
+		case 3:
+			prod.setNumberBought((int) aValue);
+			break;
 		}
 	}
 

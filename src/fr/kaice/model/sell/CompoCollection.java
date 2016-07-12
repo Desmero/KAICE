@@ -61,7 +61,7 @@ public class CompoCollection extends DTableModel {
 		ArrayList<Integer> list = new ArrayList<>(composition.keySet());
 		for (int id : list) {
 			RawMaterial mat = KaiceModel.getRawMatCollection().getMat(id);
-			price += mat.getPrice() * composition.get(id);
+			price += mat.getPurchasedPrice() * composition.get(id);
 		}
 		return price;
 	}
@@ -91,7 +91,7 @@ public class CompoCollection extends DTableModel {
 			case 1:
 				return KaiceModel.getRawMatCollection().getMat(id).getName();
 			case 2:
-				int price = KaiceModel.getRawMatCollection().getMat(id).getPrice();
+				int price = KaiceModel.getRawMatCollection().getMat(id).getPurchasedPrice();
 				return DMonetarySpinner.intToDouble(price);
 			case 3:
 				return composition.get(id);

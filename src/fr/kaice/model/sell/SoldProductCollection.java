@@ -155,7 +155,7 @@ public class SoldProductCollection extends DTableModel {
 		case 1:
 			return prod.getName();
 		case 2:
-			return DMonetarySpinner.intToDouble(prod.getPrice());
+			return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
 		case 3:
 			return DMonetarySpinner.intToDouble(prod.getBuyPrice());
 		case 4:
