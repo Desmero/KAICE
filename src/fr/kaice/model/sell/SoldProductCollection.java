@@ -1,5 +1,6 @@
 package fr.kaice.model.sell;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -7,9 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.raw.CellRenderRawMaterial;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.sell.SoldProduct.prodType;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
+import fr.kaice.tools.generic.DCellRender;
+import fr.kaice.tools.generic.DColor;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableModel;
 
@@ -113,7 +117,16 @@ public class SoldProductCollection extends DTableModel {
 	public SoldProduct getSoldProduct(int id) {
 		return map.get(id);
 	}
-	
+
+	public Color getRowColor(int row) {
+		Integer qtty = alphabeticList.get(row).getQuantity();
+		if (qtty != null && qtty == 0) {
+			return DColor.RED;
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Update the alphabetical sorted list.
 	 */
@@ -168,6 +181,14 @@ public class SoldProductCollection extends DTableModel {
 			break;
 		}
 		KaiceModel.update();
+	}
+
+	@Override
+	public DCellRender getColumnModel(int col) {
+		if (col == 5) {
+			return new CellRenderSoldProduct(colClass[col], colEdit[col], totalLine);
+		}
+		return new DCellRender(colClass[col], colEdit[col], totalLine);
 	}
 
 }

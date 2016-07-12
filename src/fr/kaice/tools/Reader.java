@@ -49,8 +49,8 @@ public class Reader {
 			line = d.readLine();
 			while (line != null) {
 				data = line.split(KFileParameter.SEPARATOR);
-				coll.addReadRawMaterial(id, data[0], Integer.parseInt(data[1]), Integer.parseInt(data[2]),
-						Integer.parseInt(data[3]));
+				coll.addReadRawMaterial(id, data[0], Integer.parseInt(data[1]), Integer.parseInt(data[3]),
+						Integer.parseInt(data[2]));
 				id++;
 				line = d.readLine();
 			}

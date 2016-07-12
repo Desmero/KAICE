@@ -123,7 +123,7 @@ public class RawMaterialCollection extends DTableModel {
 	public Color getRowColor(int row) {
 		return alphabeticList.get(row).getColor();
 	}
-	
+
 	public RawMaterial getMat(int id) {
 		return map.get(id);
 	}
@@ -136,7 +136,7 @@ public class RawMaterialCollection extends DTableModel {
 		}
 		return null;
 	}
-	
+
 	public RawMaterial[] getAllRawMaterial() {
 		RawMaterial[] tab = new RawMaterial[alphabeticList.size()];
 		int i = 0;
@@ -145,7 +145,7 @@ public class RawMaterialCollection extends DTableModel {
 		}
 		return tab;
 	}
-	
+
 	@Override
 	public int getRowCount() {
 		return map.size();
@@ -166,6 +166,22 @@ public class RawMaterialCollection extends DTableModel {
 			return alphabeticList.get(rowIndex).getAlert();
 		default:
 			return null;
+		}
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		RawMaterial mat = alphabeticList.get(rowIndex);
+		switch (columnIndex) {
+		case 1:
+			mat.setName((String) aValue);
+			break;
+		case 2:
+			mat.setStock((int) aValue);
+			break;
+		case 4:
+			mat.setAlert((int) aValue);
+			break;
 		}
 	}
 
