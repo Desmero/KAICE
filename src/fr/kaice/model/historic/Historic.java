@@ -3,6 +3,7 @@ package fr.kaice.model.historic;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.kaice.tools.cells.CellRenderTransaction;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DMonetarySpinner;

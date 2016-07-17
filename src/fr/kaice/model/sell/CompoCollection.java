@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.raw.CellRenderRawMaterial;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
+import fr.kaice.tools.cells.CellRenderRawMaterial;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableModel;
@@ -61,7 +61,7 @@ public class CompoCollection extends DTableModel {
 		ArrayList<Integer> list = new ArrayList<>(composition.keySet());
 		for (int id : list) {
 			RawMaterial mat = KaiceModel.getRawMatCollection().getMat(id);
-			price += mat.getPurchasedPrice() * composition.get(id);
+			price += mat.getSalePrice() * composition.get(id);
 		}
 		return price;
 	}
@@ -91,7 +91,7 @@ public class CompoCollection extends DTableModel {
 			case 1:
 				return KaiceModel.getRawMatCollection().getMat(id).getName();
 			case 2:
-				int price = KaiceModel.getRawMatCollection().getMat(id).getPurchasedPrice();
+				int price = KaiceModel.getRawMatCollection().getMat(id).getSalePrice();
 				return DMonetarySpinner.intToDouble(price);
 			case 3:
 				return composition.get(id);

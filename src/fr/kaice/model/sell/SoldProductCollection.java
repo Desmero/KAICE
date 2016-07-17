@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.raw.CellRenderRawMaterial;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.sell.SoldProduct.prodType;
+import fr.kaice.tools.cells.CellRenderRawMaterial;
+import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DColor;
@@ -118,6 +119,16 @@ public class SoldProductCollection extends DTableModel {
 		return map.get(id);
 	}
 
+	public ArrayList<Integer> getAvilableProduct(SoldProduct.prodType type) {
+		ArrayList<Integer> coll = new ArrayList<>();
+		for (SoldProduct prod : alphabeticList) {
+			if (prod.getType() == type) {
+				coll.add(prod.getId());
+			}
+		}
+		return coll;
+	}
+	
 	public Color getRowColor(int row) {
 		Integer qtty = alphabeticList.get(row).getQuantity();
 		if (qtty != null && qtty == 0) {
@@ -155,7 +166,7 @@ public class SoldProductCollection extends DTableModel {
 		case 1:
 			return prod.getName();
 		case 2:
-			return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
+			return DMonetarySpinner.intToDouble(prod.getSalePrice());
 		case 3:
 			return DMonetarySpinner.intToDouble(prod.getBuyPrice());
 		case 4:

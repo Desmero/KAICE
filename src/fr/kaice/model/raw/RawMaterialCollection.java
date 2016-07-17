@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.cells.CellRenderRawMaterial;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DMonetarySpinner;
@@ -165,7 +166,7 @@ public class RawMaterialCollection extends DTableModel {
 		case 2:
 			return alphabeticList.get(rowIndex).getStock();
 		case 3:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPurchasedPrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getSalePrice());
 		case 4:
 			return alphabeticList.get(rowIndex).getAlert();
 		default:

@@ -31,7 +31,7 @@ public class PanelSellProductDetails extends JPanel {
 		JLabel quantity = new JLabel("Quantité : " + prod.getQuantity());
 		quantity.setHorizontalAlignment(JLabel.CENTER);
 		JLabel price = new JLabel(
-				"Prix : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getPurchasedPrice())) + " €");
+				"Prix : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getSalePrice())) + " €");
 		price.setHorizontalAlignment(JLabel.CENTER);
 		JLabel cost = new JLabel(
 				"Coût : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getBuyPrice())) + " €");

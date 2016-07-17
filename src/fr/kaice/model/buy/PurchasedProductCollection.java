@@ -129,7 +129,7 @@ public class PurchasedProductCollection extends DTableModel{
 		case 1:
 			return prod.getName();
 		case 2:
-			return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
+			return DMonetarySpinner.intToDouble(prod.getSalePrice());
 		case 3:
 			return prod.getNumberBought();
 		case 4:

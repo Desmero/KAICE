@@ -112,9 +112,9 @@ public class Transaction extends DTableModel {
 			case 2:
 				return prod.getQuantity();
 			case 3:
-				return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
+				return DMonetarySpinner.intToDouble(prod.getSalePrice());
 			case 4:
-				return DMonetarySpinner.intToDouble(prod.getQuantity() * prod.getPurchasedPrice());
+				return DMonetarySpinner.intToDouble(prod.getQuantity() * prod.getSalePrice());
 			default:
 				break;
 			}

@@ -7,6 +7,7 @@ import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.model.historic.Historic;
 import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.model.raw.RawMaterialCollection;
+import fr.kaice.model.sell.CurrentTransaction;
 import fr.kaice.model.sell.SoldProductCollection;
 
 /**
@@ -22,6 +23,9 @@ public class KaiceModel extends Observable {
 	private static RawMaterialCollection rawMatColl = new RawMaterialCollection();
 	private static SoldProductCollection soldProdColl = new SoldProductCollection();
 	private static PurchasedProductCollection purProdColl = new PurchasedProductCollection();
+	
+	private static CurrentTransaction curTran = new CurrentTransaction();
+	
 	private static MemberCollection memColl = new MemberCollection();
 	private static Historic hist = new Historic();
 	
@@ -54,6 +58,10 @@ public class KaiceModel extends Observable {
 
 	public static PurchasedProductCollection getPurchasedProdCollection() {
 		return purProdColl;
+	}
+
+	public static CurrentTransaction getCurrentTransaction() {
+		return curTran;
 	}
 
 	public static MemberCollection getMemberCollection() {

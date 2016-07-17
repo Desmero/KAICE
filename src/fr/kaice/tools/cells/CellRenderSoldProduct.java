@@ -1,4 +1,4 @@
-package fr.kaice.model.sell;
+package fr.kaice.tools.cells;
 
 import java.awt.Color;
 

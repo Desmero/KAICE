@@ -39,7 +39,7 @@ public class PanelMember extends JPanel {
 				}
 			}
 		});
-
+		
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);

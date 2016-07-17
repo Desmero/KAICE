@@ -27,7 +27,7 @@ public class ArchivedProduct implements GenericProduct {
 		return quantity;
 	}
 
-	public int getPurchasedPrice() {
+	public int getSalePrice() {
 		return price;
 	}
 	

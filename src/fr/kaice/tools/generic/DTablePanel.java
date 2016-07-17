@@ -1,6 +1,7 @@
 package fr.kaice.tools.generic;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -13,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 public class DTablePanel extends JPanel implements Observer{
 
@@ -73,13 +76,47 @@ public class DTablePanel extends JPanel implements Observer{
 		}
 	}
 
+	public JTable getTable() {
+		return table;
+	}
+	
 	private void setNumberRow(int row) {
 		Dimension d = table.getPreferredSize();
 		scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * row));
 	}
 	
+	public void setWidth(int width) {
+		Dimension d = this.getPreferredSize();
+		d.setSize(width, d.getHeight());
+		this.setPreferredSize(d);
+		
+	}
+	
 	public int getSelectedRow() {
 		return table.getSelectedRow();
+	}
+	
+	public int[] getSelectedRows() {
+		return table.getSelectedRows();
+	}
+	
+	public void clearSelection() {
+		table.clearSelection();
+	}
+	
+	public void resizeColumnWidth() {
+		final TableColumnModel columnModel = table.getColumnModel();
+		for (int column = 0; column < table.getColumnCount(); column++) {
+			int width = 2; // Min width
+			int widthMax = 175; // Max width
+			for (int row = 0; row < table.getRowCount(); row++) {
+				TableCellRenderer renderer = table.getCellRenderer(row, column);
+				Component comp = table.prepareRenderer(renderer, row, column);
+				width = Math.max(comp.getPreferredSize().width + 1, width);
+				width = Math.min(width, widthMax);
+			}
+			columnModel.getColumn(column).setPreferredWidth(width);
+		}
 	}
 	
 	@Override
@@ -89,6 +126,7 @@ public class DTablePanel extends JPanel implements Observer{
 			table.getColumnModel().getColumn(i)
 			.setCellRenderer(tableModel.getColumnModel(i));
 		}
+		resizeColumnWidth();
 	}
 
 }

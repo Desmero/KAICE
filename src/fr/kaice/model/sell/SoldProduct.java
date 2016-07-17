@@ -120,7 +120,7 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 		this.name = name;
 	}
 
-	public int getPurchasedPrice() {
+	public int getSalePrice() {
 		return salePrice;
 	}
 
@@ -144,7 +144,7 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 		for (Integer id : listRawMat.keySet()) {
 			qtt = listRawMat.get(id);
 			mat = rmColl.getMat(id);
-			price += qtt * mat.getPurchasedPrice();
+			price += qtt * mat.getSalePrice();
 		}
 		return price;
 	}
@@ -210,7 +210,7 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 		case 3:
 			return mat.getStock();
 		case 4:
-			return DMonetarySpinner.intToDouble(mat.getPurchasedPrice());
+			return DMonetarySpinner.intToDouble(mat.getSalePrice());
 		default:
 			return null;
 		}
