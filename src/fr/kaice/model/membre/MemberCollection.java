@@ -19,6 +19,10 @@ public class MemberCollection extends DTableModel {
 	private static final long serialVersionUID = -6044679184177698933L;
 	private Map<Integer, Member> map;
 	private List<Member> orderedList;
+	private Member selectedMember;
+	private int sortCol;
+	private String searchName;
+	private String searchFirstname;
 
 	/**
 	 * Construct a {@link MemberCollection}.
@@ -29,6 +33,10 @@ public class MemberCollection extends DTableModel {
 		colEdit = new Boolean[] { false, false, false };
 		map = new HashMap<>();
 		orderedList = new ArrayList<>();
+		selectedMember = null;
+		sortCol = 0;
+		searchName = "";
+		searchFirstname = "";
 	}
 
 	/**
@@ -100,18 +108,70 @@ public class MemberCollection extends DTableModel {
 		return id + 1;
 	}
 
+	public void setSortColl(String sortColName) {
+		for (int i = 0; i < colNames.length; i++) {
+			if (colNames[i].equals(sortColName)) {
+				sortCol = i;
+				break;
+			}
+		}
+		updateOrderedList();
+	}
+
+	public void setSearchName(String searchName) {
+		this.searchName = searchName;
+		updateOrderedList();
+	}
+
+	public void setSearchFirstname(String searchFirstname) {
+		this.searchFirstname = searchFirstname;
+		updateOrderedList();
+	}
+
 	/**
 	 * Update the sorted list.
 	 */
 	public void updateOrderedList() {
-		ArrayList<Member> newList = new ArrayList<>(map.values());
+		ArrayList<Member> newList = new ArrayList<>();
+		for (Member mem : map.values()) {
+			if (mem.getName().toLowerCase().contains(searchName.toLowerCase())
+					&& mem.getFirstname().toLowerCase().contains(searchFirstname.toLowerCase())) {
+				newList.add(mem);
+			}
+		}
 		newList.sort(new Comparator<Member>() {
 			@Override
 			public int compare(Member arg0, Member arg1) {
-				return arg0.getUserId() - arg1.getUserId();
+				switch (sortCol) {
+				case 1:
+					return arg0.getName().compareTo(arg1.getName());
+				case 2:
+					return arg0.getFirstname().compareTo(arg1.getFirstname());
+				case 0:
+				default:
+					return arg0.getUserId() - arg1.getUserId();
+				}
 			}
 		});
 		orderedList = newList;
+		KaiceModel.update();
+	}
+
+	public Member getSelectedMember() {
+		return selectedMember;
+	}
+
+	public void setSelectedMember(Member mem) {
+		selectedMember = mem;
+	}
+
+	public void setSelectedMember(int row) {
+		selectedMember = getRow(row);
+		KaiceModel.update();
+	}
+
+	public Member getRow(int row) {
+		return orderedList.get(row);
 	}
 
 	public Member getProd(int id) {
@@ -120,7 +180,7 @@ public class MemberCollection extends DTableModel {
 
 	@Override
 	public int getRowCount() {
-		return map.size();
+		return orderedList.size();
 	}
 
 	@Override

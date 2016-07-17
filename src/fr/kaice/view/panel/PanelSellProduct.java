@@ -35,11 +35,13 @@ public class PanelSellProduct extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (table.getSelectedRow() != -1) {
 					SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(table.getSelectedRow());
-					new WindowInform("Article en vente : " + prod.getName(), false, new PanelSellProductDetails(prod));
+					KaiceModel.getInstance().setDetails(new PanelSellProductDetails(prod));
 				}
 			}
 		});
 
+		table.setMultiselection(false);
+		
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);

@@ -31,7 +31,6 @@ public class PanelChoosSoldProduct extends JPanel implements Observer{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private boolean ctrlPressed;
 	private DTablePanel[] tables;
 	private SoldProductDisplayCollection[] tableModels;
 
@@ -41,23 +40,6 @@ public class PanelChoosSoldProduct extends JPanel implements Observer{
 		tables = new DTablePanel[types.length];
 		tableModels = new SoldProductDisplayCollection[types.length];
 
-		ctrlPressed = false;
-		KeyListener ctrlListener = new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				if (arg0.getKeyCode() == 17) {
-					ctrlPressed = false;
-				}
-			}
-
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				if (arg0.getKeyCode() == 17) {
-					ctrlPressed = true;
-				}
-			}
-		};
-
 		class MouseListener extends MouseAdapter {
 			private DTablePanel table;
 			public MouseListener(DTablePanel table) {
@@ -65,7 +47,7 @@ public class PanelChoosSoldProduct extends JPanel implements Observer{
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (!ctrlPressed) {
+				if (!e.isControlDown()) {
 					resetSelectionWithout(table);
 				}
 			}
@@ -97,7 +79,6 @@ public class PanelChoosSoldProduct extends JPanel implements Observer{
 			tableModels[i] = new SoldProductDisplayCollection(types[i]);
 			tables[i] = new DTablePanel(KaiceModel.getInstance(), tableModels[i]);
 			tables[i].getTable().addMouseListener(new MouseListener(tables[i]));
-			tables[i].getTable().addKeyListener(ctrlListener);
 			tables[i].setWidth(20);
 			tables[i].resizeColumnWidth();
 			tablesPanel.add(tables[i]);

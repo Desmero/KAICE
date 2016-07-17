@@ -53,7 +53,7 @@ public class Transaction extends DTableModel {
 		if (m == null) {
 			return "...";
 		}
-		return m.getName() + " " + m.getFirstname();
+		return m.getFullName();
 	}
 	
 	public int getPrice() {

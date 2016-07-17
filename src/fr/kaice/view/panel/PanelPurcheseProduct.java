@@ -31,6 +31,8 @@ public class PanelPurcheseProduct extends JPanel {
 		});
 		view.setEnabled(false);
 		
+		table.setMultiselection(false);
+		
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);

@@ -136,6 +136,10 @@ public class Member {
 		this.firstname = firstname;
 	}
 
+	public String getFullName() {
+		return firstname + " " + name;
+	}
+	
 	public boolean isMale() {
 		return gender;
 	}

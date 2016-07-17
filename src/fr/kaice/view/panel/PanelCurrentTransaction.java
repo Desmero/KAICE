@@ -15,11 +15,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.membre.Member;
 import fr.kaice.model.sell.CurrentTransaction;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DMonetarySpinner;
@@ -36,6 +39,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 	private JLabel cashBack;
 	private JLabel cashBackText;
 	private JLabel total;
+	private JLabel member;
 
 	public PanelCurrentTransaction() {
 		KaiceModel.getInstance().addObserver(this);
@@ -53,6 +57,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 		total = new JLabel("Total : 0.00€");
 		total.setBorder(new LineBorder(Color.RED));
 		total.setFont(new Font(total.getFont().getFontName(), Font.BOLD, 20));
+		member = new JLabel();
 
 		JButton add = new JButton("Ajouter");
 		add.addActionListener(new ActionListener() {
@@ -74,6 +79,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				valid();
+				reset();
 			}
 		});
 		JButton cancel = new JButton("Annuler");
@@ -87,7 +93,9 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 		JPanel tran = new JPanel(new BorderLayout());
 		JPanel ctrl = new JPanel(new BorderLayout());
 
-		JPanel ctrlButton = new JPanel(new GridLayout(2, 2));
+		JPanel ctrlButtonMember = new JPanel(new BorderLayout());
+		JPanel ctrlButton = new JPanel();
+		JPanel ctrlMember = new JPanel();
 		JPanel price = new JPanel(new BorderLayout());
 		JPanel cashPanel = new JPanel(new GridLayout(2, 2));
 		JPanel totalPrice = new JPanel();
@@ -99,16 +107,24 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 		tran.add(ctrl, BorderLayout.NORTH);
 		tran.add(currentTran, BorderLayout.CENTER);
 
-		ctrl.add(ctrlButton, BorderLayout.CENTER);
+		ctrl.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.NORTH);
+		ctrl.add(ctrlButtonMember, BorderLayout.CENTER);
 		ctrl.add(price, BorderLayout.EAST);
 
+		ctrlButtonMember.add(ctrlButton, BorderLayout.NORTH);
+		ctrlButtonMember.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.CENTER);
+		ctrlButtonMember.add(ctrlMember, BorderLayout.SOUTH);
+		
 		ctrlButton.add(add);
 		ctrlButton.add(rem);
 		ctrlButton.add(valide);
 		ctrlButton.add(cancel);
 
+		ctrlMember.add(member);
+		
 		price.add(cashPanel, BorderLayout.CENTER);
-		price.add(totalPrice, BorderLayout.SOUTH);
+		price.add(totalPrice, BorderLayout.EAST);
+		price.add(new JSeparator(SwingConstants.VERTICAL), BorderLayout.WEST);
 
 		cashPanel.add(new JLabel("Espece : "));
 		cashPanel.add(cash);
@@ -141,8 +157,10 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 	}
 
 	private void reset() {
-		cash.setValue(DFormat.MONEY_FORMAT.format(0.0));
+		cash.setValue(0.);
+		// cashBack.setText(DFormat.MONEY_FORMAT.format(0.0));
 		KaiceModel.getCurrentTransaction().reset();
+		KaiceModel.update();
 	}
 
 	private void removeProduct() {
@@ -171,6 +189,12 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
 			cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(surp)) + " €");
 			cashBack.setForeground(Color.LIGHT_GRAY);
 			cashBackText.setForeground(Color.LIGHT_GRAY);
+		}
+		Member mem = KaiceModel.getMemberCollection().getSelectedMember();
+		if (mem == null) {
+			member.setText("Client : ... (0)");
+		} else {
+			member.setText("Client : " + mem.getFullName() + " (" + mem.getUserId() + ")");
 		}
 	}
 

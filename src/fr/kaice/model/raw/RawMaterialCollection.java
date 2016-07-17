@@ -34,9 +34,9 @@ public class RawMaterialCollection extends DTableModel {
 	 * Construct a {@link RawMaterialCollection}.
 	 */
 	public RawMaterialCollection() {
-		colNames = new String[] { "Id", "Nom", "Stock", "Prix", "Alert" };
-		colClass = new Class[] { Integer.class, String.class, Integer.class, Double.class, Integer.class };
-		colEdit = new Boolean[] { false, true, true, false, true };
+		colNames = new String[] { "Nom", "Stock", "Prix", "Alert" };
+		colClass = new Class[] { String.class, Integer.class, Double.class, Integer.class };
+		colEdit = new Boolean[] { true, true, false, true };
 		map = new HashMap<>();
 		alphabeticList = new ArrayList<>();
 	}
@@ -93,6 +93,12 @@ public class RawMaterialCollection extends DTableModel {
 		addRawMaterial(newMaterial);
 	}
 
+	public void sale(int id, int number) {
+		RawMaterial mat = map.get(id);
+		mat.consumption(number);
+		KaiceModel.update();
+	}
+	
 	/**
 	 * Auto-generate a new free identification number for this collection of
 	 * {@link RawMaterial}.
@@ -160,14 +166,12 @@ public class RawMaterialCollection extends DTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return alphabeticList.get(rowIndex).getId();
-		case 1:
 			return alphabeticList.get(rowIndex).getName();
-		case 2:
+		case 1:
 			return alphabeticList.get(rowIndex).getStock();
-		case 3:
+		case 2:
 			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getSalePrice());
-		case 4:
+		case 3:
 			return alphabeticList.get(rowIndex).getAlert();
 		default:
 			return null;
@@ -178,13 +182,13 @@ public class RawMaterialCollection extends DTableModel {
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		RawMaterial mat = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
-		case 1:
+		case 0:
 			mat.setName((String) aValue);
 			break;
-		case 2:
+		case 1:
 			mat.setStock((int) aValue);
 			break;
-		case 4:
+		case 3:
 			mat.setAlert((int) aValue);
 			break;
 		}
@@ -192,7 +196,7 @@ public class RawMaterialCollection extends DTableModel {
 
 	@Override
 	public DCellRender getColumnModel(int col) {
-		if (col == 2) {
+		if (col == 1) {
 			return new CellRenderRawMaterial(colClass[col], colEdit[col], totalLine);
 		}
 		return new DCellRender(colClass[col], colEdit[col], totalLine);

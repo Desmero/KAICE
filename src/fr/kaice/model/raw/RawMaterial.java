@@ -132,4 +132,8 @@ public class RawMaterial implements GenericProduct {
 		return col;
 	}
 
+	public void consumption(int number) {
+		stock -= number;
+	}
+
 }

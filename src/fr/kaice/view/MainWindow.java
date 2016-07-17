@@ -1,38 +1,42 @@
 package fr.kaice.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import fr.kaice.model.KaiceModel;
 import fr.kaice.view.panel.PanelCurrentTransaction;
 import fr.kaice.view.panel.PanelHistoric;
 import fr.kaice.view.panel.PanelMember;
-import fr.kaice.view.panel.PanelMemberDetails;
-import fr.kaice.view.panel.PanelMemberLightDetails;
+import fr.kaice.view.panel.PanelOrder;
 import fr.kaice.view.panel.PanelPurcheseProduct;
 import fr.kaice.view.panel.PanelRawMaterial;
 import fr.kaice.view.panel.PanelSellProduct;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame implements Observer{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4647074488941101569L;
-
+	private JPanel centerSouth;
+	
 	public MainWindow() {
 		super("KAICE v2.0");
+		
+		KaiceModel.getInstance().addObserver(this);
 		
 		JPanel center = new JPanel(new BorderLayout());
 		JPanel east = new JPanel(new BorderLayout());
 		JPanel west = new JPanel(new BorderLayout());
 		
 		JPanel centerNorth = new JPanel(new BorderLayout());
-		JPanel centerSouth = new JPanel(new BorderLayout());
-		JPanel eastNorth = new JPanel(new BorderLayout());
-		JPanel eastSouth = new JPanel(new BorderLayout());
+		centerSouth = new JPanel(new BorderLayout());
 		JPanel westNorth = new JPanel(new BorderLayout());
 		JPanel westSouth = new JPanel(new BorderLayout());
 		
@@ -41,10 +45,8 @@ public class MainWindow extends JFrame{
 		this.add(east, BorderLayout.EAST);
 		this.add(west, BorderLayout.WEST);
 
-		center.add(centerNorth, BorderLayout.NORTH);
-		center.add(centerSouth, BorderLayout.CENTER);
-		east.add(eastNorth, BorderLayout.NORTH);
-		east.add(eastSouth, BorderLayout.CENTER);
+		center.add(centerNorth, BorderLayout.CENTER);
+		center.add(centerSouth, BorderLayout.SOUTH);
 		west.add(westNorth, BorderLayout.NORTH);
 		west.add(westSouth, BorderLayout.CENTER);
 		
@@ -54,20 +56,32 @@ public class MainWindow extends JFrame{
 		JTabbedPane tablePaneSouth = new JTabbedPane();
 		tablePaneSouth.add("Produits bruts", new PanelRawMaterial());
 		tablePaneSouth.add("Articles en vente", new PanelSellProduct());
-		tablePaneSouth.add("Historic", new PanelHistoric());
-		JPanel member = new PanelMemberDetails(0);
-		JPanel memberLight = new PanelMemberLightDetails(0);
+		tablePaneSouth.add("Historique", new PanelHistoric());
 		PanelMember memberColl = new PanelMember();
+		PanelOrder order = new PanelOrder();
+		JPanel details = KaiceModel.getInstance().getDetails();
 		
-		centerNorth.add(tablePaneNorth, BorderLayout.NORTH);
-		centerSouth.add(member, BorderLayout.CENTER);
-		// westNorth
+		centerNorth.add(tablePaneNorth, BorderLayout.CENTER);
+		centerSouth.add(details, BorderLayout.CENTER);
+		westNorth.add(order, BorderLayout.CENTER);
 		westSouth.add(tablePaneSouth, BorderLayout.CENTER);
-		eastNorth.add(memberLight, BorderLayout.NORTH);
-		eastSouth.add(memberColl, BorderLayout.CENTER);
+		east.add(memberColl, BorderLayout.CENTER);
+		
+		Dimension d = new Dimension(1600, 900);
+		setPreferredSize(d);
 		
 		pack();
 		setVisible(true);
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		setPreferredSize(getSize());
+		JPanel details = KaiceModel.getInstance().getDetails();
+		centerSouth.removeAll();
+		centerSouth.add(details, BorderLayout.CENTER);
+		centerSouth.repaint();
+		pack();
 	}
 	
 }

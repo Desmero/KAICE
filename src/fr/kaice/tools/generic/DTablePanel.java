@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -38,6 +39,14 @@ public class DTablePanel extends JPanel implements Observer{
 		setNumberRow(row);
 	}
 
+	public void setMultiselection(boolean multi) {
+		if (multi) {
+			table.setSelectionMode(DefaultListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		} else {
+			table.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+		}
+	}
+	
 	private void construct(DTableModel tableModel) {
 		this.setLayout(new BorderLayout());
 		this.tableModel = tableModel;

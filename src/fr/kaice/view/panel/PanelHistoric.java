@@ -30,11 +30,13 @@ public class PanelHistoric extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (table.getSelectedRow() != -1) {
 					Transaction tran = KaiceModel.getHistoric().getTransaction(table.getSelectedRow());
-					new WindowInform("Transaction", false, new PanelTransaction(tran));
+					KaiceModel.getInstance().setDetails(new PanelTransaction(tran));
 				}
 			}
 		});
 
+		table.setMultiselection(false);
+		
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);

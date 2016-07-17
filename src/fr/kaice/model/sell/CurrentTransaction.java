@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.historic.Transaction.transactionType;
+import fr.kaice.model.order.Order;
+import fr.kaice.model.order.OrderCollection;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableModel;
 
@@ -38,15 +41,21 @@ public class CurrentTransaction extends DTableModel {
 	}
 
 	public void validTransaction(int cashIn) {
-		// TODO get Member ID
-		Transaction tran = new Transaction(0, transactionType.SELL, getPrice(), cashIn, new Date());
+		OrderCollection ordColl = KaiceModel.getOrderCollection();
+		int idMember = KaiceModel.getMemberCollection().getSelectedMember().getUserId();
+		Transaction tran = new Transaction(idMember, transactionType.SELL, getPrice(), cashIn, new Date());
 		SoldProductCollection prodColl = KaiceModel.getSoldProdCollection();
 		for (Entry<Integer, Integer> article : listArticles.entrySet()) {
-			int id = article.getKey();
-			SoldProduct prod = prodColl.getSoldProduct(id);
-			// TODO finirr la fonction
-			
+			int idProd = article.getKey();
+			SoldProduct prod = prodColl.getSoldProduct(idProd);
+			prod.sale(article.getValue());
+			ArchivedProduct archProd = prod.archivedProduct(article.getValue()); 
+			tran.addArchivedProduct(archProd);
+			Order ord = new Order(idMember, idProd);
+			ordColl.addOrder(ord);
 		}
+		KaiceModel.getHistoric().addTransaction(tran);
+		KaiceModel.update();
 	}
 
 	public void reset() {

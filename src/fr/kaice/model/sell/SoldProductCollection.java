@@ -39,9 +39,9 @@ public class SoldProductCollection extends DTableModel {
 	 * Construct a {@link SoldProductCollection}.
 	 */
 	public SoldProductCollection() {
-		colNames = new String[] { "Id", "Nom", "Prix de vente", "Prix d'achat", "Bénéfice", "Quantité disponible" };
-		colClass = new Class[] { Integer.class, String.class, Double.class, Double.class, Double.class, Integer.class };
-		colEdit = new Boolean[] { false, true, true, false, false, false };
+		colNames = new String[] { "Nom", "Prix de vente", "Prix d'achat", "Bénéfice", "Quantité disponible" };
+		colClass = new Class[] { String.class, Double.class, Double.class, Double.class, Integer.class };
+		colEdit = new Boolean[] { true, true, false, false, false };
 		map = new HashMap<>();
 		alphabeticList = new ArrayList<>();
 	}
@@ -162,16 +162,14 @@ public class SoldProductCollection extends DTableModel {
 		SoldProduct prod = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			return prod.getId();
-		case 1:
 			return prod.getName();
-		case 2:
+		case 1:
 			return DMonetarySpinner.intToDouble(prod.getSalePrice());
-		case 3:
+		case 2:
 			return DMonetarySpinner.intToDouble(prod.getBuyPrice());
-		case 4:
+		case 3:
 			return DMonetarySpinner.intToDouble(prod.getProfit());
-		case 5:
+		case 4:
 			return prod.getQuantity();
 		default:
 			return null;
@@ -182,10 +180,10 @@ public class SoldProductCollection extends DTableModel {
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		SoldProduct prod = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
-		case 1:
+		case 0:
 			prod.setName((String) aValue);
 			break;
-		case 2:
+		case 1:
 			prod.setSalePrice(DMonetarySpinner.doubleToInt((double) aValue));
 			break;
 		default:
@@ -196,7 +194,7 @@ public class SoldProductCollection extends DTableModel {
 
 	@Override
 	public DCellRender getColumnModel(int col) {
-		if (col == 5) {
+		if (col == 4) {
 			return new CellRenderSoldProduct(colClass[col], colEdit[col], totalLine);
 		}
 		return new DCellRender(colClass[col], colEdit[col], totalLine);

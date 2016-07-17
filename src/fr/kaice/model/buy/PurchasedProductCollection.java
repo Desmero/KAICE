@@ -24,9 +24,9 @@ public class PurchasedProductCollection extends DTableModel{
 	 * Construct a {@link PurchasedProductCollection}.
 	 */
 	public PurchasedProductCollection() {
-		colNames = new String[] { "Id", "Nom", "Prix unitaire", "Quantité", "Prix total" };
-		colClass = new Class[] { Integer.class, String.class, Double.class, Integer.class, Double.class };
-		colEdit = new Boolean[] { false, true, true, true, false };
+		colNames = new String[] { "Nom", "Prix unitaire", "Quantité", "Prix total" };
+		colClass = new Class[] { String.class, Double.class, Integer.class, Double.class };
+		colEdit = new Boolean[] { true, true, true, false };
 		map = new HashMap<>();
 		alphabeticList = new ArrayList<>();
 	}
@@ -125,14 +125,12 @@ public class PurchasedProductCollection extends DTableModel{
 		PurchasedProduct prod = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			return prod.getId();
-		case 1:
 			return prod.getName();
-		case 2:
+		case 1:
 			return DMonetarySpinner.intToDouble(prod.getSalePrice());
-		case 3:
+		case 2:
 			return prod.getNumberBought();
-		case 4:
+		case 3:
 			return DMonetarySpinner.intToDouble(prod.getTotalPrice());
 		default:
 			return null;
@@ -143,13 +141,13 @@ public class PurchasedProductCollection extends DTableModel{
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		PurchasedProduct prod = alphabeticList.get(rowIndex);
 		switch (columnIndex) {
-		case 1:
+		case 0:
 			prod.setName((String) aValue);
 			break;
-		case 2:
+		case 1:
 			prod.setPurchasedPrice(DMonetarySpinner.doubleToInt((double) aValue));
 			break;
-		case 3:
+		case 2:
 			prod.setNumberBought((int) aValue);
 			break;
 		}

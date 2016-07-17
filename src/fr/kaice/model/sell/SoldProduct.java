@@ -3,8 +3,10 @@ package fr.kaice.model.sell;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.tools.GenericProduct;
@@ -76,6 +78,17 @@ public class SoldProduct extends DTableModel implements GenericProduct {
 		this.type = type;
 	}
 
+	public void sale(int number) {
+		RawMaterialCollection coll = KaiceModel.getRawMatCollection();
+		for (Entry<Integer, Integer> entry : listRawMat.entrySet()) {
+			coll.sale(entry.getKey(), entry.getValue() * number);
+		}
+	}
+	
+	public ArchivedProduct archivedProduct(int number) {
+		return new ArchivedProduct(name, number, salePrice * number);
+	}
+	
 	/**
 	 * Return the quantity of a {@link RawMaterial} that need this product.
 	 * Return 0 if the {@link RawMaterial} don't exist.
