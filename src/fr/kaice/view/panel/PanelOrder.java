@@ -29,8 +29,8 @@ public class PanelOrder extends JPanel {
 		valid.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int row = table.getSelectedRow();
-				KaiceModel.getOrderCollection().validOrdre(row);
+				int[] rows = table.getSelectedRows();
+				KaiceModel.getOrderCollection().validOrdres(rows);
 			}
 		});
 		rem.addActionListener(new ActionListener() {
@@ -53,8 +53,6 @@ public class PanelOrder extends JPanel {
 			}
 		});
 
-		table.setMultiselection(false);
-		
 		this.setLayout(new BorderLayout());
 		this.add(table, BorderLayout.CENTER);
 		this.add(ctrl, BorderLayout.SOUTH);

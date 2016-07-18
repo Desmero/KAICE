@@ -97,7 +97,7 @@ public class RawMaterial implements GenericProduct {
 		return id;
 	}
 
-	public int getSalePrice() {
+	public int getPurchasedPrice() {
 		return unitPrice;
 	}
 

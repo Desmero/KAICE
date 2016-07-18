@@ -18,4 +18,9 @@ public class Order {
 		return idProd;
 	}
 
+	@Override
+	protected Order clone() {
+		return new Order(idMember, idProd);
+	}
+
 }

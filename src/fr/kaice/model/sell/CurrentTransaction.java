@@ -52,7 +52,7 @@ public class CurrentTransaction extends DTableModel {
 			ArchivedProduct archProd = prod.archivedProduct(article.getValue()); 
 			tran.addArchivedProduct(archProd);
 			Order ord = new Order(idMember, idProd);
-			ordColl.addOrder(ord);
+			ordColl.addOrder(ord, article.getValue());
 		}
 		KaiceModel.getHistoric().addTransaction(tran);
 		KaiceModel.update();
@@ -67,7 +67,7 @@ public class CurrentTransaction extends DTableModel {
 		int price = 0;
 		for (Integer id : listArticles.keySet()) {
 			SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(id);
-			price += prod.getSalePrice() * listArticles.get(id);
+			price += prod.getPurchasedPrice() * listArticles.get(id);
 		}
 		return price;
 	}
@@ -110,14 +110,24 @@ public class CurrentTransaction extends DTableModel {
 			case 0:
 				return prod.getName();
 			case 1:
-				return DMonetarySpinner.intToDouble(prod.getSalePrice());
+				return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
 			case 2:
 				return listArticles.get(id);
 			case 3:
-				return DMonetarySpinner.intToDouble(prod.getSalePrice() * listArticles.get(id));
+				return DMonetarySpinner.intToDouble(prod.getPurchasedPrice() * listArticles.get(id));
 			default:
 				return null;
 			}
+		}
+	}
+
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		if (rowIndex != listArticles.size() && columnIndex == 2) {
+			ArrayList<Integer> list = new ArrayList<>(listArticles.keySet());
+			int id = list.get(rowIndex);
+			listArticles.put(id, (Integer) aValue);
+			KaiceModel.update();
 		}
 	}
 

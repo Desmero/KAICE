@@ -14,7 +14,8 @@ import fr.kaice.view.panel.PanelCurrentTransaction;
 import fr.kaice.view.panel.PanelHistoric;
 import fr.kaice.view.panel.PanelMember;
 import fr.kaice.view.panel.PanelOrder;
-import fr.kaice.view.panel.PanelPurcheseProduct;
+import fr.kaice.view.panel.PanelPurchasedProduct;
+import fr.kaice.view.panel.PanelPurchasedProductLight;
 import fr.kaice.view.panel.PanelRawMaterial;
 import fr.kaice.view.panel.PanelSellProduct;
 
@@ -52,10 +53,11 @@ public class MainWindow extends JFrame implements Observer{
 		
 		JTabbedPane tablePaneNorth = new JTabbedPane();
 		tablePaneNorth.add("Vente", new PanelCurrentTransaction());
-		tablePaneNorth.add("Articles achetés", new PanelPurcheseProduct());
+		tablePaneNorth.add("Achats", new PanelPurchasedProduct());
 		JTabbedPane tablePaneSouth = new JTabbedPane();
 		tablePaneSouth.add("Produits bruts", new PanelRawMaterial());
 		tablePaneSouth.add("Articles en vente", new PanelSellProduct());
+		tablePaneSouth.add("Articles achetés", new PanelPurchasedProductLight());
 		tablePaneSouth.add("Historique", new PanelHistoric());
 		PanelMember memberColl = new PanelMember();
 		PanelOrder order = new PanelOrder();

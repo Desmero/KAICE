@@ -28,8 +28,10 @@ public class OrderCollection extends DTableModel {
 		list = new ArrayList<>();
 	}
 
-	public void addOrder(Order ordre) {
-		list.add(ordre);
+	public void addOrder(Order ordre, int number) {
+		for (int i = 0; i < number; i++) {
+			list.add(ordre.clone());
+		}
 		KaiceModel.update();
 	}
 
@@ -37,9 +39,9 @@ public class OrderCollection extends DTableModel {
 		Order order = list.get(row);
 		list.remove(row);
 		SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(order.getIdProd());
-		Transaction tran = new Transaction(order.getIdMember(), transactionType.CANCEL, -prod.getSalePrice(), -cashBack,
+		Transaction tran = new Transaction(order.getIdMember(), transactionType.CANCEL, -prod.getPurchasedPrice(), -cashBack,
 				new Date());
-		ArchivedProduct archProd = new ArchivedProduct(prod.getName(), 1, -prod.getSalePrice());
+		ArchivedProduct archProd = new ArchivedProduct(prod.getName(), 1, -prod.getPurchasedPrice());
 		tran.addArchivedProduct(archProd);
 		KaiceModel.getHistoric().addTransaction(tran);
 		KaiceModel.update();
@@ -47,6 +49,13 @@ public class OrderCollection extends DTableModel {
 
 	public void validOrdre(int row) {
 		list.remove(row);
+		KaiceModel.update();
+	}
+
+	public void validOrdres(int[] rows) {
+		for (int i = rows.length; i > 0; i--) {
+			list.remove(i);
+		}
 		KaiceModel.update();
 	}
 

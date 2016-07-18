@@ -170,7 +170,7 @@ public class RawMaterialCollection extends DTableModel {
 		case 1:
 			return alphabeticList.get(rowIndex).getStock();
 		case 2:
-			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getSalePrice());
+			return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPurchasedPrice());
 		case 3:
 			return alphabeticList.get(rowIndex).getAlert();
 		default:

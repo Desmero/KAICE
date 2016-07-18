@@ -44,7 +44,7 @@ public class SoldProductDisplayCollection extends DTableModel {
 		case 0:
 			return prod.getName();
 		case 1:
-			return DMonetarySpinner.intToDouble(prod.getSalePrice());
+			return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
 		case 2:
 			return prod.getQuantity();
 		}

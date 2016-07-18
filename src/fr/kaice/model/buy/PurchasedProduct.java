@@ -44,7 +44,7 @@ public class PurchasedProduct implements GenericProduct {
 		this.numberBought = 0;
 	}
 
-	public int getSalePrice() {
+	public int getPurchasedPrice() {
 		return purchasedPrice;
 	}
 
@@ -69,7 +69,7 @@ public class PurchasedProduct implements GenericProduct {
 	}
 
 	public int getTotalPrice() {
-		return getNumberBought() * getSalePrice();
+		return getNumberBought() * getPurchasedPrice();
 	}
 	
 	public int getId() {

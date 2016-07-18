@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DMonetarySpinner;
@@ -83,6 +84,14 @@ public class PurchasedProductCollection extends DTableModel{
 		map.put(id, newProduct);
 	}
 
+	public int getTotalPrice() {
+		int price = 0;
+		for (PurchasedProduct prod : alphabeticList ) {
+			price += prod.getTotalPrice();
+		}
+		return price;
+	}
+	
 	/**
 	 * Auto-generate a new free identification number for this collection of
 	 * {@link PurchasedProduct}.
@@ -127,7 +136,7 @@ public class PurchasedProductCollection extends DTableModel{
 		case 0:
 			return prod.getName();
 		case 1:
-			return DMonetarySpinner.intToDouble(prod.getSalePrice());
+			return DMonetarySpinner.intToDouble(prod.getPurchasedPrice());
 		case 2:
 			return prod.getNumberBought();
 		case 3:
@@ -151,6 +160,7 @@ public class PurchasedProductCollection extends DTableModel{
 			prod.setNumberBought((int) aValue);
 			break;
 		}
+		KaiceModel.update();
 	}
 
 }

@@ -6,7 +6,7 @@ import javax.swing.JTabbedPane;
 import fr.kaice.view.panel.PanelCurrentTransaction;
 import fr.kaice.view.panel.PanelHistoric;
 import fr.kaice.view.panel.PanelMember;
-import fr.kaice.view.panel.PanelPurcheseProduct;
+import fr.kaice.view.panel.PanelPurchasedProduct;
 import fr.kaice.view.panel.PanelRawMaterial;
 import fr.kaice.view.panel.PanelSellProduct;
 
@@ -24,7 +24,7 @@ public class MainWindow2 extends JFrame{
 		jtb1.add("Vente", new PanelCurrentTransaction());
 		jtb1.add("Produits bruts", new PanelRawMaterial());
 		jtb1.add("Articles en vente", new PanelSellProduct());
-		jtb1.add("Articles achetés", new PanelPurcheseProduct());
+		jtb1.add("Articles achetés", new PanelPurchasedProduct());
 		jtb1.add("Membres", new PanelMember());
 //		jtb1.add("E-Mails", new PanelEMailList());
 		jtb1.add("Historic", new PanelHistoric());
