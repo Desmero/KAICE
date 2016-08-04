@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -34,8 +35,8 @@ public class PanelNewSellProduct extends JPanel {
 
 	public PanelNewSellProduct() {
 		JButton accept = new JButton("Valider");
-		JButton add = new JButton("=>");
-		JButton rem = new JButton("<=");
+		JButton add = new JButton();
+		JButton rem = new JButton();
 		JTextField name = new JTextField();
 		DMonetarySpinner price = new DMonetarySpinner(0.1);
 		JComboBox<SoldProduct.prodType> type = new JComboBox<SoldProduct.prodType>();
@@ -51,7 +52,7 @@ public class PanelNewSellProduct extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				if (e.getClickCount() ==2) {
+				if (e.getClickCount() % 2 == 0) {
 					int[] val = list.getSelectedIndices();
 					for (int v : val) {
 						tmCompo.addRawMaterial(items[v]);
@@ -61,6 +62,7 @@ public class PanelNewSellProduct extends JPanel {
 			}
 		});
 		
+		add.setIcon(new ImageIcon("icon/rightArrow.png"));
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -71,6 +73,7 @@ public class PanelNewSellProduct extends JPanel {
 				update();
 			}
 		});
+		rem.setIcon(new ImageIcon("icon/leftArrow.png"));
 		rem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -98,6 +101,7 @@ public class PanelNewSellProduct extends JPanel {
 		JPanel param = new JPanel();
 		JPanel ctrl = new JPanel();
 		JPanel compo = new JPanel(new BorderLayout());
+		JPanel ctrlCompoDisp = new JPanel();
 		JPanel ctrlCompo = new JPanel();
 		ctrlCompo.setLayout(new BoxLayout(ctrlCompo, BoxLayout.Y_AXIS));
 
@@ -116,7 +120,7 @@ public class PanelNewSellProduct extends JPanel {
 
 		ctrl.add(accept);
 
-		compo.add(ctrlCompo, BorderLayout.WEST);
+		compo.add(ctrlCompoDisp, BorderLayout.WEST);
 		compo.add(compos, BorderLayout.CENTER);
 
 		JPanel pAdd = new JPanel();
@@ -124,11 +128,9 @@ public class PanelNewSellProduct extends JPanel {
 		JPanel pRem = new JPanel();
 		pRem.add(rem);
 		
-		ctrlCompo.setLayout(new GridLayout(10, 1));
-		ctrlCompo.add(new JLabel(""));
-		ctrlCompo.add(new JLabel(""));
-		ctrlCompo.add(new JLabel(""));
-		ctrlCompo.add(new JLabel(""));
+		ctrlCompoDisp.add(ctrlCompo);
+		
+		ctrlCompo.setLayout(new GridLayout(2, 1));
 		ctrlCompo.add(pAdd);
 		ctrlCompo.add(pRem);
 	}

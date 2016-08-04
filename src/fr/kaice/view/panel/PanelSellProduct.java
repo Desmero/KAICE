@@ -27,7 +27,7 @@ public class PanelSellProduct extends JPanel {
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new WindowInform("Nouvelle article", false, new PanelNewSellProduct());
+				KaiceModel.getInstance().setDetails(new PanelNewSellProduct());
 			}
 		});
 		view.addActionListener(new ActionListener() {

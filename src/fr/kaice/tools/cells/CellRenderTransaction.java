@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.generic.DCellRender;
+import fr.kaice.tools.generic.DColor;
 import fr.kaice.tools.generic.DFunction;
 
 public class CellRenderTransaction extends DCellRender {
@@ -21,6 +22,9 @@ public class CellRenderTransaction extends DCellRender {
 	}
 
 	protected Color getColor(JTable table, int row, int col, JLabel l) {
+		if (row == table.getRowCount() - 1) {
+			return DColor.GRAY;
+		}
 		Color color1 = KaiceModel.getHistoric().getTransaction(row).getColor();
 		return DFunction.colorfusion(color1, super.getColor(table, row, col, l));
 	}

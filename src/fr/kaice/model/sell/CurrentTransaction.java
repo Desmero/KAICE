@@ -33,7 +33,11 @@ public class CurrentTransaction extends DTableModel {
 	}
 
 	public void addSoldProduct(int id, int quantity) {
-		listArticles.put(id, quantity);
+		int add = quantity;
+		if (listArticles.containsKey(id)) {
+			add += listArticles.get(id);
+		}
+		listArticles.put(id, add);
 	}
 
 	public void removeSolldProduct(int id) {
@@ -41,6 +45,9 @@ public class CurrentTransaction extends DTableModel {
 	}
 
 	public void validTransaction(int cashIn) {
+		if (getNumberArticle() == 0) {
+			return;
+		}
 		OrderCollection ordColl = KaiceModel.getOrderCollection();
 		int idMember = KaiceModel.getMemberCollection().getSelectedMember().getUserId();
 		Transaction tran = new Transaction(idMember, transactionType.SELL, getPrice(), cashIn, new Date());

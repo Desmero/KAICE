@@ -7,7 +7,10 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.view.panel.PanelCurrentTransaction;
@@ -31,25 +34,33 @@ public class MainWindow extends JFrame implements Observer{
 		super("KAICE v2.0");
 		
 		KaiceModel.getInstance().addObserver(this);
+
+		Dimension d;
 		
 		JPanel center = new JPanel(new BorderLayout());
 		JPanel east = new JPanel(new BorderLayout());
 		JPanel west = new JPanel(new BorderLayout());
 		
+		JSplitPane splitEastOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, center, east);
+		splitEastOut.setResizeWeight(1);
+		JSplitPane splitWestOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, west, splitEastOut);
+		splitWestOut.setResizeWeight(0);
+		
+		this.setLayout(new BorderLayout());
+		this.add(splitWestOut);
+
 		JPanel centerNorth = new JPanel(new BorderLayout());
 		centerSouth = new JPanel(new BorderLayout());
 		JPanel westNorth = new JPanel(new BorderLayout());
 		JPanel westSouth = new JPanel(new BorderLayout());
-		
-		this.setLayout(new BorderLayout());
-		this.add(center, BorderLayout.CENTER);
-		this.add(east, BorderLayout.EAST);
-		this.add(west, BorderLayout.WEST);
 
-		center.add(centerNorth, BorderLayout.CENTER);
-		center.add(centerSouth, BorderLayout.SOUTH);
-		west.add(westNorth, BorderLayout.NORTH);
-		west.add(westSouth, BorderLayout.CENTER);
+		JSplitPane splitCenterIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, centerNorth, centerSouth);
+		splitCenterIn.setResizeWeight(1);
+		JSplitPane splitWestIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, westNorth, westSouth);
+		splitWestIn.setResizeWeight(0.5);
+		
+		center.add(splitCenterIn, BorderLayout.CENTER);
+		west.add(splitWestIn, BorderLayout.CENTER);
 		
 		JTabbedPane tablePaneNorth = new JTabbedPane();
 		tablePaneNorth.add("Vente", new PanelCurrentTransaction());
@@ -64,13 +75,21 @@ public class MainWindow extends JFrame implements Observer{
 		JPanel details = KaiceModel.getInstance().getDetails();
 		
 		centerNorth.add(tablePaneNorth, BorderLayout.CENTER);
+		centerNorth.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
 		centerSouth.add(details, BorderLayout.CENTER);
 		westNorth.add(order, BorderLayout.CENTER);
+		westNorth.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
 		westSouth.add(tablePaneSouth, BorderLayout.CENTER);
 		east.add(memberColl, BorderLayout.CENTER);
+
+		Dimension dim = centerSouth.getPreferredSize();
+		dim.setSize(dim.getWidth(), 300);
+		centerSouth.setPreferredSize(dim);
+
 		
-		Dimension d = new Dimension(1600, 900);
+		d = new Dimension(1600, 900);
 		setPreferredSize(d);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		pack();
 		setVisible(true);

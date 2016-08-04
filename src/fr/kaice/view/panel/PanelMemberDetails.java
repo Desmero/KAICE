@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -19,6 +20,9 @@ import javax.swing.event.ChangeListener;
 import com.toedter.calendar.JDateChooser;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Transaction;
+import fr.kaice.model.historic.Transaction.transactionType;
 import fr.kaice.model.membre.Member;
 import fr.kaice.model.membre.MemberCollection;
 import fr.kaice.tools.IdSpinner;
@@ -126,6 +130,7 @@ public class PanelMemberDetails extends JPanel {
 		JPanel center = new JPanel(new BorderLayout());
 		JPanel details = new JPanel(new BorderLayout());
 		JPanel detailsLeft = new JPanel(new GridLayout(6, 2));
+		JPanel detailsCenter = new JPanel(new GridLayout(6, 4));
 		JPanel detailsRightR = new JPanel(new GridLayout(6, 1, 0, 8));
 		JPanel detailsRightL = new JPanel(new GridLayout(6, 1));
 		JPanel detailsEdit = new JPanel();
@@ -134,37 +139,37 @@ public class PanelMemberDetails extends JPanel {
 		this.add(center, BorderLayout.CENTER);
 		this.add(details, BorderLayout.NORTH);
 
-		details.add(detailsLeft, BorderLayout.WEST);
-		details.add(detailsRightR, BorderLayout.CENTER);
-		details.add(detailsRightL, BorderLayout.EAST);
+		// details.add(detailsLeft, BorderLayout.WEST);
+		// details.add(detailsRightR, BorderLayout.CENTER);
+		details.add(detailsCenter, BorderLayout.CENTER);
+		// details.add(detailsRightL, BorderLayout.EAST);
 		details.add(detailsEdit, BorderLayout.SOUTH);
 
-		detailsLeft.add(new JLabel("Id : "));
-		detailsLeft.add(id);
-		detailsLeft.add(new JLabel("Nom : "));
-		detailsLeft.add(name);
-		detailsLeft.add(new JLabel("Prenom : "));
-		detailsLeft.add(firstname);
-		detailsLeft.add(new JLabel("Date de naissance : "));
-		detailsLeft.add(pBirth);
-		detailsLeft.add(new JLabel("Sexe : "));
-		detailsLeft.add(pGender);
-		detailsLeft.add(new JLabel("Filière : "));
-		detailsLeft.add(studies);
-
-		detailsRightR.add(new JLabel("Adresse : "));
-		detailsRightL.add(mailStreet);
-		detailsRightR.add(new JLabel("    (Code postal)"));
-		detailsRightL.add(mailPostalCode);
-		detailsRightR.add(new JLabel("    (Commune)"));
-		detailsRightL.add(mailTown);
-		detailsRightR.add(new JLabel("Adresse e-Mail : "));
-		detailsRightL.add(eMail);
-		detailsRightR.add(new JLabel());
-		detailsRightL.add(newsLetter);
-		detailsRightR.add(new JLabel("Numero de Tel : "));
-		detailsRightL.add(tel);
-
+		detailsCenter.add(new JLabel("Id : "));
+		detailsCenter.add(id);
+		detailsCenter.add(new JLabel("Adresse : "));
+		detailsCenter.add(mailStreet);
+		detailsCenter.add(new JLabel("Nom : "));
+		detailsCenter.add(name);
+		detailsCenter.add(new JLabel("    (Code postal)"));
+		detailsCenter.add(mailPostalCode);
+		detailsCenter.add(new JLabel("Prenom : "));
+		detailsCenter.add(firstname);
+		detailsCenter.add(new JLabel("    (Commune)"));
+		detailsCenter.add(mailTown);
+		detailsCenter.add(new JLabel("Date de naissance : "));
+		detailsCenter.add(pBirth);
+		detailsCenter.add(new JLabel("Adresse e-Mail : "));
+		detailsCenter.add(eMail);
+		detailsCenter.add(new JLabel("Sexe : "));
+		detailsCenter.add(pGender);
+		detailsCenter.add(new JLabel());
+		detailsCenter.add(newsLetter);
+		detailsCenter.add(new JLabel("Filière : "));
+		detailsCenter.add(studies);
+		detailsCenter.add(new JLabel("Numero de Tel : "));
+		detailsCenter.add(tel);
+		
 		detailsEdit.add(editValid);
 		detailsEdit.add(edit);
 
@@ -189,6 +194,18 @@ public class PanelMemberDetails extends JPanel {
 		Member u = col.getMember(id.getValue());
 		if (u == null) {
 			u = new Member(id.getValue());
+			int res = JOptionPane.showConfirmDialog(null,
+					"Le payment a-t-il été effectué en luiquide ?", "Payement",
+					JOptionPane.YES_NO_OPTION, 2);
+			int paid = 0;
+			if (res == JOptionPane.YES_OPTION) {
+				// TODO ajouter la possibilité de changer le prix de l'inscription
+				paid = 500;
+			}
+			Transaction tran = new Transaction(id.getValue(), transactionType.INS, 500, paid, new Date());
+			ArchivedProduct archProd = new ArchivedProduct("Inscription", 1, 5);
+			tran.addArchivedProduct(archProd);
+			KaiceModel.getHistoric().addTransaction(tran);
 			col.addMember(u);
 		}
 		u.setName(name.getText());
@@ -258,7 +275,7 @@ public class PanelMemberDetails extends JPanel {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(m.getBirthDate());
 			birthDate.setDate(cal.getTime());
-			lBirthDate.setText(DFormat.DATE_FORMAT.format(m.getBirthDate()));
+			lBirthDate.setText(DFormat.DATE_ONLY.format(m.getBirthDate()));
 			updateGender();
 			studies.setText(m.getStudies());
 			mailStreet.setText(m.getMailStreet());

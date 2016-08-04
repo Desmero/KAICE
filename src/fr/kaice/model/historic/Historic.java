@@ -1,8 +1,11 @@
 package fr.kaice.model.historic;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.cells.CellRenderTransaction;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DFormat;
@@ -16,6 +19,9 @@ public class Historic extends DTableModel {
 	 */
 	private static final long serialVersionUID = 7463943181952132052L;
 	private List<Transaction> orderedList;
+	private List<Transaction> displayList;
+	private Date start;
+	private Date end;
 	
 	public Historic() {
 		totalLine = true;
@@ -23,37 +29,64 @@ public class Historic extends DTableModel {
 		colClass = new Class[] { String.class, String.class, String.class, Double.class, Double.class };
 		colEdit = new Boolean[] { false, false, false, false, false };
 		orderedList = new ArrayList<Transaction>();
+		displayList = new ArrayList<Transaction>();
+		Calendar cal = Calendar.getInstance();
+		cal.clear(Calendar.HOUR);
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		start = cal.getTime();
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		end = cal.getTime();
 	}
 	
 	public Transaction getTransaction(int idrow) {
-		return orderedList.get(idrow);
+		return displayList.get(idrow);
 	}
 	
 	public void addTransaction(Transaction trans) {
 		orderedList.add(trans);
-		// TODO updateDisplayList pour ne pas tout afficher
+		updateDisplayList();
+	}
+	
+	public void setDateSelect(Date start, Date end) {
+		this.start = start;
+		this.end = end;
+		updateDisplayList();
+	}
+	
+	private void updateDisplayList() {
+		displayList.clear();
+		Date dTran;
+		for (Transaction tran : orderedList) {
+			dTran = tran.getDate();
+			if (dTran.after(start) && dTran.before(end)) {
+				displayList.add(tran);
+			}
+		}
+		KaiceModel.update();
 	}
 	
 	@Override
 	public int getRowCount() {
-		return orderedList.size();
-		// TODO faire la ligne de fin
-		// TODO ne pas tout afficher
+		return displayList.size() + 1;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (rowIndex == displayList.size()) {
+			return null;
+		}
 		switch (columnIndex) {
 		case 0:
-			return DFormat.FULL_DATE_FORMAT.format(orderedList.get(rowIndex).getDate());
+			return DFormat.format(displayList.get(rowIndex).getDate());
 		case 1:
-			return orderedList.get(rowIndex).getClient();
+			return displayList.get(rowIndex).getClient();
 		case 2:
-			return orderedList.get(rowIndex).toString();
+			return displayList.get(rowIndex).toString();
 		case 3:
-			return DMonetarySpinner.intToDouble(orderedList.get(rowIndex).getPrice());
+			return DMonetarySpinner.intToDouble(displayList.get(rowIndex).getPrice());
 		case 4:
-			return DMonetarySpinner.intToDouble(orderedList.get(rowIndex).getPaid());
+			return DMonetarySpinner.intToDouble(displayList.get(rowIndex).getPaid());
 		default:
 			return null;
 		}

@@ -54,7 +54,7 @@ public class PanelChoosSoldProduct extends JPanel implements Observer{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
+				if (e.getClickCount() % 2 == 0) {
 					addSelection();
 				}
 			}

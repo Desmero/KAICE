@@ -1,7 +1,12 @@
 package fr.kaice.model.raw;
 
 import java.awt.Color;
+import java.util.Date;
 
+import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Transaction;
+import fr.kaice.model.historic.Transaction.transactionType;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.KFileParameter;
 import fr.kaice.tools.generic.DColor;
@@ -82,6 +87,16 @@ public class RawMaterial implements GenericProduct {
 	}
 
 	public void setStock(int stock) {
+		int add = stock - this.stock;
+		transactionType type = transactionType.ADD;
+		if (add < 0) {
+			type = transactionType.SUB;
+			add = -add;
+		}
+		Transaction tran = new Transaction(0, type, 0, 0, new Date());
+		ArchivedProduct archProd = new ArchivedProduct(name, add, 0);
+		tran.addArchivedProduct(archProd);
+		KaiceModel.getHistoric().addTransaction(tran);
 		this.stock = stock;
 	}
 

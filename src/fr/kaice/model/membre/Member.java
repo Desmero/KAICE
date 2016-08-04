@@ -247,7 +247,7 @@ public class Member {
 		sb.append(';');
 		sb.append(firstname);
 		sb.append(';');
-		sb.append(DFormat.DATE_FORMAT.format(birthDate));
+		sb.append(DFormat.DATE_ONLY.format(birthDate));
 		sb.append(';');
 		sb.append(gender);
 		sb.append(';');

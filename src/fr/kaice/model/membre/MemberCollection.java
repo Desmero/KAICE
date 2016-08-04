@@ -24,6 +24,10 @@ public class MemberCollection extends DTableModel {
 	private String searchName;
 	private String searchFirstname;
 
+	public static final int ID = 0;
+	public static final int NAME = 1;
+	public static final int FIRSTNAME = 2;
+
 	/**
 	 * Construct a {@link MemberCollection}.
 	 */
@@ -132,10 +136,15 @@ public class MemberCollection extends DTableModel {
 	 * Update the sorted list.
 	 */
 	public void updateOrderedList() {
+		orderedList = getOrderedList(searchName, searchFirstname, sortCol);
+		KaiceModel.update();
+	}
+
+	private ArrayList<Member> getOrderedList(String name, String firstname, int select) {
 		ArrayList<Member> newList = new ArrayList<>();
 		for (Member mem : map.values()) {
-			if (mem.getName().toLowerCase().contains(searchName.toLowerCase())
-					&& mem.getFirstname().toLowerCase().contains(searchFirstname.toLowerCase())) {
+			if (mem.getName().toLowerCase().contains(name.toLowerCase())
+					&& mem.getFirstname().toLowerCase().contains(firstname.toLowerCase())) {
 				newList.add(mem);
 			}
 		}
@@ -143,18 +152,30 @@ public class MemberCollection extends DTableModel {
 			@Override
 			public int compare(Member arg0, Member arg1) {
 				switch (sortCol) {
-				case 1:
+				case NAME:
 					return arg0.getName().compareTo(arg1.getName());
-				case 2:
+				case FIRSTNAME:
 					return arg0.getFirstname().compareTo(arg1.getFirstname());
-				case 0:
+				case ID:
 				default:
 					return arg0.getUserId() - arg1.getUserId();
 				}
 			}
 		});
-		orderedList = newList;
-		KaiceModel.update();
+		return newList;
+	}
+	
+	public String[] getPartialArray(String name, String firstname, int select) {
+		ArrayList<Member> newList = getOrderedList(name, firstname, select);
+		String[] newArray = new String[newList.size()];
+		for (int i = 0; i < newList.size(); i++) {
+			if (select == FIRSTNAME) {
+				newArray[i] = newList.get(i).getFirstname();
+			} else {
+			newArray[i] = newList.get(i).getName();
+			}
+		}
+		return newArray;
 	}
 
 	public Member getSelectedMember() {
@@ -168,6 +189,21 @@ public class MemberCollection extends DTableModel {
 	public void setSelectedMember(int row) {
 		selectedMember = getRow(row);
 		KaiceModel.update();
+	}
+
+	public void setSelectedMemberById(int id) {
+		selectedMember = map.get(id);
+		KaiceModel.update();
+	}
+
+	public void setSelectedMemberByName(String name, String firstname) {
+		ArrayList<Member> list = getOrderedList(name, firstname, ID);
+		if (list.size() == 1) {
+			selectedMember = list.get(0);
+			KaiceModel.update();
+		} else {
+			selectedMember = null;
+		}
 	}
 
 	public Member getRow(int row) {

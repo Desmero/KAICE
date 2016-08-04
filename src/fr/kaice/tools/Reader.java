@@ -253,7 +253,7 @@ public class Reader {
 				m = null;
 				data = line.split(KFileParameter.SEPARATOR);
 				try {
-					birthDate = DFormat.DATE_FORMAT.parse(data[3]);
+					birthDate = DFormat.DATE_ONLY.parse(data[3]);
 				} catch (ParseException e) {
 					birthDate = new Date();
 					System.err.println("Erreur de lecture de date du membre " + data[0] + " : " + data[3]);
