@@ -1,267 +1,302 @@
 package fr.kaice.model.membre;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
+import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
+import javax.swing.table.AbstractTableModel;
+import java.util.*;
+
+/**
+ * This class store all {@link Member} of the current year.
+ * This should be construct only by {@link KaiceModel}, and one time.
+ * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
+ * In a table, it display 3 columns : <br/>
+ * - "Num", witch display membership numbers (non editable {@link Integer});<br/>
+ * - "Nam", witch display names (non editable {@link String});<br/>
+ * - "Prénom", witch display first names(non editable {@link String}).<br/>
+ * The table entries can ne sorted by dates, names or firs names.
+ *
+ * @author Raphaël Merkling
+ * @version 2.1
+ * @see Member
+ * @see DTableModel
+ * @see AbstractTableModel
+ * @see KaiceModel
+ */
 public class MemberCollection extends DTableModel {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6044679184177698933L;
-	private Map<Integer, Member> map;
-	private List<Member> orderedList;
-	private Member selectedMember;
-	private int sortCol;
-	private String searchName;
-	private String searchFirstname;
-
-	public static final int ID = 0;
-	public static final int NAME = 1;
-	public static final int FIRSTNAME = 2;
-
-	/**
-	 * Construct a {@link MemberCollection}.
-	 */
-	public MemberCollection() {
-		colNames = new String[] { "Id", "Nom", "Pr�nom" };
-		colClass = new Class[] { Integer.class, String.class, String.class };
-		colEdit = new Boolean[] { false, false, false };
-		map = new HashMap<>();
-		orderedList = new ArrayList<>();
-		selectedMember = null;
-		sortCol = 0;
-		searchName = "";
-		searchFirstname = "";
-	}
-
-	/**
-	 * Store an existing {@link Member}.
-	 * 
-	 * @param pord
-	 *            {@link Member} - The raw material to store in the collection.
-	 */
-	public void addMember(Member membre) {
-		int id = membre.getUserId();
-		if (map.containsKey(id)) {
-			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
-		}
-		map.put(id, membre);
-		updateOrderedList();
-	}
-
-	public void addReadMember(Member membre) {
-		int id = membre.getUserId();
-		if (map.containsKey(id)) {
-			throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
-		}
-		map.put(id, membre);
-	}
-
-	/**
-	 * Create and store a {@link Member}.
-	 * 
-	 * @param userId
-	 * @param name
-	 * @param firstname
-	 * @param gender
-	 * @param birthDate
-	 * @param phoneNumber
-	 * @param studies
-	 * @param mailStreet
-	 * @param mailPostalCode
-	 * @param mailTown
-	 * @param eMail
-	 * @param newsLetter
-	 */
-	public void addReadMember(int userId, String name, String firstname, boolean gender, Date birthDate,
-			String phoneNumber, String studies, String mailStreet, String mailPostalCode, String mailTown, String eMail,
-			boolean newsLetter) {
-		if (map.containsKey(userId)) {
-			throw new AlreadyUsedIdException("RawMaterial Id " + userId + " is already used.");
-		}
-		Member newProduct = new Member(userId, name, firstname, gender, birthDate, phoneNumber, studies, mailStreet,
-				mailPostalCode, mailTown, eMail, newsLetter);
-		map.put(userId, newProduct);
-		updateOrderedList();
-	}
-
-	/**
-	 * Auto-generate a new free identification number for this collection of
-	 * {@link Member}.
-	 * 
-	 * @return A new identification number for a {@link Member}.
-	 */
-	public int getNewId() {
-		int id = 1;
-		int add = KaiceModel.getActualYear();
-		add *= 10000;
-		id += add;
-
-		for (Member u : orderedList) {
-			id = Integer.max(id, u.getUserId());
-		}
-		return id + 1;
-	}
-
-	public void setSortColl(String sortColName) {
-		for (int i = 0; i < colNames.length; i++) {
-			if (colNames[i].equals(sortColName)) {
-				sortCol = i;
-				break;
-			}
-		}
-		updateOrderedList();
-	}
-
-	public void setSearchName(String searchName) {
-		this.searchName = searchName;
-		updateOrderedList();
-	}
-
-	public void setSearchFirstname(String searchFirstname) {
-		this.searchFirstname = searchFirstname;
-		updateOrderedList();
-	}
-
-	/**
-	 * Update the sorted list.
-	 */
-	public void updateOrderedList() {
-		orderedList = getOrderedList(searchName, searchFirstname, sortCol);
-		KaiceModel.update();
-	}
-
-	private ArrayList<Member> getOrderedList(String name, String firstname, int select) {
-		ArrayList<Member> newList = new ArrayList<>();
-		for (Member mem : map.values()) {
-			if (mem.getName().toLowerCase().contains(name.toLowerCase())
-					&& mem.getFirstname().toLowerCase().contains(firstname.toLowerCase())) {
-				newList.add(mem);
-			}
-		}
-		newList.sort(new Comparator<Member>() {
-			@Override
-			public int compare(Member arg0, Member arg1) {
-				switch (sortCol) {
-				case NAME:
-					return arg0.getName().compareTo(arg1.getName());
-				case FIRSTNAME:
-					return arg0.getFirstname().compareTo(arg1.getFirstname());
-				case ID:
-				default:
-					return arg0.getUserId() - arg1.getUserId();
-				}
-			}
-		});
-		return newList;
-	}
-	
-	public String[] getPartialArray(String name, String firstname, int select) {
-		ArrayList<Member> newList = getOrderedList(name, firstname, select);
-		String[] newArray = new String[newList.size()];
-		for (int i = 0; i < newList.size(); i++) {
-			if (select == FIRSTNAME) {
-				newArray[i] = newList.get(i).getFirstname();
-			} else {
-			newArray[i] = newList.get(i).getName();
-			}
-		}
-		return newArray;
-	}
-
-	public Member getSelectedMember() {
-		return selectedMember;
-	}
-
-	public void setSelectedMember(Member mem) {
-		selectedMember = mem;
-	}
-
-	public void setSelectedMember(int row) {
-		selectedMember = getRow(row);
-		KaiceModel.update();
-	}
-
-	public void setSelectedMemberById(int id) {
-		selectedMember = map.get(id);
-		KaiceModel.update();
-	}
-
-	public void setSelectedMemberByName(String name, String firstname) {
-		ArrayList<Member> list = getOrderedList(name, firstname, ID);
-		if (list.size() == 1) {
-			selectedMember = list.get(0);
-			KaiceModel.update();
-		} else {
-			selectedMember = null;
-		}
-	}
-
-	public Member getRow(int row) {
-		return orderedList.get(row);
-	}
-
-	public Member getProd(int id) {
-		return map.get(id);
-	}
-
-	@Override
-	public int getRowCount() {
-		return orderedList.size();
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		switch (columnIndex) {
-		case 0:
-			return orderedList.get(rowIndex).getUserId();
-		case 1:
-			return orderedList.get(rowIndex).getName();
-		case 2:
-			return orderedList.get(rowIndex).getFirstname();
-		default:
-			return null;
-		}
-	}
-
-	public String getEMailList() {
-		StringBuilder sb = new StringBuilder();
-		for (Member u : orderedList) {
-			if (u.isNewsLetter() && u.isValidEmailAddress()) {
-				String eMail = u.getEMail();
-				sb.append(eMail + "\n");
-			}
-		}
-		return sb.toString();
-	}
-
-	public Member getMember(int id) {
-		/*
-		 * Member mem = null; for (Member m : orderedList) { if (m.getUserId()
-		 * == id) { mem = m; break; } }
-		 */
-		return map.get(id);
-	}
-
-	public boolean isIdUsed(int id) {
-		/*
-		 * boolean used = false; for (Member m : orderedList) { if
-		 * (m.getUserId() == id) { used = true; break; } }
-		 */
-		return map.containsKey(id);
-	}
-
-	public int getMemberIdAtRow(int selectedRow) {
-		return orderedList.get(selectedRow).getUserId();
-	}
-
+    
+    private static final int COL_NUM_ID = 0;
+    private static final int COL_NUM_NAME = 1;
+    private static final int COL_NUM_FIRST_NAME = 2;
+    private static final DTableColumnModel colId = new DTableColumnModel("Num", Integer.class, false);
+    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
+    private static final DTableColumnModel colFirstName = new DTableColumnModel("Prénom", String.class, false);
+    private Map<Integer, Member> map;
+    private List<Member> displayList;
+    private Member selectedMember;
+    private int sortCol;
+    private String searchName;
+    private String searchFirstName;
+    
+    /**
+     * Construct a {@link MemberCollection}. This should be only call one time, and by {@link KaiceModel}.
+     */
+    public MemberCollection() {
+        colModel = new DTableColumnModel[3];
+        colModel[COL_NUM_ID] = colId;
+        colModel[COL_NUM_NAME] = colName;
+        colModel[COL_NUM_FIRST_NAME] = colFirstName;
+        map = new HashMap<>();
+        displayList = new ArrayList<>();
+        selectedMember = null;
+        sortCol = 0;
+        searchName = "";
+        searchFirstName = "";
+    }
+    
+    /**
+     * Store an existing {@link Member}.
+     *
+     * @param member {@link Member} - The raw material to store in the collection.
+     */
+    public void addMember(Member member) {
+        int id = member.getUserId();
+        if (map.containsKey(id)) {
+            throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
+        }
+        map.put(id, member);
+        updateDisplayList();
+    }
+    
+    /**
+     * Update the display list with a new generated one (generated with {@link MemberCollection#getDisplayList(String, String, int)}).
+     */
+    private void updateDisplayList() {
+        displayList = getDisplayList(searchName, searchFirstName, sortCol);
+        KaiceModel.update();
+    }
+    
+    /**
+     * Generate a new display list, with a name filter, a first name filter and a sort method (by membership number, name or first name)
+     *
+     * @param name      {@link String} - The name filter sub-string.
+     * @param firstName {@link String} - The first name filter sub-string.
+     * @param sotMethod int - the sort method ({@value COL_NUM_ID} for id, {@value COL_NUM_NAME} for name,
+     *                  {@value COL_NUM_FIRST_NAME} for first name).
+     * @return A new list of {@link Member}, corresponding to the filter, and sort parameters.
+     */
+    private ArrayList<Member> getDisplayList(String name, String firstName, int sotMethod) {
+        ArrayList<Member> newList = new ArrayList<>();
+        for (Member mem : map.values()) {
+            if (mem.getName().toLowerCase().contains(name.toLowerCase())
+                    && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase())) {
+                newList.add(mem);
+            }
+        }
+        newList.sort(new Comparator<Member>() {
+            @Override
+            public int compare(Member arg0, Member arg1) {
+                switch (sotMethod) {
+                    case COL_NUM_NAME:
+                        return arg0.getName().compareTo(arg1.getName());
+                    case COL_NUM_FIRST_NAME:
+                        return arg0.getFirstName().compareTo(arg1.getFirstName());
+                    case COL_NUM_ID:
+                    default:
+                        return arg0.getUserId() - arg1.getUserId();
+                }
+            }
+        });
+        return newList;
+    }
+    
+    /**
+     * Auto-generate a new free membership number for this collection of {@link Member}.
+     * A membership number is composed of 6 digits, the firsts 2 are thr current year code given by
+     * {@link KaiceModel#getActualYear()}, the others 4 are equals to the higher used number corresponding of this year,
+     * plus 1.
+     *
+     * @return A new membership number for a {@link Member}.
+     */
+    public int getNewId() {
+        int id = 1;
+        int add = KaiceModel.getActualYear();
+        add *= 10000;
+        id += add;
+        
+        for (Member u : displayList) {
+            id = Integer.max(id, u.getUserId());
+        }
+        return id + 1;
+    }
+    
+    /**
+     * Sort the display list of {@link MemberCollection} following the column given in parameter.
+     *
+     * @param sortColName {@link String} - The name of the column to sort.
+     */
+    public void setSortColl(String sortColName) {
+        for (int i = 0; i < colModel.length; i++) {
+            if (colModel[i].getName().equals(sortColName)) {
+                sortCol = i;
+                break;
+            }
+        }
+        updateDisplayList();
+    }
+    
+    /**
+     * Set the filter by name.
+     * Update the display list in order to only keep {@link Member}'s names who contains the searchName sub-string.
+     *
+     * @param searchName {@link String} - A sub-string filter for name.
+     */
+    public void setSearchName(String searchName) {
+        this.searchName = searchName;
+        updateDisplayList();
+    }
+    
+    /**
+     * Set the filter by first name.
+     * Update the display list in order to only keep {@link Member}'s first names who contains the searchName sub-string.
+     *
+     * @param searchFirstName {@link String} - A sub-string filter for first name.
+     */
+    public void setSearchFirstName(String searchFirstName) {
+        this.searchFirstName = searchFirstName;
+        updateDisplayList();
+    }
+    
+    /**
+     * Return the selected {@link Member} for the current transaction.
+     *
+     * @return The selected {@link Member}.
+     */
+    public Member getSelectedMember() {
+        return selectedMember;
+    }
+    
+    /**
+     * Set the selected {@link Member} for the current transaction.
+     *
+     * @param mem {@link Member} - The new selected {@link Member}.
+     */
+    public void setSelectedMember(Member mem) {
+        selectedMember = mem;
+    }
+    
+    /**
+     * Set the selected {@link Member} for the current transaction.
+     *
+     * @param row int - The row of the new selected {@link Member}.
+     */
+    public void setSelectedMember(int row) {
+        selectedMember = getRow(row);
+        KaiceModel.update();
+    }
+    
+    /**
+     * Return the {@link Member} at the given row.
+     *
+     * @param row int - The number of the row.
+     * @return The {@link Member} at the given row.
+     */
+    private Member getRow(int row) {
+        return displayList.get(row);
+    }
+    
+    /**
+     * Set the selected {@link Member} for the current transaction.
+     *
+     * @param id int - The membership number of the new selected {@link Member}.
+     */
+    public void setSelectedMemberById(int id) {
+        selectedMember = map.get(id);
+        KaiceModel.update();
+    }
+    
+    /**
+     * Set the selected {@link Member} for the current transaction.
+     *
+     * @param name      {@link String} The name of the new selected {@link Member}.
+     * @param firstName {@link String} The first name of the new selected {@link Member}.
+     */
+    public void setSelectedMemberByName(String name, String firstName) {
+        ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID);
+        if (list.size() == 1) {
+            selectedMember = list.get(0);
+            KaiceModel.update();
+        } else {
+            selectedMember = null;
+        }
+    }
+    
+    @Override
+    public int getRowCount() {
+        return displayList.size();
+    }
+    
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        switch (columnIndex) {
+            case COL_NUM_ID:
+                return displayList.get(rowIndex).getUserId();
+            case COL_NUM_NAME:
+                return displayList.get(rowIndex).getName();
+            case COL_NUM_FIRST_NAME:
+                return displayList.get(rowIndex).getFirstName();
+            default:
+                return null;
+        }
+    }
+    
+    /**
+     * Create one {@link String} with the correct e-mail address of every {@link Member} who subscribe to the newsletter.
+     * Each address is separated by a semicolon ';'.
+     *
+     * @return A {@link String} containing e-mail address.
+     */
+    public String getEMailList() {
+        StringBuilder sb = new StringBuilder();
+        for (Member u : map.values()) {
+            if (u.isNewsLetter() && u.isValidEmailAddress()) {
+                String eMail = u.getEMail();
+                sb.append(eMail + "\n");
+            }
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Return the {@link Member} with the corresponding membership number.
+     *
+     * @param id int - The membership number.
+     * @return The {@link Member} with the corresponding membership number.
+     */
+    public Member getMember(int id) {
+        return map.get(id);
+    }
+    
+    /**
+     * Return true if the given membership number is already used.
+     *
+     * @param id int - The membership number.
+     * @return True if the given membership number is already used.
+     */
+    public boolean isIdUsed(int id) {
+        return map.containsKey(id);
+    }
+    
+    /**
+     * Return the {@link Member} at the corresponding row.
+     *
+     * @param selectedRow int - The row's number.
+     * @return The {@link Member} at the corresponding row.
+     */
+    public int getMemberIdAtRow(int selectedRow) {
+        return displayList.get(selectedRow).getUserId();
+    }
+    
 }

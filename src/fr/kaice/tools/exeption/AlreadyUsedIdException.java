@@ -1,13 +1,20 @@
 package fr.kaice.tools.exeption;
 
+/**
+ * This exception must be throw when a {@linkplain fr.kaice.model.membre.Member Member} try to be registered with a used
+ * membership number (id)
+ *
+ * @author Raphaël Merkling
+ * @version 1.0
+ */
 public class AlreadyUsedIdException extends RuntimeException {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 548414687355115711L;
-
-	public AlreadyUsedIdException(String arg0) {
-		super(arg0);
-	}
+    
+    /**
+     * Create a new {@link AlreadyUsedIdException}.
+     *
+     * @param arg0 {@link String} - The detail message. The message should contains the incriminate membership number (id).
+     */
+    public AlreadyUsedIdException(String arg0) {
+        super(arg0);
+    }
 }

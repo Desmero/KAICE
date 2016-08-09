@@ -1,37 +1,46 @@
 package fr.kaice.view.panel;
 
-import java.awt.BorderLayout;
+import fr.kaice.model.KaiceModel;
+import fr.kaice.model.membre.MemberCollection;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import fr.kaice.model.KaiceModel;
-
+/**
+ * This panel display a list of e-Mail address. The list contains only correct address, and only of
+ * {@linkplain fr.kaice.model.membre.Member Member} who subscribe to the newsletter (using the method
+ * {@link MemberCollection#getEMailList()}).
+ *
+ * @author Raphaël Merkling
+ * @version 2.0
+ * @see JPanel
+ * @see fr.kaice.model.membre.Member
+ * @see MemberCollection
+ */
 public class PanelEMailList extends JPanel implements Observer{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JTextArea emails;
-
-	public PanelEMailList() {
-		KaiceModel.getInstance().addObserver(this);
-		
-		emails = new JTextArea();
-		emails.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(emails);
-		
-		this.setLayout(new BorderLayout());
-		this.add(scrollPane, BorderLayout.CENTER);
-	}
-
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		emails.setText(KaiceModel.getEMailList());
-		System.out.println("email : \n" + KaiceModel.getEMailList());
-	}
+    
+    private static final long serialVersionUID = 1L;
+    private JTextArea emails;
+    
+    /**
+     * Create a new {@link PanelEMailList}.
+     */
+    public PanelEMailList() {
+        KaiceModel.getInstance().addObserver(this);
+        
+        emails = new JTextArea();
+        emails.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(emails);
+        
+        this.setLayout(new BorderLayout());
+        this.add(scrollPane, BorderLayout.CENTER);
+    }
+    
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        emails.setText(KaiceModel.getEMailList());
+        System.out.println("email : \n" + KaiceModel.getEMailList());
+    }
 }

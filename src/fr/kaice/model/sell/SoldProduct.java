@@ -1,231 +1,263 @@
 package fr.kaice.model.sell;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.tools.GenericProduct;
-import fr.kaice.tools.KFileParameter;
 import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
- * This class represent one kind of sold product
- * 
- * @author Raph
+ * This class represent one kind of sold product. <br/>
+ * It is composed by : <br/>
+ *  - An id; <br/>
+ *  - A name; <br/>
+ *  - A sale price; <br/>
+ *  - A type; <br/>
+ *  - And a collection of {@link RawMaterial}.
+ *
+ * @author RaphaÃ«l Merkling
  * @version 2.0
  *
  */
 public class SoldProduct extends DTableModel implements GenericProduct {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2422533674812971388L;
-
-	/**
-	 * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
-	 * or MISC.
-	 * 
-	 * @author Raph
-	 *
-	 */
-	public enum prodType {
-		FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
-
-		private String name;
-
-		private prodType(String name) {
-			this.name = name;
-		}
-
-		public String toString() {
-			return name;
-		}
-	};
-
-	private int id;
-	private String name;
-	private int salePrice;
-	private Map<Integer, Integer> listRawMat;
-	private prodType type;
-
-	/**
-	 * SoldProduct constructor.
-	 * 
-	 * @param id
-	 *            int - The id of the product.
-	 * @param name
-	 *            {@link String} - The name of the product.
-	 * @param salePrice
-	 *            int - The sale price of the product.
-	 * @param type
-	 *            {@link prodType} - The type of the product.
-	 */
-	public SoldProduct(int id, String name, int salePrice, prodType type) {
-		colNames = new String[] { "Id", "Nom", "Quentité utilisée", "Stock", "Prix" };
-		colClass = new Class[] { Integer.class, String.class, Integer.class, Integer.class, Double.class };
-		colEdit = new Boolean[] { false, false, true, false, false };
-		this.id = id;
-		this.name = name;
-		this.salePrice = salePrice;
-		this.listRawMat = new HashMap<>();
-		this.type = type;
-	}
-
-	public void sale(int number) {
-		RawMaterialCollection coll = KaiceModel.getRawMatCollection();
-		for (Entry<Integer, Integer> entry : listRawMat.entrySet()) {
-			coll.sale(entry.getKey(), entry.getValue() * number);
-		}
-	}
-	
-	public ArchivedProduct archivedProduct(int number) {
-		return new ArchivedProduct(name, number, salePrice * number);
-	}
-	
-	/**
-	 * Return the quantity of a {@link RawMaterial} that need this product.
-	 * Return 0 if the {@link RawMaterial} don't exist.
-	 * 
-	 * @param idRaw
-	 *            int - The id of the {@link RawMaterial}.
-	 * @return int - The quantity of a {@link RawMaterial}.
-	 */
-	public int getRawMaterial(int idRaw) {
-		Integer quantity = listRawMat.get(idRaw);
-		if (quantity == null) {
-			quantity = 0;
-		}
-		return quantity;
-	}
-
-	/**
-	 * Set the quantity of a {@link RawMaterial} that need this product. The
-	 * quantity must be positive. If the quantity is equals to 0, the
-	 * {@link RawMaterial} is remove to collection.
-	 * 
-	 * @param rawId
-	 *            int - The id of the {@link RawMaterial}.
-	 * @param quantity
-	 *            - The quantity, must be positive or equals to 0.
-	 */
-	public void setRawMaterial(int rawId, int quantity) {
-		if (quantity < 0) {
-			throw new IllegalArgumentException("Quantity equals to " + quantity + " must be positive.");
-		} else if (quantity == 0) {
-			listRawMat.remove(rawId);
-		} else {
-			listRawMat.put(rawId, quantity);
-		}
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getPurchasedPrice() {
-		return salePrice;
-	}
-
-	public void setSalePrice(int salePrice) {
-		this.salePrice = salePrice;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public prodType getType() {
-		return type;
-	}
-
-	public int getBuyPrice() {
-		int price = 0;
-		int qtt;
-		RawMaterialCollection rmColl = KaiceModel.getRawMatCollection();
-		RawMaterial mat;
-		for (Integer id : listRawMat.keySet()) {
-			qtt = listRawMat.get(id);
-			mat = rmColl.getMat(id);
-			price += qtt * mat.getPurchasedPrice();
-		}
-		return price;
-	}
-
-	public int getProfit() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public Integer getQuantity() {
-		int qtty = Integer.MAX_VALUE;
-		for (Integer id : listRawMat.keySet()) {
-			qtty = Integer.min(qtty, (KaiceModel.getRawMatCollection().getMat(id).getStock() / listRawMat.get(id)));
-		}
-		if (qtty == Integer.MAX_VALUE) {
-			return null;
-		}
-		return qtty;
-	}
-
-	public static prodType parstType(String arg0) {
-		prodType type;
-		if (arg0.equals("FOOD")) {
-			type = SoldProduct.prodType.FOOD;
-		} else if (arg0.equals("DRINK")) {
-			type = SoldProduct.prodType.DRINK;
-		} else {
-			type = SoldProduct.prodType.MISC;
-		}
-		return type;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(id);
-		sb.append(KFileParameter.SEPARATOR);
-		sb.append(salePrice);
-		sb.append(KFileParameter.SEPARATOR);
-		sb.append(name);
-		// TODO gérer la liste de matieres premieres
-		sb.append(KFileParameter.SEPARATOR);
-		return sb.toString();
-	}
-
-	@Override
-	public int getRowCount() {
-		return listRawMat.size();
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		ArrayList<Integer> list = new ArrayList<>(listRawMat.keySet());
-		int id = list.get(rowIndex);
-		RawMaterial mat = KaiceModel.getRawMatCollection().getMat(id);
-		switch (columnIndex) {
-		case 0:
-			return id;
-		case 1:
-			return mat.getName();
-		case 2:
-			return listRawMat.get(id);
-		case 3:
-			return mat.getStock();
-		case 4:
-			return DMonetarySpinner.intToDouble(mat.getPurchasedPrice());
-		default:
-			return null;
-		}
-	}
+    
+    private static final int COL_NUM_ID = -1;
+    private static final int COL_NUM_NAME = 0;
+    private static final int COL_NUM_USED = 1;
+    private static final int COL_NUM_STOCK = 2;
+    private static final int COL_NUM_PRICE = 3;
+    // private static DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
+    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
+    private static final DTableColumnModel colUsed = new DTableColumnModel("QuantitÃ© utilisÃ©e", Integer.class, true);
+    private static final DTableColumnModel colStock = new DTableColumnModel("Stock", Integer.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
+    private final int id;
+    private final Map<RawMaterial, Integer> listRawMat;
+    private final prodType type;
+    private String name;
+    private int salePrice;
+    
+    /**
+     * SoldProduct constructor.
+     *
+     * @param id        int - The id of the product.
+     * @param name      {@link String} - The name of the product.
+     * @param salePrice int - The sale price of the product.
+     * @param type      {@link prodType} - The type of the product.
+     */
+    public SoldProduct(int id, String name, int salePrice, prodType type) {
+        colModel = new DTableColumnModel[4];
+        colModel[COL_NUM_NAME] = colName;
+        colModel[COL_NUM_PRICE] = colPrice;
+        colModel[COL_NUM_STOCK] = colStock;
+        colModel[COL_NUM_USED] = colUsed;
+        this.id = id;
+        this.name = name;
+        this.salePrice = salePrice;
+        this.listRawMat = new HashMap<>();
+        this.type = type;
+    }
+    
+    /**
+     * Reduce the stock a the {@link RawMaterial} that compose the {@link SoldProduct}.
+     *
+     * @param number int - The number of the {@link SoldProduct} sold.
+     */
+    void sale(int number) {
+        RawMaterialCollection coll = KaiceModel.getRawMatCollection();
+        for (Entry<RawMaterial, Integer> entry : listRawMat.entrySet()) {
+            coll.sale(entry.getKey(), entry.getValue() * number);
+        }
+    }
+    
+    /**
+     * Create an {@link ArchivedProduct} for the historic.
+     *
+     * @param number int - The number of the {@link SoldProduct} sold.
+     * @return A new {@link ArchivedProduct}.
+     */
+    ArchivedProduct archivedProduct(int number) {
+        return new ArchivedProduct(name, number, salePrice * number);
+    }
+    
+    /**
+     * Set the quantity of {@link RawMaterial} that need this product.
+     * The quantity must be positive. If the quantity is equals to 0, the
+     * {@link RawMaterial} is remove to collection.
+     *
+     * @param mat      /!\
+     *                 {@link RawMaterial} - The raw material.
+     * @param quantity int - The quantity, must be positive or equals to 0.
+     */
+    public void setRawMaterial(RawMaterial mat, int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity equals to " + quantity + " must be positive.");
+        } else if (quantity == 0) {
+            listRawMat.remove(mat);
+        } else {
+            listRawMat.put(mat, quantity);
+        }
+    }
+    
+    /**
+     * Set the sale price in cents of the {@link SoldProduct}.
+     *
+     * @param salePrice int - The new sale price in cents of the {@link SoldProduct}.
+     */
+    void setSalePrice(int salePrice) {
+        this.salePrice = salePrice;
+    }
+    
+    /**
+     * Return the id of the {@link SoldProduct}.
+     *
+     * @return The id of the {@link SoldProduct}.
+     */
+    @Override
+    public int getId() {
+        return id;
+    }
+    
+    /**
+     * Return the name of the {@link SoldProduct}.
+     *
+     * @return The name of the {@link SoldProduct}.
+     */
+    @Override
+    public String getName() {
+        return name;
+    }
+    
+    /**
+     * Set the name of the {@link SoldProduct}.
+     *
+     * @param name The new name of the {@link SoldProduct}.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    /**
+     * Return the sale price in cents of the {@link SoldProduct}.
+     *
+     * @return The sale price in cents of the {@link SoldProduct}.
+     */
+    @Override
+    public int getPrice() {
+        return salePrice;
+    }
+    
+    /**
+     * Return the {@link prodType} of the {@link SoldProduct}.
+     *
+     * @return The {@link prodType} of the {@link SoldProduct}.
+     */
+    public prodType getType() {
+        return type;
+    }
+    
+    /**
+     * Return the profit in cents of the {@link SoldProduct}. Calculate by subtracting the sell and buy prices.
+     *
+     * @return The profit in cents of the {@link SoldProduct}.
+     */
+    public int getProfit() {
+        return getPrice() - getBuyPrice();
+    }
+    
+    /**
+     * return the buy price in cents of the {@link SoldProduct}. Calculate with the price of the composing
+     * {@link RawMaterial}.
+     *
+     * @return The buy price in cents of the {@link SoldProduct}.
+     */
+    public int getBuyPrice() {
+        int price = 0;
+        int qtt;
+        for (RawMaterial mat : listRawMat.keySet()) {
+            qtt = listRawMat.get(mat);
+            price += qtt * mat.getPrice();
+        }
+        return price;
+    }
+    
+    /**
+     * Calculate the available quantity of the {@link SoldProduct} with the stock of each composing {@link RawMaterial}.
+     *
+     * @return The available quantity of the {@link SoldProduct}.
+     */
+    public Integer getQuantity() {
+        int qty = Integer.MAX_VALUE;
+        for (RawMaterial mat : listRawMat.keySet()) {
+            qty = Integer.min(qty, (mat.getStock() / listRawMat.get(mat)));
+        }
+        if (qty == Integer.MAX_VALUE) {
+            return null;
+        }
+        return qty;
+    }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
+    
+    @Override
+    public int getRowCount() {
+        return listRawMat.size();
+    }
+    
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        ArrayList<RawMaterial> list = new ArrayList<>(listRawMat.keySet());
+        RawMaterial mat = list.get(rowIndex);
+        switch (columnIndex) {
+            case COL_NUM_ID:
+                return mat.getId();
+            case COL_NUM_NAME:
+                return mat.getName();
+            case COL_NUM_USED:
+                return listRawMat.get(mat);
+            case COL_NUM_STOCK:
+                return mat.getStock();
+            case COL_NUM_PRICE:
+                return DMonetarySpinner.intToDouble(mat.getPrice());
+            default:
+                return null;
+        }
+    }
+    
+    /**
+     * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
+     * or MISC.
+     *
+     * @author Raph
+     */
+    public enum prodType {
+        FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
+        
+        private final String name;
+        
+        /**
+         * Create a new element of the enumeration {@link prodType} with a display name.
+         *
+         * @param name {@link String} - The display name of the type.
+         */
+        prodType(String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 }

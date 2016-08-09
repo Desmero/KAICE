@@ -1,56 +1,62 @@
 package fr.kaice.tools.generic;
 
-import java.util.ArrayList;
-
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Simple {@link AbstractTableModel} with some methods already implements. Used
- * in the KAICE project.
- * 
- * @author Raph
- * @version 1.0
+ * This class extends {@link AbstractTableModel}. This class manage column models with {@link DCellRender}.
+ * And provide a implementation of some methods in the {@linkplain javax.swing.table.TableModel TableModel} interface.
+ * This can also add a last line to summary the table data.
+ *
+ * @author Raphaël Merkling
+ * @version 1.1
+ *
+ * @see AbstractTableModel
+ * @see DCellRender
+ * @see javax.swing.table.TableModel
  */
 public abstract class DTableModel extends AbstractTableModel {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2400053798894698246L;
-	protected String[] colNames;
-	protected Class<?>[] colClass;
-	protected Boolean[] colEdit;
-	protected boolean totalLine;
-
-	public DTableModel() {
-		totalLine = false;
-	}
-
-	public DCellRender getColumnModel(int col) {
-		return new DCellRender(colClass[col], colEdit[col], totalLine);
-	}
-
-	@Override
-	public int getColumnCount() {
-		return colNames.length;
-	}
-
-	@Override
-	public String getColumnName(int columnIndex) {
-		return colNames[columnIndex];
-	}
-
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		return colClass[columnIndex];
-	}
-
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (totalLine && rowIndex == getRowCount() - 1) {
-			return false;
-		}
-		return colEdit[columnIndex];
-	}
-
+    
+    protected DTableColumnModel[] colModel;
+    protected boolean totalLine;
+    
+    /**
+     * Initialise a new {@link DTableModel}.
+     */
+    public DTableModel() {
+        totalLine = false;
+    }
+    
+    /**
+     * Return the {@link DCellRender} of the column.
+     *
+     * @param col int - The number of the column.
+     * @return The {@link DCellRender} of the corresponding column.
+     */
+    public DCellRender getColumnModel(int col) {
+        return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
+    }
+    
+    @Override
+    public int getColumnCount() {
+        return colModel.length;
+    }
+    
+    @Override
+    public String getColumnName(int columnIndex) {
+        return colModel[columnIndex].getName();
+    }
+    
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return colModel[columnIndex].getColClass();
+    }
+    
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        if (totalLine && rowIndex == getRowCount() - 1) {
+            return false;
+        }
+        return colModel[columnIndex].isEditable();
+    }
+    
 }
