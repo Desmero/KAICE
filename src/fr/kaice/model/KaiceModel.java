@@ -2,7 +2,7 @@ package fr.kaice.model;
 
 import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.model.historic.Historic;
-import fr.kaice.model.membre.MemberCollection;
+import fr.kaice.model.member.MemberCollection;
 import fr.kaice.model.order.OrderCollection;
 import fr.kaice.model.raw.RawMaterialCollection;
 import fr.kaice.model.sell.CurrentTransaction;
@@ -21,17 +21,17 @@ import java.util.Observable;
  */
 public class KaiceModel extends Observable {
     
-    private static RawMaterialCollection rawMatColl = new RawMaterialCollection();
-    private static SoldProductCollection soldProdColl = new SoldProductCollection();
-    private static PurchasedProductCollection purProdColl = new PurchasedProductCollection();
+    private static final RawMaterialCollection rawMatColl = new RawMaterialCollection();
+    private static final SoldProductCollection soldProdColl = new SoldProductCollection();
+    private static final PurchasedProductCollection purProdColl = new PurchasedProductCollection();
     
-    private static CurrentTransaction curTran = new CurrentTransaction();
-    private static OrderCollection ordColl = new OrderCollection();
+    private static final CurrentTransaction curTran = new CurrentTransaction();
+    private static final OrderCollection ordColl = new OrderCollection();
     
-    private static MemberCollection memColl = new MemberCollection();
-    private static Historic hist = new Historic();
+    private static final MemberCollection memColl = new MemberCollection();
+    private static final Historic hist = new Historic();
     
-    private static KaiceModel model = new KaiceModel();
+    private static final KaiceModel model = new KaiceModel();
     private JPanel details;
     
     private KaiceModel() {

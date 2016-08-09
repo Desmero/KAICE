@@ -12,7 +12,7 @@ import java.awt.*;
  * @version 1.0
  * @see JDialog
  */
-public class WindowInform extends JDialog {
+class WindowInform extends JDialog {
     
     /**
      * Create a new {@link WindowInform} witch display the windowName on top, the mainPanel in the center, and can block

@@ -8,16 +8,16 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * This panel display all {@linkplain fr.kaice.model.membre.Member Member} contains in the
- * {@linkplain fr.kaice.model.membre.MemberCollection MemberCollection} known by {@link KaiceModel}.
+ * This panel display all {@linkplain fr.kaice.model.member.Member Member} contains in the
+ * {@linkplain fr.kaice.model.member.MemberCollection MemberCollection} known by {@link KaiceModel}.
  * The interface allow to visualise or create a new member.
  *
  * @author Raphaël Merkling
  * @version 2.0
  * @see JPanel
  * @see KaiceModel
- * @see fr.kaice.model.membre.MemberCollection
- * @see fr.kaice.model.membre.Member
+ * @see fr.kaice.model.member.MemberCollection
+ * @see fr.kaice.model.member.Member
  */
 public class PanelMember extends JPanel {
     
@@ -28,25 +28,19 @@ public class PanelMember extends JPanel {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getMemberCollection());
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
-        JPanel selec = new JPanel(new BorderLayout());
+        JPanel select = new JPanel(new BorderLayout());
         JPanel search = new JPanel(new GridLayout(2, 2));
         JTextField name = new JTextField(15);
-        JTextField firstname = new JTextField(15);
+        JTextField firstName = new JTextField(15);
         
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int memberId = KaiceModel.getMemberCollection().getNewId();
-                KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId, true));
-            }
+        add.addActionListener(e -> {
+            int memberId = KaiceModel.getMemberCollection().getNewId();
+            KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId, true));
         });
-        view.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (table.getSelectedRow() != -1) {
-                    int memberId = KaiceModel.getMemberCollection().getMemberIdAtRow(table.getSelectedRow());
-                    KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
-                }
+        view.addActionListener(e -> {
+            if (table.getSelectedRow() != -1) {
+                int memberId = KaiceModel.getMemberCollection().getMemberIdAtRow(table.getSelectedRow());
+                KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
             }
         });
         
@@ -75,10 +69,10 @@ public class PanelMember extends JPanel {
             }
         });
         
-        firstname.addKeyListener(new KeyAdapter() {
+        firstName.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                KaiceModel.getMemberCollection().setSearchFirstName(firstname.getText());
+                KaiceModel.getMemberCollection().setSearchFirstName(firstName.getText());
             }
         });
         
@@ -87,15 +81,15 @@ public class PanelMember extends JPanel {
         
         this.setLayout(new BorderLayout());
         this.add(table, BorderLayout.CENTER);
-        this.add(selec, BorderLayout.NORTH);
+        this.add(select, BorderLayout.NORTH);
         this.add(ctrl, BorderLayout.SOUTH);
         
-        selec.add(search, BorderLayout.CENTER);
+        select.add(search, BorderLayout.CENTER);
         
         search.add(new JLabel("Nom :"));
         search.add(name);
         search.add(new JLabel("Prénom :"));
-        search.add(firstname);
+        search.add(firstName);
         
         ctrl.add(add);
         ctrl.add(view);

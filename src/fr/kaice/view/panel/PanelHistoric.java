@@ -7,8 +7,6 @@ import fr.kaice.tools.generic.TimePeriodChooser;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This panel display the {@linkplain fr.kaice.model.historic.Historic Historic} table known by {@link KaiceModel}.
@@ -22,25 +20,20 @@ import java.awt.event.ActionListener;
  */
 public class PanelHistoric extends JPanel {
     
-    private TimePeriodChooser dateChooser;
-    
     /**
      * Create a new {@link PanelHistoric}.
      */
     public PanelHistoric() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getHistoric());
-        dateChooser = new TimePeriodChooser();
+        TimePeriodChooser dateChooser = new TimePeriodChooser();
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
         
         add.setEnabled(false);
-        view.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (table.getSelectedRow() != -1) {
-                    Transaction tran = KaiceModel.getHistoric().getTransaction(table.getSelectedRow());
-                    KaiceModel.getInstance().setDetails(new PanelTransaction(tran));
-                }
+        view.addActionListener(e -> {
+            if (table.getSelectedRow() != -1) {
+                Transaction tran = KaiceModel.getHistoric().getTransaction(table.getSelectedRow());
+                KaiceModel.getInstance().setDetails(new PanelTransaction(tran));
             }
         });
         

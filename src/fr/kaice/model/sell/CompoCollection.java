@@ -37,7 +37,7 @@ public class CompoCollection extends DTableModel {
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
-    private HashMap<RawMaterial, Integer> composition;
+    private final HashMap<RawMaterial, Integer> composition;
     
     /**
      * Construct a {@link CompoCollection}.
@@ -60,7 +60,7 @@ public class CompoCollection extends DTableModel {
      *          {@link RawMaterial} - The raw material to add.
      */
     public void addRawMaterial(RawMaterial mat) {
-        Integer oldNum = composition.get(mat.getId());
+        Integer oldNum = composition.get(mat);
         if (oldNum != null) {
             composition.put(mat, oldNum + 1);
         } else {
@@ -78,7 +78,7 @@ public class CompoCollection extends DTableModel {
      *          int - The quantity.
      */
     public void setRawMaterial(RawMaterial mat, int number) {
-        setRawMaterial(mat, number);
+        composition.put(mat, number);
     }
     
     /**
@@ -177,7 +177,10 @@ public class CompoCollection extends DTableModel {
         if (rowIndex != getColumnCount() - 1) {
             ArrayList<RawMaterial> list = new ArrayList<>(composition.keySet());
             RawMaterial mat = list.get(rowIndex);
-            composition.put(mat, (Integer) aValue);
+            switch (columnIndex) {
+                case COL_NUM_QTY:
+                    setRawMaterial(mat, (Integer) aValue);
+            }
         }
         KaiceModel.update();
     }

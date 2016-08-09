@@ -1,7 +1,7 @@
 package fr.kaice.model.historic;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.membre.Member;
+import fr.kaice.model.member.Member;
 import fr.kaice.tools.generic.DColor;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
@@ -41,18 +41,18 @@ public class Transaction extends DTableModel {
     private static final int COL_NUM_UNIT_PRICE = 2;
     private static final int COL_NUM_QTY = 3;
     private static final int COL_NUM_PRICE = 4;
-    private static int COL_COUNT = 5;
-    private static DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
-    private static DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
-    private static DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
-    private static DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private List<ArchivedProduct> productList;
-    private transactionType type;
-    private Member client;
-    private int price;
-    private int paid;
-    private Date date;
+    private static final int COL_COUNT = 5;
+    private static final DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
+    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
+    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
+    private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private final List<ArchivedProduct> productList;
+    private final transactionType type;
+    private final Member client;
+    private final int price;
+    private final int paid;
+    private final Date date;
     
     /**
      * Create a new {@link Transaction}.

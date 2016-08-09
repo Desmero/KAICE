@@ -4,7 +4,7 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.historic.Transaction.transactionType;
-import fr.kaice.model.membre.Member;
+import fr.kaice.model.member.Member;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
@@ -35,10 +35,10 @@ public class OrderCollection extends DTableModel {
     private static final int COL_NUM_FIRST_ORDER = 0;
     private static final int COL_NUM_FIRST_MEMBER = 1;
     private static final int COL_NUM_FIRST_PRODUCT = 2;
-    private static DTableColumnModel colOrder = new DTableColumnModel("Ordre", Integer.class, false);
-    private static DTableColumnModel colMember = new DTableColumnModel("Client", String.class, false);
-    private static DTableColumnModel colProduct = new DTableColumnModel("Article", String.class, false);
-    private ArrayList<Order> list;
+    private static final DTableColumnModel colOrder = new DTableColumnModel("Ordre", Integer.class, false);
+    private static final DTableColumnModel colMember = new DTableColumnModel("Client", String.class, false);
+    private static final DTableColumnModel colProduct = new DTableColumnModel("Article", String.class, false);
+    private final ArrayList<Order> list;
     
     /**
      * Construct a {@link OrderCollection}. This should be only call one time, and by {@link KaiceModel}.

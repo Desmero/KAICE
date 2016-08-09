@@ -37,7 +37,7 @@ public class PurchasedProductCollection extends DTableModel {
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private static final DTableColumnModel colTotalPrice = new DTableColumnModel("Prix total", Double.class, false);
-    private Map<Integer, PurchasedProduct> map;
+    private final Map<Integer, PurchasedProduct> map;
     private List<PurchasedProduct> alphabeticList;
     
     /**
@@ -88,12 +88,7 @@ public class PurchasedProductCollection extends DTableModel {
      */
     private void updateAlphabeticalList() {
         ArrayList<PurchasedProduct> newList = new ArrayList<>(map.values());
-        newList.sort(new Comparator<PurchasedProduct>() {
-            @Override
-            public int compare(PurchasedProduct arg0, PurchasedProduct arg1) {
-                return arg0.getName().compareTo(arg1.getName());
-            }
-        });
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
         alphabeticList = newList;
     }
     

@@ -17,9 +17,7 @@ import java.awt.*;
  * @see JPanel
  * @see Transaction
  */
-public class PanelTransaction extends JPanel {
-    
-    private Transaction tran;
+class PanelTransaction extends JPanel {
     
     /**
      * Create a new {@link PanelTransaction} who display the details of the given {@link Transaction}.
@@ -28,8 +26,6 @@ public class PanelTransaction extends JPanel {
      *          {@link Transaction} - The transaction to visualise.
      */
     public PanelTransaction(Transaction tran) {
-        
-        this.tran = tran;
         
         JLabel member = new JLabel(tran.getClient());
         JLabel date = new JLabel(DFormat.FULL_DATE_FORMAT.format(tran.getDate()));

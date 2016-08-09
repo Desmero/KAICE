@@ -17,9 +17,9 @@ import java.util.Observer;
  * @see JPanel
  * @see KaiceModel
  */
-public class PanelShoppingList extends JPanel implements Observer {
+class PanelShoppingList extends JPanel implements Observer {
     
-    private JList<JCheckBox> list;
+    private final JList<JCheckBox> list;
     
     /**
      * Create a new {@link PanelShoppingList}

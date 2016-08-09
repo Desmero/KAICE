@@ -34,7 +34,7 @@ public class SoldProductDisplayCollection extends DTableModel {
     private static final DTableColumnModel colQty = new DTableColumnModel("Disp.", Integer.class, false);
     
     private ArrayList<SoldProduct> collection;
-    private SoldProduct.prodType type;
+    private final SoldProduct.prodType type;
     
     /**
      * Construct a {@link SoldProductDisplayCollection} of a given type.
@@ -64,7 +64,7 @@ public class SoldProductDisplayCollection extends DTableModel {
      *
      * @param row
      *          int - The row number of the {@link SoldProduct}
-     * @return
+     * @return The {@link SoldProduct} at the given row.
      */
     public SoldProduct getSoldProduct(int row) {
         return collection.get(row);

@@ -5,17 +5,13 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.historic.Transaction.transactionType;
-import fr.kaice.model.membre.Member;
-import fr.kaice.model.membre.MemberCollection;
+import fr.kaice.model.member.Member;
+import fr.kaice.model.member.MemberCollection;
 import fr.kaice.tools.IdSpinner;
 import fr.kaice.tools.generic.DFormat;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,7 +24,7 @@ import java.util.Date;
  * @see JPanel
  * @see Member
  */
-public class PanelMemberDetails extends JPanel {
+class PanelMemberDetails extends JPanel {
     
     private boolean gender;
     private boolean edition;
@@ -80,18 +76,14 @@ public class PanelMemberDetails extends JPanel {
      * Method coll only by the constructors, used to initialise the {@link PanelMemberDetails}.
      *
      * @param memberId
+     *          int - The membership number of the {@link Member}
      */
     private void construct(int memberId) {
         int col = 10;
         
         id = new IdSpinner();
         id.setValue(memberId);
-        id.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                updateId();
-            }
-        });
+        id.addChangeListener(e -> updateId());
         
         name = new JTextField(col);
         firstName = new JTextField(col);
@@ -107,12 +99,9 @@ public class PanelMemberDetails extends JPanel {
         bGender = new JButton();
         pGender.add(lGender);
         bGender.setPreferredSize(name.getPreferredSize());
-        bGender.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                gender = !gender;
-                updateGender();
-            }
+        bGender.addActionListener(arg0 -> {
+            gender = !gender;
+            updateGender();
         });
         studies = new JTextField(col);
         col = 30;
@@ -123,41 +112,29 @@ public class PanelMemberDetails extends JPanel {
         newsLetter = new JCheckBox("newsLetter");
         tel = new JTextField();
         
-        edit = new JButton("?diter");
-        edit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                edition = !edition;
-                update();
-            }
+        edit = new JButton("Éditer");
+        edit.addActionListener(e -> {
+            edition = !edition;
+            update();
         });
         editValid = new JButton("Valider");
-        editValid.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editProfile();
-                edition = false;
-                update();
-            }
+        editValid.addActionListener(e -> {
+            editProfile();
+            edition = false;
+            update();
         });
         
         // TODO test BorderLayout bl = new BorderLayout();
         JPanel center = new JPanel(new BorderLayout());
         JPanel details = new JPanel(new BorderLayout());
-        JPanel detailsLeft = new JPanel(new GridLayout(6, 2));
         JPanel detailsCenter = new JPanel(new GridLayout(6, 4));
-        JPanel detailsRightR = new JPanel(new GridLayout(6, 1, 0, 8));
-        JPanel detailsRightL = new JPanel(new GridLayout(6, 1));
         JPanel detailsEdit = new JPanel();
         
         this.setLayout(new BorderLayout());
         this.add(center, BorderLayout.CENTER);
         this.add(details, BorderLayout.NORTH);
         
-        // details.add(detailsLeft, BorderLayout.WEST);
-        // details.add(detailsRightR, BorderLayout.CENTER);
         details.add(detailsCenter, BorderLayout.CENTER);
-        // details.add(detailsRightL, BorderLayout.EAST);
         details.add(detailsEdit, BorderLayout.SOUTH);
         
         detailsCenter.add(new JLabel("Id : "));
@@ -180,7 +157,7 @@ public class PanelMemberDetails extends JPanel {
         detailsCenter.add(pGender);
         detailsCenter.add(new JLabel());
         detailsCenter.add(newsLetter);
-        detailsCenter.add(new JLabel("Fili?re : "));
+        detailsCenter.add(new JLabel("Filière : "));
         detailsCenter.add(studies);
         detailsCenter.add(new JLabel("Numero de Tel : "));
         detailsCenter.add(tel);
@@ -196,14 +173,11 @@ public class PanelMemberDetails extends JPanel {
      */
     private void updateId() {
         edition = false;
-        int newId = (int) id.getValue();
+        int newId = id.getValue();
         // TODO display member's historic
         // tableModel.setId(newId);
-        if (KaiceModel.getMemberCollection().isIdUsed(newId)) {
-            gender = KaiceModel.getMemberCollection().getMember(newId).isMale();
-        } else {
-            gender = true;
-        }
+        // TODO Test if correct (KaiceModel.getMemberCollection().getMember(newId) could be null)
+        gender = !KaiceModel.getMemberCollection().isIdUsed(newId) || KaiceModel.getMemberCollection().getMember(newId).isMale();
         update();
     }
     
@@ -241,7 +215,7 @@ public class PanelMemberDetails extends JPanel {
         u.setNewsLetter(newsLetter.isSelected());
         u.setPhoneNumber(tel.getText());
         // TODO write file
-        // Model.getInstance().writeAllUSers();
+        // Model.getInstance().writeAllUsers();
         // Model.getInstance().update();
     }
     

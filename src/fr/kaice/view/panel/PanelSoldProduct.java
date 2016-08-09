@@ -6,8 +6,6 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This panel display all {@link SoldProduct} contains in the
@@ -31,19 +29,11 @@ public class PanelSoldProduct extends JPanel {
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
         
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                KaiceModel.getInstance().setDetails(new PanelNewSoldProduct());
-            }
-        });
-        view.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (table.getSelectedRow() != -1) {
-                    SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(table.getSelectedRow());
-                    KaiceModel.getInstance().setDetails(new PanelSoldProductDetails(prod));
-                }
+        add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewSoldProduct()));
+        view.addActionListener(e -> {
+            if (table.getSelectedRow() != -1) {
+                SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(table.getSelectedRow());
+                KaiceModel.getInstance().setDetails(new PanelSoldProductDetails(prod));
             }
         });
         

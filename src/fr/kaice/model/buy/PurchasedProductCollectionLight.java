@@ -26,15 +26,14 @@ public class PurchasedProductCollectionLight extends DTableModel {
     
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_UNIT_PRICE = 1;
-    private static int COL_COUNT = 2;
-    private static DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
-    private static DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
+    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
+    private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
     
     /**
      * Construct a {@link PurchasedProductCollectionLight}.
      */
     public PurchasedProductCollectionLight() {
-        colModel = new DTableColumnModel[COL_COUNT];
+        colModel = new DTableColumnModel[2];
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_UNIT_PRICE] = colUnitPrice;
     }

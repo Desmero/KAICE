@@ -1,7 +1,7 @@
 package fr.kaice.tools.exeption;
 
 /**
- * This exception must be throw when a {@linkplain fr.kaice.model.membre.Member Member} try to be registered with a used
+ * This exception must be throw when a {@linkplain fr.kaice.model.member.Member Member} try to be registered with a used
  * membership number (id)
  *
  * @author Raphaël Merkling

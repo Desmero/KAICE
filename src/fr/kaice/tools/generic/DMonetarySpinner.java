@@ -34,12 +34,9 @@ public class DMonetarySpinner extends JSpinner {
         JTextField textField = textEditor.getTextField();
         textField.addFocusListener(new FocusAdapter() {
             public void focusGained(final FocusEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        JTextField tf = (JTextField) e.getSource();
-                        tf.selectAll();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    JTextField tf = (JTextField) e.getSource();
+                    tf.selectAll();
                 });
             }
         });

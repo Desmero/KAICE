@@ -11,9 +11,9 @@ import fr.kaice.tools.GenericProduct;
  */
 public class ArchivedProduct implements GenericProduct {
     
-    private String name;
-    private int quantity;
-    private int price;
+    private final String name;
+    private final int quantity;
+    private final int price;
     
     /**
      * Create a new {@link ArchivedProduct}. The quantity should be a positive number. It is the {@link Transaction} who

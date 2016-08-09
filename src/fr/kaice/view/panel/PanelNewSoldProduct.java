@@ -10,8 +10,6 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -26,9 +24,9 @@ import java.awt.event.MouseEvent;
  * @see fr.kaice.model.sell.SoldProductCollection
  * @see SoldProduct
  */
-public class PanelNewSoldProduct extends JPanel {
+class PanelNewSoldProduct extends JPanel {
     
-    private CompoCollection tmCompo;
+    private final CompoCollection tmCompo;
     
     /**
      * Create a new {@link PanelNewSoldProduct}
@@ -39,8 +37,8 @@ public class PanelNewSoldProduct extends JPanel {
         JButton rem = new JButton();
         JTextField name = new JTextField();
         DMonetarySpinner price = new DMonetarySpinner(0.1);
-        JComboBox<SoldProduct.prodType> type = new JComboBox<SoldProduct.prodType>();
-        JList<RawMaterial> list = new JList<RawMaterial>(KaiceModel.getRawMatCollection().getAllRawMaterial());
+        JComboBox<SoldProduct.prodType> type = new JComboBox<>();
+        JList<RawMaterial> list = new JList<>(KaiceModel.getRawMatCollection().getAllRawMaterial());
         JScrollPane spListRaw = new JScrollPane(list);
         tmCompo = new CompoCollection();
         DTablePanel compos = new DTablePanel(KaiceModel.getInstance(), tmCompo);
@@ -63,34 +61,25 @@ public class PanelNewSoldProduct extends JPanel {
         });
         
         add.setIcon(new ImageIcon("icon/rightArrow.png"));
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int[] val = list.getSelectedIndices();
-                for (int v : val) {
-                    tmCompo.addRawMaterial(items[v]);
-                }
-                update();
+        add.addActionListener(e -> {
+            int[] val = list.getSelectedIndices();
+            for (int v : val) {
+                tmCompo.addRawMaterial(items[v]);
             }
+            update();
         });
         rem.setIcon(new ImageIcon("icon/leftArrow.png"));
-        rem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tmCompo.removeSelectedRows(compos.getSelectedRow());
-                update();
-            }
+        rem.addActionListener(e -> {
+            tmCompo.removeSelectedRows(compos.getSelectedRow());
+            update();
         });
-        accept.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SoldProduct prod = KaiceModel.getSoldProdCollection().addNewSoldProduct(name.getText(),
-                        price.getIntValue(), (prodType) type.getSelectedItem());
-                for (RawMaterial mat : tmCompo.getAllRawMaterial()) {
-                    prod.setRawMaterial(mat, tmCompo.getQuantity(mat));
-                }
-                KaiceModel.update();
+        accept.addActionListener(e -> {
+            SoldProduct prod = KaiceModel.getSoldProdCollection().addNewSoldProduct(name.getText(),
+                    price.getIntValue(), (prodType) type.getSelectedItem());
+            for (RawMaterial mat : tmCompo.getAllRawMaterial()) {
+                prod.setRawMaterial(mat, tmCompo.getQuantity(mat));
             }
+            KaiceModel.update();
         });
         name.setColumns(10);
         type.addItem(SoldProduct.prodType.DRINK);
@@ -138,7 +127,7 @@ public class PanelNewSoldProduct extends JPanel {
     /**
      * Update the table. Use when a {@link RawMaterial} is add or remove from it.
      */
-    void update() {
+    private void update() {
         tmCompo.fireTableDataChanged();
     }
 }

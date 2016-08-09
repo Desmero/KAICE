@@ -1,4 +1,4 @@
-package fr.kaice.model.membre;
+package fr.kaice.model.member;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
@@ -7,6 +7,7 @@ import fr.kaice.tools.generic.DTableModel;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class store all {@link Member} of the current year.
@@ -33,7 +34,7 @@ public class MemberCollection extends DTableModel {
     private static final DTableColumnModel colId = new DTableColumnModel("Num", Integer.class, false);
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
     private static final DTableColumnModel colFirstName = new DTableColumnModel("Prénom", String.class, false);
-    private Map<Integer, Member> map;
+    private final Map<Integer, Member> map;
     private List<Member> displayList;
     private Member selectedMember;
     private int sortCol;
@@ -88,25 +89,19 @@ public class MemberCollection extends DTableModel {
      * @return A new list of {@link Member}, corresponding to the filter, and sort parameters.
      */
     private ArrayList<Member> getDisplayList(String name, String firstName, int sotMethod) {
-        ArrayList<Member> newList = new ArrayList<>();
-        for (Member mem : map.values()) {
-            if (mem.getName().toLowerCase().contains(name.toLowerCase())
-                    && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase())) {
-                newList.add(mem);
-            }
-        }
-        newList.sort(new Comparator<Member>() {
-            @Override
-            public int compare(Member arg0, Member arg1) {
-                switch (sotMethod) {
-                    case COL_NUM_NAME:
-                        return arg0.getName().compareTo(arg1.getName());
-                    case COL_NUM_FIRST_NAME:
-                        return arg0.getFirstName().compareTo(arg1.getFirstName());
-                    case COL_NUM_ID:
-                    default:
-                        return arg0.getUserId() - arg1.getUserId();
-                }
+        ArrayList<Member> newList = map.values().stream().filter(mem ->
+                mem.getName().toLowerCase().contains(name.toLowerCase())
+                && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        newList.sort((arg0, arg1) -> {
+            switch (sotMethod) {
+                case COL_NUM_NAME:
+                    return arg0.getName().compareTo(arg1.getName());
+                case COL_NUM_FIRST_NAME:
+                    return arg0.getFirstName().compareTo(arg1.getFirstName());
+                case COL_NUM_ID:
+                default:
+                    return arg0.getUserId() - arg1.getUserId();
             }
         });
         return newList;
@@ -179,14 +174,11 @@ public class MemberCollection extends DTableModel {
     }
     
     /**
-     * Set the selected {@link Member} for the current transaction.
      *
-     * @param mem {@link Member} - The new selected {@link Member}.
      */
-    public void setSelectedMember(Member mem) {
-        selectedMember = mem;
+    public void clearSelectedMember() {
+        selectedMember = null;
     }
-    
     /**
      * Set the selected {@link Member} for the current transaction.
      *
@@ -260,12 +252,10 @@ public class MemberCollection extends DTableModel {
      */
     public String getEMailList() {
         StringBuilder sb = new StringBuilder();
-        for (Member u : map.values()) {
-            if (u.isNewsLetter() && u.isValidEmailAddress()) {
-                String eMail = u.getEMail();
-                sb.append(eMail + "\n");
-            }
-        }
+        map.values().stream().filter(u -> u.isNewsLetter() && u.isValidEmailAddress()).forEachOrdered(u -> {
+            String eMail = u.getEMail();
+            sb.append(eMail).append("\n");
+        });
         return sb.toString();
     }
     

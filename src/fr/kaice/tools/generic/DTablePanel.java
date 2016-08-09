@@ -42,6 +42,7 @@ public class DTablePanel extends JPanel implements Observer{
      * The should only be used by a constructor.
      *
      * @param tableModel
+     *          {@link DTableModel} - The model of the table.
      */
     private void construct(DTableModel tableModel) {
         this.setLayout(new BorderLayout());

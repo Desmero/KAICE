@@ -1,4 +1,4 @@
-package fr.kaice.model.membre;
+package fr.kaice.model.member;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +24,7 @@ import java.util.Date;
  */
 public class Member {
     
-    private int userId;
+    private final int userId;
     private String name;
     private String firstName;
     private boolean gender; // true : male; false : female

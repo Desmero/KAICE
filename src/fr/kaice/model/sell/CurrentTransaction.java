@@ -4,7 +4,7 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.historic.Transaction.transactionType;
-import fr.kaice.model.membre.Member;
+import fr.kaice.model.member.Member;
 import fr.kaice.model.order.Order;
 import fr.kaice.model.order.OrderCollection;
 import fr.kaice.tools.generic.DMonetarySpinner;
@@ -45,7 +45,7 @@ public class CurrentTransaction extends DTableModel {
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private HashMap<SoldProduct, Integer> listArticles;
+    private final HashMap<SoldProduct, Integer> listArticles;
     
     
     /**

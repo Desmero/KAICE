@@ -5,9 +5,6 @@ import fr.kaice.model.KaiceModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,9 +24,8 @@ public class TimePeriodChooser extends JPanel {
     private static final int MONTH = 2;
     private static final int YEAR = 3;
     private static final int ALL = 4;
-    private static final int OTHER = 5;
-    private JDateChooser start;
-    private JDateChooser end;
+    private final JDateChooser start;
+    private final JDateChooser end;
     
     /**
      * Create a new {@link TimePeriodChooser}.
@@ -38,12 +34,7 @@ public class TimePeriodChooser extends JPanel {
         start = new JDateChooser(new Date(), "dd/MM/yyyy HH:mm:ss");
         end = new JDateChooser(new Date(), "dd/MM/yyyy HH:mm:ss");
         
-        PropertyChangeListener listener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                KaiceModel.getHistoric().setDateSelect(getStart(), getEnd());
-            }
-        };
+        PropertyChangeListener listener = evt -> KaiceModel.getHistoric().setDateSelect(getStart(), getEnd());
         start.addPropertyChangeListener(listener);
         start.setPreferredSize(new Dimension(150, 25));
         end.addPropertyChangeListener(listener);
@@ -56,12 +47,7 @@ public class TimePeriodChooser extends JPanel {
         selec.addItem("Cette ann?e");
         selec.addItem("Tout");
         selec.addItem("Personalis?");
-        selec.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateDate(selec.getSelectedIndex());
-            }
-        });
+        selec.addActionListener(e -> updateDate(selec.getSelectedIndex()));
         
         JPanel top = new JPanel();
         JPanel bot = new JPanel();
@@ -71,11 +57,11 @@ public class TimePeriodChooser extends JPanel {
         this.add(top, BorderLayout.CENTER);
         this.add(bot, BorderLayout.SOUTH);
         
-        top.add(new JLabel("D?but : "));
+        top.add(new JLabel("Début : "));
         top.add(start);
         top.add(new JLabel("Fin : "));
         top.add(end);
-        bot.add(new JLabel("Pr?selecction : "));
+        bot.add(new JLabel("Préselecction : "));
         bot.add(selec);
         updateDate(DAY);
     }

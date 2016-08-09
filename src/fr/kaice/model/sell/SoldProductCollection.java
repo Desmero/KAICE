@@ -9,6 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class store all {@link SoldProduct} the programme need to know.
@@ -42,7 +43,7 @@ public class SoldProductCollection extends DTableModel {
     private static final DTableColumnModel colBuyPrice = new DTableColumnModel("Prix d'achat", Double.class, false);
     private static final DTableColumnModel colBenef = new DTableColumnModel("Bénéfices", Double.class, false);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité disponible", Integer.class, false);
-    private Map<Integer, SoldProduct> map;
+    private final Map<Integer, SoldProduct> map;
     private List<SoldProduct> alphabeticList;
     
     /**
@@ -93,12 +94,7 @@ public class SoldProductCollection extends DTableModel {
      */
     private void updateAlphabeticalList() {
         ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
-        newList.sort(new Comparator<SoldProduct>() {
-            @Override
-            public int compare(SoldProduct arg0, SoldProduct arg1) {
-                return arg0.getName().compareTo(arg1.getName());
-            }
-        });
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
         alphabeticList = newList;
     }
     
@@ -119,13 +115,7 @@ public class SoldProductCollection extends DTableModel {
      * @return All available product of the given type in a {@link ArrayList}.
      */
     ArrayList<SoldProduct> getAvailableProduct(SoldProduct.prodType type) {
-        ArrayList<SoldProduct> coll = new ArrayList<>();
-        for (SoldProduct prod : alphabeticList) {
-            if (prod.getType() == type) {
-                coll.add(prod);
-            }
-        }
-        return coll;
+        return alphabeticList.stream().filter(prod -> prod.getType() == type).collect(Collectors.toCollection(ArrayList::new));
     }
     
     /**

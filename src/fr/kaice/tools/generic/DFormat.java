@@ -18,36 +18,36 @@ public abstract class DFormat {
      * {@link SimpleDateFormat}, only date, French representation : "dd/MM/yyyy". <br/>
      * Example : "26/08/2016"
      */
-    public static SimpleDateFormat DATE_ONLY = new SimpleDateFormat("dd/MM/yyyy");
+    public static final SimpleDateFormat DATE_ONLY = new SimpleDateFormat("dd/MM/yyyy");
     
     /**
      * {@link SimpleDateFormat}, only date without year, French representation : "E dd/MM". <br/>
      * Example : "ven. 26/08"
      */
-    public static SimpleDateFormat DATE_YEAR_LESS = new SimpleDateFormat("E dd/MM");
+    public static final SimpleDateFormat DATE_YEAR_LESS = new SimpleDateFormat("E dd/MM");
     
     /**
      * {@link SimpleDateFormat}, only the ful name of the day of the week : "EEEE". <br/>
      * Example : "Vendredi"
      */
-    public static SimpleDateFormat DAY_OF_WEEK = new SimpleDateFormat("EEEE");
+    public static final SimpleDateFormat DAY_OF_WEEK = new SimpleDateFormat("EEEE");
     
     /**
      * {@link SimpleDateFormat}, only hour (24 hours format), French representation : "HH:mm". <br/>
      * Example : "14:48"
      */
-    public static SimpleDateFormat HOUR_ONLY = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat HOUR_ONLY = new SimpleDateFormat("HH:mm");
     /**
      * {@link SimpleDateFormat}, date + hour, French representation : "dd/MM/yyyy". HH:mm:ss. <br/>
      * Example : "26/08/2016 14:48:36"
      */
-    public static SimpleDateFormat FULL_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    public static final SimpleDateFormat FULL_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     
     /**
      * {@link DecimalFormat} with 2 decimal digits : "#0.00". <br/>
      * Example : "2.75"
      */
-    public static DecimalFormat MONEY_FORMAT = new DecimalFormat("#0.00");
+    public static final DecimalFormat MONEY_FORMAT = new DecimalFormat("#0.00");
     
     /**
      * Description partially copied from {@link SimpleDateFormat#format(Date)}. <br/>

@@ -6,8 +6,6 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This panel display all {@linkplain fr.kaice.model.buy.PurchasedProduct PurchasedProduct} contains in the
@@ -31,12 +29,7 @@ public class PanelPurchasedProductLight extends JPanel {
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
         
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct());
-            }
-        });
+        add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
         view.setEnabled(false);
         
         table.setMultiSelection(false);

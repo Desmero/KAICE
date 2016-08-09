@@ -38,12 +38,12 @@ public class RawMaterialCollection extends DTableModel {
     private static final int COL_NUM_QTY = 1;
     private static final int COL_NUM_PRICE = 2;
     private static final int COL_NUM_ALERT = 3;
-    private static DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
-    private static DTableColumnModel colQty = new DTableColumnModel("Stock", Integer.class, true);
-    private static DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static DTableColumnModel colAlert = new DTableColumnModel("Alert", Double.class, true);
+    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel("Stock", Integer.class, true);
+    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Double.class, true);
     
-    private Map<Integer, RawMaterial> map;
+    private final Map<Integer, RawMaterial> map;
     private List<RawMaterial> alphabeticList;
     
     /**
@@ -104,12 +104,7 @@ public class RawMaterialCollection extends DTableModel {
      */
     private void updateAlphabeticalList() {
         ArrayList<RawMaterial> newList = new ArrayList<>(map.values());
-        newList.sort(new Comparator<RawMaterial>() {
-            @Override
-            public int compare(RawMaterial arg0, RawMaterial arg1) {
-                return arg0.getName().compareTo(arg1.getName());
-            }
-        });
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
         alphabeticList = newList;
     }
     

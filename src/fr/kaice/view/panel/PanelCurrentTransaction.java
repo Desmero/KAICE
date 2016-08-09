@@ -1,7 +1,7 @@
 package fr.kaice.view.panel;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.membre.Member;
+import fr.kaice.model.member.Member;
 import fr.kaice.model.sell.CurrentTransaction;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.tools.IdSpinner;
@@ -11,17 +11,13 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 /**
- * This panel display the {@link CurrentTransaction} and the {@link PanelChoosSoldProduct}.
+ * This panel display the {@link CurrentTransaction} and the {@link PanelChoseSoldProduct}.
  * The interface allow to add or remove a {@link SoldProduct} from the current transaction, set a client {@link Member},
  * and valid or cancel the transaction.
  *
@@ -31,18 +27,18 @@ import java.util.Observer;
  * @see SoldProduct
  * @see Member
  * @see CurrentTransaction
- * @see PanelChoosSoldProduct
+ * @see PanelChoseSoldProduct
  */
 public class PanelCurrentTransaction extends JPanel implements Observer {
     
-    private DTablePanel currentTran;
-    private DMonetarySpinner cash;
-    private JLabel cashBack;
-    private JLabel cashBackText;
-    private JLabel total;
-    private JTextField memberName;
-    private JTextField memberFirstName;
-    private IdSpinner memberId;
+    private final DTablePanel currentTran;
+    private final DMonetarySpinner cash;
+    private final JLabel cashBack;
+    private final JLabel cashBackText;
+    private final JLabel total;
+    private final JTextField memberName;
+    private final JTextField memberFirstName;
+    private final IdSpinner memberId;
     
     /**
      * Create a new {@link PanelCurrentTransaction}.
@@ -50,14 +46,9 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     public PanelCurrentTransaction() {
         KaiceModel.getInstance().addObserver(this);
         currentTran = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getCurrentTransaction(), 10);
-        PanelChoosSoldProduct product = new PanelChoosSoldProduct();
+        PanelChoseSoldProduct product = new PanelChoseSoldProduct();
         cash = new DMonetarySpinner(0.1);
-        cash.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                KaiceModel.update();
-            }
-        });
+        cash.addChangeListener(e -> KaiceModel.update());
         cashBack = new JLabel();
         cashBackText = new JLabel("Rendu : ");
         total = new JLabel("Total : 0.00?");
@@ -66,65 +57,34 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         
         memberName = new JTextField();
         memberName.setColumns(10);
-        memberName.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectMember();
-            }
-        });
+        memberName.addActionListener(e -> selectMember());
         memberFirstName = new JTextField();
         memberFirstName.setColumns(10);
-        memberFirstName.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectMember();
-            }
-        });
+        memberFirstName.addActionListener(e -> selectMember());
         memberId = new IdSpinner();
         Dimension dimId = memberFirstName.getPreferredSize();
         dimId.setSize(80, dimId.getHeight());
         memberId.setPreferredSize(dimId);
-        memberId.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                KaiceModel.getMemberCollection().setSelectedMemberById(memberId.getValue());
-            }
-        });
+        memberId.addChangeListener(e -> KaiceModel.getMemberCollection().setSelectedMemberById(memberId.getValue()));
         
         JButton add = new JButton("Ajouter");
         add.setIcon(new ImageIcon("icon/downArrow.png"));
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                product.addSelection();
-            }
-        });
+        add.addActionListener(e -> product.addSelection());
         JButton rem = new JButton("Retirer");
         rem.setIcon(new ImageIcon("icon/upArrow.png"));
-        rem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeProduct();
-                KaiceModel.update();
-            }
+        rem.addActionListener(e -> {
+            removeProduct();
+            KaiceModel.update();
         });
         JButton valide = new JButton("Valider");
         valide.setIcon(new ImageIcon("icon/valid.png"));
-        valide.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                valid();
-                reset();
-            }
+        valide.addActionListener(e -> {
+            valid();
+            reset();
         });
         JButton cancel = new JButton("Annuler");
         cancel.setIcon(new ImageIcon("icon/cancel.png"));
-        cancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reset();
-            }
-        });
+        cancel.addActionListener(e -> reset());
         
         JPanel tran = new JPanel(new BorderLayout());
         JPanel ctrl = new JPanel(new BorderLayout());
@@ -185,9 +145,9 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         int lastRow = tran.getRowCount() - 1;
         ArrayList<SoldProduct> items = tran.getAllProduct();
         int[] val = currentTran.getSelectedRows();
-        for (int i = 0; i < val.length; i++) {
-            if (val[i] != lastRow) {
-                KaiceModel.getCurrentTransaction().removeSoldProduct(items.get(val[i]));
+        for (int aVal : val) {
+            if (aVal != lastRow) {
+                KaiceModel.getCurrentTransaction().removeSoldProduct(items.get(aVal));
             }
         }
     }
@@ -199,9 +159,10 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         CurrentTransaction tran = KaiceModel.getCurrentTransaction();
         int res = JOptionPane.YES_OPTION;
         int price = tran.getPrice();
-        int surp = cash.getIntValue() - price;
-        // TODO membre non enregistrée
-        if (res == JOptionPane.YES_OPTION && surp < 0) {
+        int add = cash.getIntValue() - price;
+        // TODO non registered member
+        //noinspection ConstantConditions
+        if (res == JOptionPane.YES_OPTION && add < 0) {
             res = JOptionPane.showConfirmDialog(null,
                     "Le payment en espece est inssufisant, voulez-vous d?biter le compte ?", "Espece insuffisant",
                     JOptionPane.YES_NO_OPTION, 2);
@@ -222,7 +183,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     private void reset() {
         cash.setValue(0.);
         KaiceModel.getCurrentTransaction().reset();
-        KaiceModel.getMemberCollection().setSelectedMember(null);
+        KaiceModel.getMemberCollection().clearSelectedMember();
         KaiceModel.update();
     }
     
@@ -230,16 +191,16 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
         CurrentTransaction tran = KaiceModel.getCurrentTransaction();
         int price = tran.getPrice();
-        int surp = cash.getIntValue() - price;
+        int add = cash.getIntValue() - price;
         
         total.setText("Total : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(price)) + " ?");
-        if (surp > 0) {
-            cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(surp)) + " ?");
+        if (add > 0) {
+            cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
             cashBack.setForeground(Color.BLACK);
             cashBackText.setForeground(Color.BLACK);
         } else {
-            surp = 0;
-            cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(surp)) + " ?");
+            add = 0;
+            cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
             cashBack.setForeground(Color.LIGHT_GRAY);
             cashBackText.setForeground(Color.LIGHT_GRAY);
         }

@@ -6,8 +6,6 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -34,20 +32,14 @@ public class PanelOrder extends JPanel {
         JPanel ctrl = new JPanel();
         DMonetarySpinner cashBack = new DMonetarySpinner(0.1);
         
-        valid.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int[] rows = table.getSelectedRows();
-                KaiceModel.getOrderCollection().validOrders(rows);
-            }
+        valid.addActionListener(e -> {
+            int[] rows = table.getSelectedRows();
+            KaiceModel.getOrderCollection().validOrders(rows);
         });
-        rem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (table.getSelectedRow() != -1) {
-                    int row = table.getSelectedRow();
-                    KaiceModel.getOrderCollection().cancelOrder(row, cashBack.getIntValue());
-                }
+        rem.addActionListener(e -> {
+            if (table.getSelectedRow() != -1) {
+                int row = table.getSelectedRow();
+                KaiceModel.getOrderCollection().cancelOrder(row, cashBack.getIntValue());
             }
         });
         

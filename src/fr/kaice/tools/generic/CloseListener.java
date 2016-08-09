@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  */
 public class CloseListener implements ActionListener {
     
-    protected Window window;
+    private final Window window;
     
     /**
      * Create a new {@link CloseListener}. The listener close the window when an action occurs.

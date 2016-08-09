@@ -20,7 +20,7 @@ import java.util.Observer;
  */
 public class MainWindow extends JFrame implements Observer{
     
-    private JPanel centerSouth;
+    private final JPanel centerSouth;
     
     /**
      * Create a new {@link MainWindow}.
@@ -84,7 +84,7 @@ public class MainWindow extends JFrame implements Observer{
         
         d = new Dimension(1600, 900);
         setPreferredSize(d);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
         pack();
         setVisible(true);

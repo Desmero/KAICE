@@ -5,8 +5,6 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This panel display all {@linkplain fr.kaice.model.raw.RawMaterial RawMaterial} contains in the
@@ -30,15 +28,12 @@ public class PanelRawMaterial extends JPanel {
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
         
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                String s = (String) JOptionPane.showInputDialog(null,
-                        "Nom du produit : ", "Nouveau produit", -1, null, null,
-                        null);
-                if (s != null) {
-                    KaiceModel.getRawMatCollection().addNewRawMaterial(s);
-                }
+        add.addActionListener(arg0 -> {
+            String s = (String) JOptionPane.showInputDialog(null,
+                    "Nom du produit : ", "Nouveau produit", -1, null, null,
+                    null);
+            if (s != null) {
+                KaiceModel.getRawMatCollection().addNewRawMaterial(s);
             }
         });
         view.setEnabled(false);

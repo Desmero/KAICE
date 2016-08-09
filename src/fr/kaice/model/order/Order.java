@@ -1,6 +1,6 @@
 package fr.kaice.model.order;
 
-import fr.kaice.model.membre.Member;
+import fr.kaice.model.member.Member;
 import fr.kaice.model.sell.SoldProduct;
 
 /**
@@ -14,8 +14,8 @@ import fr.kaice.model.sell.SoldProduct;
  */
 public class Order {
     
-    private Member member;
-    private SoldProduct product;
+    private final Member member;
+    private final SoldProduct product;
     
     /**
      * Create a new {@link Order}.

@@ -22,7 +22,7 @@ public abstract class DTableModel extends AbstractTableModel {
     /**
      * Initialise a new {@link DTableModel}.
      */
-    public DTableModel() {
+    protected DTableModel() {
         totalLine = false;
     }
     
@@ -53,10 +53,7 @@ public abstract class DTableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (totalLine && rowIndex == getRowCount() - 1) {
-            return false;
-        }
-        return colModel[columnIndex].isEditable();
+        return !(totalLine && rowIndex == getRowCount() - 1) && colModel[columnIndex].isEditable();
     }
     
 }

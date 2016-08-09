@@ -28,10 +28,11 @@ public class RawMaterial implements GenericProduct {
     private final int id;
     private String name;
     private int stock;
-    private int unitPrice;
+    private final int unitPrice;
     private int alert;
-    private int restockNum; // Used for average unit price calculation
-    private int restockCost; // Used for average unit price calculation
+    // TODO Calculate average price
+//    private int restockNum; // Used for average unit price calculation
+//    private int restockCost; // Used for average unit price calculation
     
     /**
      * Simple constructor. Take only the name, auto-generate the id, and
@@ -45,8 +46,8 @@ public class RawMaterial implements GenericProduct {
         this.stock = 0;
         this.unitPrice = 0;
         this.alert = 0;
-        this.restockNum = 0;
-        this.restockCost = 0;
+//        this.restockNum = 0;
+//        this.restockCost = 0;
     }
     
     /**
@@ -126,7 +127,7 @@ public class RawMaterial implements GenericProduct {
     /**
      * Return the unit price in cents of the {@link RawMaterial}.
      *
-     * @retur The unit price in cents of the {@link RawMaterial}.
+     * @return The unit price in cents of the {@link RawMaterial}.
      */
     public int getPrice() {
         return unitPrice;

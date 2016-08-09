@@ -8,8 +8,6 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,8 +25,8 @@ import java.util.Observer;
  */
 public class PanelPurchasedProduct extends JPanel implements Observer {
     
-    private JLabel price;
-    private JPanel shoppingPanel;
+    private final JLabel price;
+    private final JPanel shoppingPanel;
     
     /**
      * Create a new {@link PanelPurchasedProduct}
@@ -49,18 +47,8 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         shoppingPanel = new PanelShoppingList();
         price = new JLabel("0.00 €");
         
-        add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct());
-            }
-        });
-        shopping.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                KaiceModel.getInstance().setDetails(shoppingPanel);
-            }
-        });
+        add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
+        shopping.addActionListener(e -> KaiceModel.getInstance().setDetails(shoppingPanel));
         view.setEnabled(false);
         
         table.setMultiSelection(false);

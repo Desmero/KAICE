@@ -12,9 +12,9 @@ package fr.kaice.tools.generic;
  */
 public class DTableColumnModel {
     
-    private String name;
-    private Class colClass;
-    private boolean editable;
+    private final String name;
+    private final Class colClass;
+    private final boolean editable;
     
     /**
      * Create a new {@link DTableColumnModel}.

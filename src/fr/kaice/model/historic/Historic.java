@@ -37,13 +37,13 @@ public class Historic extends DTableModel {
     private static final int COL_NUM_TRAN = 2;
     private static final int COL_NUM_PRICE = 3;
     private static final int COL_NUM_CASH = 4;
-    private static DTableColumnModel colDate = new DTableColumnModel("Date", String.class, false);
-    private static DTableColumnModel colClient = new DTableColumnModel("Client", String.class, false);
-    private static DTableColumnModel colTran = new DTableColumnModel("Transaction", String.class, false);
-    private static DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
-    private List<Transaction> orderedList;
-    private List<Transaction> displayList;
+    private static final DTableColumnModel colDate = new DTableColumnModel("Date", String.class, false);
+    private static final DTableColumnModel colClient = new DTableColumnModel("Client", String.class, false);
+    private static final DTableColumnModel colTran = new DTableColumnModel("Transaction", String.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
+    private final List<Transaction> orderedList;
+    private final List<Transaction> displayList;
     private Date start;
     private Date end;
     

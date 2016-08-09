@@ -1,7 +1,7 @@
 package fr.kaice.view.panel;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.membre.MemberCollection;
+import fr.kaice.model.member.MemberCollection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,19 +10,19 @@ import java.util.Observer;
 
 /**
  * This panel display a list of e-Mail address. The list contains only correct address, and only of
- * {@linkplain fr.kaice.model.membre.Member Member} who subscribe to the newsletter (using the method
+ * {@linkplain fr.kaice.model.member.Member Member} who subscribe to the newsletter (using the method
  * {@link MemberCollection#getEMailList()}).
  *
  * @author Raphaël Merkling
  * @version 2.0
  * @see JPanel
- * @see fr.kaice.model.membre.Member
+ * @see fr.kaice.model.member.Member
  * @see MemberCollection
  */
 public class PanelEMailList extends JPanel implements Observer{
     
     private static final long serialVersionUID = 1L;
-    private JTextArea emails;
+    private final JTextArea emails;
     
     /**
      * Create a new {@link PanelEMailList}.

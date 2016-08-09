@@ -18,10 +18,10 @@ import fr.kaice.tools.GenericProduct;
  */
 public class PurchasedProduct implements GenericProduct {
     
-    private int id;
+    private final int id;
     private String name;
     private int purchasedPrice;
-    private RawMaterial rawMat;
+    private final RawMaterial rawMat;
     private int quantity;
     private int numberBought;
     

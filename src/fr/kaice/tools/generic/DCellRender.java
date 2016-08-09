@@ -15,9 +15,9 @@ import java.awt.*;
  */
 public class DCellRender extends DefaultTableCellRenderer {
     
-    protected Class<?> colClass;
-    protected boolean editable;
-    protected boolean totalLine;
+    protected final Class<?> colClass;
+    protected final boolean editable;
+    protected final boolean totalLine;
     
     /**
      * Create a {@link DCellRender}.
@@ -94,7 +94,7 @@ public class DCellRender extends DefaultTableCellRenderer {
             try {
                 double val = Double.parseDouble(l.getText());
                 l.setText(DFormat.MONEY_FORMAT.format(val) + " ?");
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
