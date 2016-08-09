@@ -1,12 +1,17 @@
 package fr.kaice.model.member;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -16,11 +21,11 @@ import java.util.stream.Collectors;
  * In a table, it display 3 columns : <br/>
  * - "Num", witch display membership numbers (non editable {@link Integer});<br/>
  * - "Nam", witch display names (non editable {@link String});<br/>
- * - "PrÃ©nom", witch display first names(non editable {@link String}).<br/>
+ * - "Prénom", witch display first names(non editable {@link String}).<br/>
  * The table entries can ne sorted by dates, names or firs names.
  *
- * @author RaphaÃ«l Merkling
- * @version 2.1
+ * @author Raphaël Merkling
+ * @version 2.2
  * @see Member
  * @see DTableModel
  * @see AbstractTableModel
@@ -33,8 +38,8 @@ public class MemberCollection extends DTableModel {
     private static final int COL_NUM_FIRST_NAME = 2;
     private static final DTableColumnModel colId = new DTableColumnModel("Num", Integer.class, false);
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final DTableColumnModel colFirstName = new DTableColumnModel("PrÃ©nom", String.class, false);
-    private final Map<Integer, Member> map;
+    private static final DTableColumnModel colFirstName = new DTableColumnModel("Prénom", String.class, false);
+    private Map<Integer, Member> map;
     private List<Member> displayList;
     private Member selectedMember;
     private int sortCol;
@@ -49,34 +54,33 @@ public class MemberCollection extends DTableModel {
         colModel[COL_NUM_ID] = colId;
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_FIRST_NAME] = colFirstName;
-        map = new HashMap<>();
-        displayList = new ArrayList<>();
+        deserialize();
+//        map = new HashMap<>();
         selectedMember = null;
         sortCol = 0;
         searchName = "";
         searchFirstName = "";
-    }
-    
-    /**
-     * Store an existing {@link Member}.
-     *
-     * @param member {@link Member} - The raw material to store in the collection.
-     */
-    public void addMember(Member member) {
-        int id = member.getUserId();
-        if (map.containsKey(id)) {
-            throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
-        }
-        map.put(id, member);
-        updateDisplayList();
-    }
-    
-    /**
-     * Update the display list with a new generated one (generated with {@link MemberCollection#getDisplayList(String, String, int)}).
-     */
-    private void updateDisplayList() {
         displayList = getDisplayList(searchName, searchFirstName, sortCol);
-        KaiceModel.update();
+    }
+    
+    /**
+     * Load a serialized members collection and deserialize-it. Erase completely the current collection.
+     */
+    private void deserialize() {
+        try {
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathMembers);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (HashMap<Integer, Member>) in.readObject();
+            in.close();
+            fileIn.close();
+            System.out.println("Members read successful.");
+        } catch (IOException i) {
+            map = new HashMap<>();
+            i.printStackTrace();
+        } catch (ClassNotFoundException c) {
+            System.out.println("HashMap<Integer, Member> class not found");
+            c.printStackTrace();
+        }
     }
     
     /**
@@ -108,6 +112,44 @@ public class MemberCollection extends DTableModel {
     }
     
     /**
+     * Store an existing {@link Member}.
+     *
+     * @param member {@link Member} - The raw material to store in the collection.
+     */
+    public void addMember(Member member) {
+        int id = member.getUserId();
+        if (map.containsKey(id)) {
+            throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
+        }
+        map.put(id, member);
+        serialize();
+        updateDisplayList();
+    }
+    
+    /**
+     * Serialize the members collection, and save-it in a file.
+     */
+    public void serialize() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathMembers);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(map);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+    
+    /**
+     * Update the display list with a new generated one (generated with {@link MemberCollection#getDisplayList(String, String, int)}).
+     */
+    public void updateDisplayList() {
+        displayList = getDisplayList(searchName, searchFirstName, sortCol);
+        KaiceModel.update();
+    }
+    
+    /**
      * Auto-generate a new free membership number for this collection of {@link Member}.
      * A membership number is composed of 6 digits, the firsts 2 are thr current year code given by
      * {@link KaiceModel#getActualYear()}, the others 4 are equals to the higher used number corresponding of this year,
@@ -116,7 +158,7 @@ public class MemberCollection extends DTableModel {
      * @return A new membership number for a {@link Member}.
      */
     public int getNewId() {
-        int id = 1;
+        int id = 0;
         int add = KaiceModel.getActualYear();
         add *= 10000;
         id += add;
@@ -163,7 +205,7 @@ public class MemberCollection extends DTableModel {
         this.searchFirstName = searchFirstName;
         updateDisplayList();
     }
-    
+
     /**
      * Return the selected {@link Member} for the current transaction.
      *
@@ -173,12 +215,6 @@ public class MemberCollection extends DTableModel {
         return selectedMember;
     }
     
-    /**
-     *
-     */
-    public void clearSelectedMember() {
-        selectedMember = null;
-    }
     /**
      * Set the selected {@link Member} for the current transaction.
      *
@@ -197,6 +233,13 @@ public class MemberCollection extends DTableModel {
      */
     private Member getRow(int row) {
         return displayList.get(row);
+    }
+    
+    /**
+     *
+     */
+    public void clearSelectedMember() {
+        selectedMember = null;
     }
     
     /**
@@ -288,5 +331,4 @@ public class MemberCollection extends DTableModel {
     public int getMemberIdAtRow(int selectedRow) {
         return displayList.get(selectedRow).getUserId();
     }
-    
 }

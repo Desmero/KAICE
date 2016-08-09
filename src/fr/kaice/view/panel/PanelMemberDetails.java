@@ -187,7 +187,9 @@ class PanelMemberDetails extends JPanel {
     private void editProfile() {
         MemberCollection col = KaiceModel.getMemberCollection();
         Member u = col.getMember(id.getValue());
+        boolean newMember = false;
         if (u == null) {
+            newMember = true;
             u = new Member(id.getValue());
             int res = JOptionPane.showConfirmDialog(null,
                     "Le payment a-t-il été effectué en luiquide ?", "Payement",
@@ -201,7 +203,6 @@ class PanelMemberDetails extends JPanel {
             ArchivedProduct archProd = new ArchivedProduct("Inscription", 1, 5);
             tran.addArchivedProduct(archProd);
             KaiceModel.getHistoric().addTransaction(tran);
-            col.addMember(u);
         }
         u.setName(name.getText());
         u.setFirstName(firstName.getText());
@@ -214,9 +215,12 @@ class PanelMemberDetails extends JPanel {
         u.setEMail(eMail.getText());
         u.setNewsLetter(newsLetter.isSelected());
         u.setPhoneNumber(tel.getText());
-        // TODO write file
-        // Model.getInstance().writeAllUsers();
-        // Model.getInstance().update();
+        if (newMember) {
+            col.addMember(u);
+        } else {
+            col.updateDisplayList();
+            col.serialize();
+        }
     }
     
     /**

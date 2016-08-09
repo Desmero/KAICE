@@ -1,5 +1,6 @@
 package fr.kaice.model.member;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,10 +20,10 @@ import java.util.Date;
  *  - Studies; <br/>
  *  - And an id. <br/>
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.0
  */
-public class Member {
+public class Member implements Serializable {
     
     private final int userId;
     private String name;
@@ -45,11 +46,11 @@ public class Member {
     public Member(int userId) {
         this.userId = userId;
         this.name = "[Nom]";
-        this.firstName = "[PrÃ©nom]";
+        this.firstName = "[Prénom]";
         this.gender = true;
         this.birthDate = new Date();
         this.phoneNumber = "XX XX XX XX XX";
-        this.studies = "[Ã‰tudes]";
+        this.studies = "[Études]";
         this.mailStreet = "[Rue]";
         this.mailPostalCode = "[Code postal]";
         this.mailTown = "[Commune]";
@@ -83,7 +84,7 @@ public class Member {
         }
         this.firstName = firstName;
         if (this.firstName.equals("")) {
-            this.firstName = "[PrÃ©nom]";
+            this.firstName = "[Prénom]";
         }
         this.gender = gender;
         this.birthDate = birthDate;
@@ -93,7 +94,7 @@ public class Member {
         }
         this.studies = studies;
         if (this.studies.equals("")) {
-            this.studies = "[Ã‰tudes]";
+            this.studies = "[Études]";
         }
         this.mailStreet = mailStreet;
         if (this.mailStreet.equals("")) {
