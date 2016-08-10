@@ -1,10 +1,12 @@
 package fr.kaice.model.historic;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderTransaction;
 import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,8 +25,8 @@ import java.util.List;
  * And a summary of all {@link Transaction} on the last line.
  * The table entries are sorted by dates.
  *
- * @author RaphaÃ«l Merkling
- * @version 2.1
+ * @author Raphaël Merkling
+ * @version 2.2
  * @see Transaction
  * @see DTableModel
  * @see AbstractTableModel
@@ -42,8 +44,8 @@ public class Historic extends DTableModel {
     private static final DTableColumnModel colTran = new DTableColumnModel("Transaction", String.class, false);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
-    private final List<Transaction> orderedList;
     private final List<Transaction> displayList;
+    private List<Transaction> fullList;
     private Date start;
     private Date end;
     
@@ -58,8 +60,8 @@ public class Historic extends DTableModel {
         colModel[COL_NUM_TRAN] = colTran;
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_CASH] = colCash;
-        
-        orderedList = new ArrayList<>();
+    
+        deserialize();
         displayList = new ArrayList<>();
         
         Calendar cal = Calendar.getInstance();
@@ -69,6 +71,45 @@ public class Historic extends DTableModel {
         start = cal.getTime();
         cal.add(Calendar.DAY_OF_MONTH, 1);
         end = cal.getTime();
+    
+        silentUpdateDisplayList();
+    }
+    
+    /**
+     * Load a serialized historic and deserialize-it. Erase completely the current collection.
+     */
+    private void deserialize() {
+        try {
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathHistoric);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            fullList = (List<Transaction>) in.readObject();
+            in.close();
+            fileIn.close();
+            System.out.println(KFilesParameters.pathHistoric + " read successful.");
+        } catch (FileNotFoundException f) {
+            System.err.println(KFilesParameters.pathHistoric + " read error : file not found.");
+            fullList = new ArrayList<>();
+        } catch (IOException i) {
+            i.printStackTrace();
+            fullList = new ArrayList<>();
+        } catch (ClassNotFoundException c) {
+            System.err.println("List<Transaction> class not found");
+            c.printStackTrace();
+        }
+    }
+    
+    /**
+     * Update the display list by checking the date of every {@link Transaction}. But not update the model.
+     */
+    private void silentUpdateDisplayList() {
+        displayList.clear();
+        Date dTran;
+        for (Transaction tran : fullList) {
+            dTran = tran.getDate();
+            if (dTran.after(start) && dTran.before(end)) {
+                displayList.add(tran);
+            }
+        }
     }
     
     /**
@@ -87,8 +128,24 @@ public class Historic extends DTableModel {
      * @param trans {@link Transaction} - The transaction to add to the collection.
      */
     public void addTransaction(Transaction trans) {
-        orderedList.add(trans);
+        fullList.add(trans);
+        serialize();
         updateDisplayList();
+    }
+    
+    /**
+     * Serialize the historic, and save-it in a file.
+     */
+    public void serialize() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathHistoric);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(fullList);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
     }
     
     /**
@@ -97,7 +154,7 @@ public class Historic extends DTableModel {
     private void updateDisplayList() {
         displayList.clear();
         Date dTran;
-        for (Transaction tran : orderedList) {
+        for (Transaction tran : fullList) {
             dTran = tran.getDate();
             if (dTran.after(start) && dTran.before(end)) {
                 displayList.add(tran);
@@ -126,19 +183,40 @@ public class Historic extends DTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (rowIndex == displayList.size()) {
-            return null;
+            switch (columnIndex) {
+                case COL_NUM_CLIENT:
+                    return "Total :";
+                case COL_NUM_TRAN:
+                    return "" + 0 + " opérations";
+                case COL_NUM_PRICE:
+                    return 0;
+                case COL_NUM_CASH:
+                    return 0;
+                default:
+                    return null;
+            }
         }
+        Transaction transaction = displayList.get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_DATE:
-                return DFormat.format(displayList.get(rowIndex).getDate());
+                return DFormat.format(transaction.getDate());
             case COL_NUM_CLIENT:
-                return displayList.get(rowIndex).getClient();
+                return transaction.getClient();
             case COL_NUM_TRAN:
-                return displayList.get(rowIndex).toString();
+                switch (transaction.getType()) {
+                    case ADD:
+                        return "Ajout stock" + displayList.get(rowIndex).toString();
+                    case SUB:
+                        return "Retrait stock" + displayList.get(rowIndex).toString();
+                    case CANCEL:
+                        return "Vente annulée" + displayList.get(rowIndex).toString();
+                    case ENR:
+                        return displayList.get(rowIndex).toString();
+                }
             case COL_NUM_PRICE:
-                return DMonetarySpinner.intToDouble(displayList.get(rowIndex).getPrice());
+                return DMonetarySpinner.intToDouble(transaction.getPrice());
             case COL_NUM_CASH:
-                return DMonetarySpinner.intToDouble(displayList.get(rowIndex).getPaid());
+                return DMonetarySpinner.intToDouble(transaction.getPaid());
             default:
                 return null;
         }
@@ -151,5 +229,4 @@ public class Historic extends DTableModel {
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
-    
 }

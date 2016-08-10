@@ -29,7 +29,7 @@ import java.util.Map.Entry;
  * And a summary of all {@link SoldProduct} on the last line.
  *
  * @author Raphaël Merkling
- * @version 2.1
+ * @version 2.2
  * @see SoldProduct
  * @see DTableModel
  * @see AbstractTableModel
@@ -101,7 +101,7 @@ public class CurrentTransaction extends DTableModel {
         }
         OrderCollection ordColl = KaiceModel.getOrderCollection();
         Member member = KaiceModel.getMemberCollection().getSelectedMember();
-        Transaction tran = new Transaction(member, transactionType.SELL, getPrice(), cashIn, new Date());
+        Transaction tran = new Transaction(member.getMemberId(), transactionType.SELL, getPrice(), cashIn, new Date());
         for (Entry<SoldProduct, Integer> article : listArticles.entrySet()) {
             SoldProduct prod = article.getKey();
             prod.sale(article.getValue());

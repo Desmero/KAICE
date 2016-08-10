@@ -93,7 +93,7 @@ public class DCellRender extends DefaultTableCellRenderer {
         if (colClass == Double.class) {
             try {
                 double val = Double.parseDouble(l.getText());
-                l.setText(DFormat.MONEY_FORMAT.format(val) + " ?");
+                l.setText(DFormat.MONEY_FORMAT.format(val) + " " + DFormat.EURO);
             } catch (Exception ignored) {
             }
         }

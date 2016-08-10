@@ -23,6 +23,9 @@ class PanelNewPurchasedProduct extends JPanel {
     
     private final JLabel material;
     private final JList<RawMaterial> list;
+    private final JTextField name;
+    private final DMonetarySpinner price;
+    private final JSpinner quantity;
     
     /**
      * Create a new {@link PanelNewPurchasedProduct}.
@@ -30,9 +33,9 @@ class PanelNewPurchasedProduct extends JPanel {
     PanelNewPurchasedProduct() {
         
         JButton accept = new JButton("Valide");
-        JTextField name = new JTextField();
-        DMonetarySpinner price = new DMonetarySpinner(0.01);
-        JSpinner quantity = new JSpinner(new SpinnerNumberModel(1, 0, null, 1));
+        name = new JTextField();
+        price = new DMonetarySpinner(0.01);
+        quantity = new JSpinner(new SpinnerNumberModel(1, 0, null, 1));
         list = new JList<>(KaiceModel.getRawMatCollection().getAllRawMaterial());
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -46,18 +49,22 @@ class PanelNewPurchasedProduct extends JPanel {
             int id = KaiceModel.getRawMatCollection().getIdAtRow(select);
             KaiceModel.getPurchasedProdCollection().addNewPurchasedProduct(name.getText(), price.getIntValue(),
                     id, (int) quantity.getValue());
+            reset();
         });
         
         this.setLayout(new BorderLayout());
-        JPanel centerDisp = new JPanel();
+        JPanel centerPlace = new JPanel(new GridLayout(1, 2));
+        JPanel centerField = new JPanel();
         JPanel center = new JPanel(new GridLayout(4, 2));
         JPanel ctrl = new JPanel();
-        
-        this.add(centerDisp, BorderLayout.EAST);
-        this.add(scrollList, BorderLayout.CENTER);
+    
+        this.add(centerPlace, BorderLayout.CENTER);
         this.add(ctrl, BorderLayout.SOUTH);
-        
-        centerDisp.add(center);
+    
+        centerPlace.add(scrollList);
+        centerPlace.add(centerField);
+    
+        centerField.add(center);
         
         center.add(new JLabel("Nom de l'articler :"));
         center.add(name);
@@ -75,9 +82,21 @@ class PanelNewPurchasedProduct extends JPanel {
      * Change the text of the selected {@link RawMaterial} label, by the name of the new selected material.
      */
     private void update() {
-        int id = list.getSelectedIndex();
-        String selection = KaiceModel.getRawMatCollection().getMat(id).getName();
+        int index = list.getSelectedIndex();
+        String selection = "...";
+        if (index != -1) {
+            selection = KaiceModel.getRawMatCollection().getMaterialAtRow(index).getName();
+        }
         material.setText(selection);
     }
     
+    /**
+     * Clear all fields.
+     */
+    private void reset() {
+        name.setText("");
+        price.setValue(0);
+        quantity.setValue(0);
+        list.clearSelection();
+    }
 }

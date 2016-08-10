@@ -1,6 +1,7 @@
 package fr.kaice.tools.generic;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.Serializable;
 
 /**
  * This class extends {@link AbstractTableModel}. This class manage column models with {@link DCellRender}.
@@ -14,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
  * @see DCellRender
  * @see javax.swing.table.TableModel
  */
-public abstract class DTableModel extends AbstractTableModel {
+public abstract class DTableModel extends AbstractTableModel implements Serializable {
     
     protected DTableColumnModel[] colModel;
     protected boolean totalLine;

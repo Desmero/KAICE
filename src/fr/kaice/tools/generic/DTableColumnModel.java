@@ -1,5 +1,7 @@
 package fr.kaice.tools.generic;
 
+import java.io.Serializable;
+
 /**
  * This class contains what need a {@link DTableModel} to display correctly a table column. <br/>
  * It contains : <br/>
@@ -10,7 +12,7 @@ package fr.kaice.tools.generic;
  * @author Raphaël Merkling
  * @version 1.0
  */
-public class DTableColumnModel {
+public class DTableColumnModel implements Serializable {
     
     private final String name;
     private final Class colClass;

@@ -85,7 +85,7 @@ public class SoldProduct extends DTableModel implements GenericProduct {
      * @return A new {@link ArchivedProduct}.
      */
     ArchivedProduct archivedProduct(int number) {
-        return new ArchivedProduct(name, number, salePrice * number);
+        return new ArchivedProduct(name, number, salePrice * number, id);
     }
     
     /**

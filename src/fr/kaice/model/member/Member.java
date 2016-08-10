@@ -21,11 +21,11 @@ import java.util.Date;
  *  - And an id. <br/>
  *
  * @author Raphaël Merkling
- * @version 2.0
+ * @version 2.2
  */
 public class Member implements Serializable {
     
-    private final int userId;
+    private final int memberId; // also call membership number
     private String name;
     private String firstName;
     private boolean gender; // true : male; false : female
@@ -41,10 +41,10 @@ public class Member implements Serializable {
     /**
      * Create an empty member with a given id. All field are filled with generic string.
      *
-     * @param userId int - membership number.
+     * @param memberId int - membership number.
      */
-    public Member(int userId) {
-        this.userId = userId;
+    public Member(int memberId) {
+        this.memberId = memberId;
         this.name = "[Nom]";
         this.firstName = "[Prénom]";
         this.gender = true;
@@ -61,7 +61,7 @@ public class Member implements Serializable {
     /**
      * Create a new {@link Member} with all fields. All empty parameters are replace with generic ones.
      *
-     * @param userId         int - Membership number.
+     * @param memberId         int - Membership number.
      * @param name           {@link String} - Mame of the member.
      * @param firstName      {@link String} - First name of the member.
      * @param gender         boolean - Gender of the member (true = male, false = female).
@@ -74,10 +74,10 @@ public class Member implements Serializable {
      * @param eMail          {@link String} - E-mail address of the member.
      * @param newsLetter     boolean - True if the member want receive news by e-mails.
      */
-    public Member(int userId, String name, String firstName, boolean gender, Date birthDate, String phoneNumber,
+    public Member(int memberId, String name, String firstName, boolean gender, Date birthDate, String phoneNumber,
                   String studies, String mailStreet, String mailPostalCode, String mailTown, String eMail,
                   boolean newsLetter) {
-        this.userId = userId;
+        this.memberId = memberId;
         this.name = name;
         if (this.name.equals("")) {
             this.name = "[Nom]";
@@ -121,8 +121,8 @@ public class Member implements Serializable {
      *
      * @return The membership number of the {@link Member}.
      */
-    public int getUserId() {
-        return userId;
+    public int getMemberId() {
+        return memberId;
     }
     
     /**
@@ -359,6 +359,6 @@ public class Member implements Serializable {
     
     @Override
     public String toString() {
-        return name + " " + firstName + " (" + userId + ")";
+        return name + " " + firstName + " (" + memberId + ")";
     }
 }

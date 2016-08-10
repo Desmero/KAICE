@@ -2,12 +2,17 @@ package fr.kaice.model.buy;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
+import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class store all {@link PurchasedProduct} the programme need to know.
@@ -16,11 +21,11 @@ import java.util.*;
  * In a table, it display 4 columns : <br/>
  * - "Nom", witch display names (editable {@link String});<br/>
  * - "Prix unitaire", witch display unitary prices (editable {@link Double});<br/>
- * - "QuantitÃ©", witch display the bought quantities (editable {@link Integer});<br/>
+ * - "Quantité", witch display the bought quantities (editable {@link Integer});<br/>
  * - "Prix total", witch display total bought prices (non editable {@link Double}).<br/>
  * The table entries are sorted by names.
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.1
  * @see PurchasedProduct
  * @see DTableModel
@@ -35,9 +40,9 @@ public class PurchasedProductCollection extends DTableModel {
     private static final int COL_NUM_TOTAL_PRICE = 3;
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
-    private static final DTableColumnModel colQty = new DTableColumnModel("QuantitÃ©", Integer.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private static final DTableColumnModel colTotalPrice = new DTableColumnModel("Prix total", Double.class, false);
-    private final Map<Integer, PurchasedProduct> map;
+    private Map<Integer, PurchasedProduct> map;
     private List<PurchasedProduct> alphabeticList;
     
     /**
@@ -49,8 +54,37 @@ public class PurchasedProductCollection extends DTableModel {
         colModel[COL_NUM_UNIT_PRICE] = colUnitPrice;
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_TOTAL_PRICE] = colTotalPrice;
-        map = new HashMap<>();
-        alphabeticList = new ArrayList<>();
+        deserialize();
+        updateAlphabeticalList();
+    }
+    
+    /**
+     * Load a serialized historic and deserialize-it. Erase completely the current collection.
+     */
+    private void deserialize() {
+        try {
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathPurchasedProduct);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (HashMap) in.readObject();
+            in.close();
+            fileIn.close();
+            System.out.println(KFilesParameters.pathPurchasedProduct + " read successful.");
+        } catch (IOException i) {
+            System.err.println(KFilesParameters.pathPurchasedProduct + " read error : file not found.");
+            map = new HashMap<>();
+        } catch (ClassNotFoundException c) {
+            System.out.println("HashMap<Integer, PurchasedProduct> class not found");
+            c.printStackTrace();
+        }
+    }
+    
+    /**
+     * Update the alphabetical sorted list.
+     */
+    private void updateAlphabeticalList() {
+        ArrayList<PurchasedProduct> newList = new ArrayList<>(map.values());
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+        alphabeticList = newList;
     }
     
     /**
@@ -66,7 +100,9 @@ public class PurchasedProductCollection extends DTableModel {
         RawMaterial mat = KaiceModel.getRawMatCollection().getMat(matId);
         PurchasedProduct newProduct = new PurchasedProduct(id, name, purchasedPrice, mat, quantity);
         map.put(id, newProduct);
+        serialize();
         updateAlphabeticalList();
+        KaiceModel.update();
     }
     
     /**
@@ -84,12 +120,18 @@ public class PurchasedProductCollection extends DTableModel {
     }
     
     /**
-     * Update the alphabetical sorted list.
+     * Serialize the historic, and save-it in a file.
      */
-    private void updateAlphabeticalList() {
-        ArrayList<PurchasedProduct> newList = new ArrayList<>(map.values());
-        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
-        alphabeticList = newList;
+    public void serialize() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathPurchasedProduct);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(map);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
     }
     
     /**
@@ -119,7 +161,7 @@ public class PurchasedProductCollection extends DTableModel {
     public int getRowCount() {
         return map.size();
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         PurchasedProduct prod = alphabeticList.get(rowIndex);
@@ -151,7 +193,7 @@ public class PurchasedProductCollection extends DTableModel {
                 prod.setNumberBought((int) aValue);
                 break;
         }
+        serialize();
         KaiceModel.update();
     }
-    
 }

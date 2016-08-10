@@ -1,6 +1,7 @@
 package fr.kaice.model.raw;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderRawMaterial;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DCellRender;
@@ -10,8 +11,11 @@ import fr.kaice.tools.generic.DTableModel;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class store all {@link RawMaterial} the programme need to know.
@@ -41,9 +45,9 @@ public class RawMaterialCollection extends DTableModel {
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
     private static final DTableColumnModel colQty = new DTableColumnModel("Stock", Integer.class, true);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Double.class, true);
+    private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Integer.class, true);
     
-    private final Map<Integer, RawMaterial> map;
+    private Map<Integer, RawMaterial> map;
     private List<RawMaterial> alphabeticList;
     
     /**
@@ -55,8 +59,37 @@ public class RawMaterialCollection extends DTableModel {
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_ALERT] = colAlert;
-        map = new HashMap<>();
-        alphabeticList = new ArrayList<>();
+        deserialize();
+        updateAlphabeticalList();
+    }
+    
+    /**
+     * Load a serialized historic and deserialize-it. Erase completely the current collection.
+     */
+    private void deserialize() {
+        try {
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathRawMaterial);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (HashMap) in.readObject();
+            in.close();
+            fileIn.close();
+            System.out.println(KFilesParameters.pathRawMaterial + " read successful.");
+        } catch (IOException i) {
+            System.err.println(KFilesParameters.pathRawMaterial + " read error : file not found.");
+            map = new HashMap<>();
+        } catch (ClassNotFoundException c) {
+            System.out.println("HashMap<Integer, RawMAterial> class not found");
+            c.printStackTrace();
+        }
+    }
+    
+    /**
+     * Update the alphabetical sorted list.
+     */
+    private void updateAlphabeticalList() {
+        ArrayList<RawMaterial> newList = new ArrayList<>(map.values());
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+        alphabeticList = newList;
     }
     
     /**
@@ -96,16 +129,23 @@ public class RawMaterialCollection extends DTableModel {
             throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
         }
         map.put(id, mat);
+        serialize();
         updateAlphabeticalList();
     }
     
     /**
-     * Update the alphabetical sorted list.
+     * Serialize the historic, and save-it in a file.
      */
-    private void updateAlphabeticalList() {
-        ArrayList<RawMaterial> newList = new ArrayList<>(map.values());
-        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
-        alphabeticList = newList;
+    public void serialize() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathRawMaterial);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(map);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
     }
     
     /**
@@ -165,6 +205,17 @@ public class RawMaterialCollection extends DTableModel {
     }
     
     /**
+     * Return the {@link RawMaterial} at the given row.
+     *
+     * @param row
+     *          int - The row number.
+     * @return The {@link RawMaterial} at the given row.
+     */
+    public RawMaterial getMaterialAtRow(int row) {
+        return alphabeticList.get(row);
+    }
+    
+    /**
      * Return an array contening all {@link RawMaterial}.
      *
      * @return An array contening all {@link RawMaterial}.
@@ -198,7 +249,7 @@ public class RawMaterialCollection extends DTableModel {
                 return null;
         }
     }
-    
+
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         RawMaterial mat = alphabeticList.get(rowIndex);
@@ -213,6 +264,7 @@ public class RawMaterialCollection extends DTableModel {
                 mat.setAlert((int) aValue);
                 break;
         }
+        serialize();
     }
     
     @Override
@@ -222,5 +274,4 @@ public class RawMaterialCollection extends DTableModel {
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
-    
 }

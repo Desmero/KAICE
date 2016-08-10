@@ -78,7 +78,7 @@ public class MainWindow extends JFrame implements Observer{
         east.add(memberColl, BorderLayout.CENTER);
         
         Dimension dim = centerSouth.getPreferredSize();
-        dim.setSize(dim.getWidth(), 300);
+        dim.setSize(dim.getWidth(), 20);
         centerSouth.setPreferredSize(dim);
         
         

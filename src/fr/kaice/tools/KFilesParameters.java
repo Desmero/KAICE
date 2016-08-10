@@ -8,8 +8,13 @@ public class KFilesParameters {
     /**
      * The path to the repositories of all files.
      */
-    public static final String globalPath = "/home/merkling/";
+    public static String globalPath = "/home/merkling/.KAICE/";
     public static final String pathMembers = globalPath + "Members.ser";
     public static final String pathHistoric = globalPath + "Historic.ser";
+    public static final String pathRawMaterial = globalPath + "RawMaterials.ser";
+    public static final String pathPurchasedProduct = globalPath + "PurchasedProducts.ser";
     
+    public static void setGlobalPath(String globalPath) {
+        KFilesParameters.globalPath = globalPath;
+    }
 }

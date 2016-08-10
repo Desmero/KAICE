@@ -13,6 +13,11 @@ import java.util.Random;
 public abstract class DFunction {
     
     /**
+     * The Euro '€' char.
+     */
+    public static final char EURO = '\u20ac';
+    
+    /**
      * Function found on the Internet. <br/>
      * Return a random element of an enum. <br/>
      * TODO find who use the function.

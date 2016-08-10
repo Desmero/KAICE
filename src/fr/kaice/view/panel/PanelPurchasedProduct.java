@@ -45,7 +45,7 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         JPanel paidCtrl = new JPanel();
         JPanel tradCtrl = new JPanel();
         shoppingPanel = new PanelShoppingList();
-        price = new JLabel("0.00 €");
+        price = new JLabel("0.00 " + DFormat.EURO);
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
         shopping.addActionListener(e -> KaiceModel.getInstance().setDetails(shoppingPanel));
@@ -82,7 +82,7 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
         PurchasedProductCollection coll = KaiceModel.getPurchasedProdCollection();
         double p = DMonetarySpinner.intToDouble(coll.getTotalPrice());
-        price.setText("" + DFormat.MONEY_FORMAT.format(p) + " €");
+        price.setText("" + DFormat.MONEY_FORMAT.format(p) + " " + DFormat.EURO);
     }
     
 }

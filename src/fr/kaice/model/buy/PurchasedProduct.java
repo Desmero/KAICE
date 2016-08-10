@@ -3,6 +3,8 @@ package fr.kaice.model.buy;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.GenericProduct;
 
+import java.io.Serializable;
+
 /**
  * This class represent one kind of purchased product. <br/>
  * It is composed of : <br/>
@@ -16,14 +18,14 @@ import fr.kaice.tools.GenericProduct;
  * @version 2.0
  *
  */
-public class PurchasedProduct implements GenericProduct {
+public class PurchasedProduct implements GenericProduct, Serializable {
     
     private final int id;
+    private final RawMaterial rawMat;
     private String name;
     private int purchasedPrice;
-    private final RawMaterial rawMat;
     private int quantity;
-    private int numberBought;
+    private transient int numberBought;
     
     /**
      * Simple constructor. This use a auto-generate id.

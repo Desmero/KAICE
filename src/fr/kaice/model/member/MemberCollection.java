@@ -60,7 +60,7 @@ public class MemberCollection extends DTableModel {
         sortCol = 0;
         searchName = "";
         searchFirstName = "";
-        displayList = getDisplayList(searchName, searchFirstName, sortCol);
+        silentUpdateDisplayList();
     }
     
     /**
@@ -73,14 +73,22 @@ public class MemberCollection extends DTableModel {
             map = (HashMap<Integer, Member>) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println("Members read successful.");
+            System.out.println(KFilesParameters.pathMembers + " read successful.");
         } catch (IOException i) {
+            System.err.println(KFilesParameters.pathMembers + " read error : file not found.");
             map = new HashMap<>();
-            i.printStackTrace();
         } catch (ClassNotFoundException c) {
             System.out.println("HashMap<Integer, Member> class not found");
             c.printStackTrace();
         }
+    }
+    
+    /**
+     * Update the display list with a new generated one (generated with
+     * {@link MemberCollection#getDisplayList(String, String, int)}). But not update the model.
+     */
+    public void silentUpdateDisplayList() {
+        displayList = getDisplayList(searchName, searchFirstName, sortCol);
     }
     
     /**
@@ -105,7 +113,7 @@ public class MemberCollection extends DTableModel {
                     return arg0.getFirstName().compareTo(arg1.getFirstName());
                 case COL_NUM_ID:
                 default:
-                    return arg0.getUserId() - arg1.getUserId();
+                    return arg0.getMemberId() - arg1.getMemberId();
             }
         });
         return newList;
@@ -117,7 +125,7 @@ public class MemberCollection extends DTableModel {
      * @param member {@link Member} - The raw material to store in the collection.
      */
     public void addMember(Member member) {
-        int id = member.getUserId();
+        int id = member.getMemberId();
         if (map.containsKey(id)) {
             throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
         }
@@ -148,7 +156,7 @@ public class MemberCollection extends DTableModel {
         displayList = getDisplayList(searchName, searchFirstName, sortCol);
         KaiceModel.update();
     }
-    
+
     /**
      * Auto-generate a new free membership number for this collection of {@link Member}.
      * A membership number is composed of 6 digits, the firsts 2 are thr current year code given by
@@ -164,7 +172,7 @@ public class MemberCollection extends DTableModel {
         id += add;
         
         for (Member u : displayList) {
-            id = Integer.max(id, u.getUserId());
+            id = Integer.max(id, u.getMemberId());
         }
         return id + 1;
     }
@@ -277,7 +285,7 @@ public class MemberCollection extends DTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case COL_NUM_ID:
-                return displayList.get(rowIndex).getUserId();
+                return displayList.get(rowIndex).getMemberId();
             case COL_NUM_NAME:
                 return displayList.get(rowIndex).getName();
             case COL_NUM_FIRST_NAME:
@@ -329,6 +337,6 @@ public class MemberCollection extends DTableModel {
      * @return The {@link Member} at the corresponding row.
      */
     public int getMemberIdAtRow(int selectedRow) {
-        return displayList.get(selectedRow).getUserId();
+        return displayList.get(selectedRow).getMemberId();
     }
 }

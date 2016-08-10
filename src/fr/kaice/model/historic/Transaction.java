@@ -8,6 +8,7 @@ import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,24 +33,24 @@ import java.util.List;
  * And a summary of all {@link ArchivedProduct} on the last line.
  *
  * @author Raphaël Merkling
- * @version 2.1
+ * @version 2.2
  */
-public class Transaction extends DTableModel {
+public class Transaction extends DTableModel implements Serializable {
     
-    private static final int COL_NUM_ID = 0;
-    private static final int COL_NUM_NAME = 1;
-    private static final int COL_NUM_UNIT_PRICE = 2;
-    private static final int COL_NUM_QTY = 3;
-    private static final int COL_NUM_PRICE = 4;
-    private static final int COL_COUNT = 5;
-    private static final DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
-    private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final transient int COL_NUM_ID = 0;
+    private static final transient int COL_NUM_NAME = 1;
+    private static final transient int COL_NUM_UNIT_PRICE = 2;
+    private static final transient int COL_NUM_QTY = 3;
+    private static final transient int COL_NUM_PRICE = 4;
+    private static final transient int COL_COUNT = 5;
+    private static final transient DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
+    private static final transient DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
+    private static final transient DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
+    private static final transient DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
+    private static final transient DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private final List<ArchivedProduct> productList;
     private final transactionType type;
-    private final Member client;
+    private final Integer clientId;
     private final int price;
     private final int paid;
     private final Date date;
@@ -57,37 +58,9 @@ public class Transaction extends DTableModel {
     /**
      * Create a new {@link Transaction}.
      *
-     * @param client
-     *          {@link Member} - The concerned client for a sell, canceling or an enrolment. Null for something else.
-     * @param type
-     *          {@link transactionType} - The type of transaction.
-     * @param price
-     *          int - The transaction's price.
-     * @param paid
-     *          int - The amount paid in cash.
-     * @param date
-     *          {@link Date} - The date of the transaction.
-     */
-    public Transaction(Member client, transactionType type, int price, int paid, Date date) {
-        this.client = client;
-        this.type = type;
-        this.price = price;
-        this.paid = paid;
-        this.date = date;
-        colModel = new DTableColumnModel[COL_COUNT];
-        colModel[COL_NUM_ID] = colId;
-        colModel[COL_NUM_NAME] = colName;
-        colModel[COL_NUM_UNIT_PRICE] = colUnitPrice;
-        colModel[COL_NUM_QTY] = colQty;
-        colModel[COL_NUM_PRICE] = colPrice;
-        productList = new ArrayList<>();
-    }
-    
-    /**
-     * Create a new {@link Transaction}.
-     *
      * @param clientId
-     *          int - The concerned client's id for a sell, canceling or an enrolment. Null for something else.
+     *          {@link Integer} - The membership number of the concerned client for a sell, canceling or an enrolment.
+     *          Null for something else.
      * @param type
      *          {@link transactionType} - The type of transaction.
      * @param price
@@ -97,8 +70,8 @@ public class Transaction extends DTableModel {
      * @param date
      *          {@link Date} - The date of the transaction.
      */
-    public Transaction(int clientId, transactionType type, int price, int paid, Date date) {
-        this.client = KaiceModel.getMemberCollection().getMember(clientId);
+    public Transaction(Integer clientId, transactionType type, int price, int paid, Date date) {
+        this.clientId = clientId;
         this.type = type;
         this.price = price;
         this.paid = paid;
@@ -127,10 +100,10 @@ public class Transaction extends DTableModel {
      * @return The full name of the client
      */
     public String getClient() {
-        if (client == null) {
+        if (clientId == 0) {
             return "...";
         }
-        return client.getFullName();
+        return KaiceModel.getMemberCollection().getMember(clientId).getFullName();
     }
     
     /**
@@ -149,6 +122,15 @@ public class Transaction extends DTableModel {
      */
     public Date getDate() {
         return date;
+    }
+    
+    /**
+     * Return the {@link transactionType} of the {@link Transaction}.
+     *
+     * @return The {@link transactionType} of the {@link Transaction}.
+     */
+    public transactionType getType() {
+        return type;
     }
     
     /**
@@ -238,9 +220,9 @@ public class Transaction extends DTableModel {
         StringBuilder sb = new StringBuilder();
         for (ArchivedProduct prod : productList) {
             sb.append(prod.getName());
-            sb.append(" x");
-            sb.append(prod.getQuantity());
-            sb.append(";");
+            if (prod.getQuantity() > 1) {
+                sb.append(" x").append(prod.getQuantity()).append(";");
+            }
         }
         return sb.toString();
     }

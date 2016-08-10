@@ -50,6 +50,11 @@ public abstract class DFormat {
     public static final DecimalFormat MONEY_FORMAT = new DecimalFormat("#0.00");
     
     /**
+     * The Euro '€' char.
+     */
+    public static final char EURO = '\u20ac';
+    
+    /**
      * Description partially copied from {@link SimpleDateFormat#format(Date)}. <br/>
      * Formats a {@link Date} into date/time string with auto-selected date format. Do not work with future date.
      *

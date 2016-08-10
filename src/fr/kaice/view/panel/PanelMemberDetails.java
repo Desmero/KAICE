@@ -191,18 +191,6 @@ class PanelMemberDetails extends JPanel {
         if (u == null) {
             newMember = true;
             u = new Member(id.getValue());
-            int res = JOptionPane.showConfirmDialog(null,
-                    "Le payment a-t-il été effectué en luiquide ?", "Payement",
-                    JOptionPane.YES_NO_OPTION, 2);
-            int paid = 0;
-            if (res == JOptionPane.YES_OPTION) {
-                // TODO ajouter la possibilité de changer le prix de l'inscription
-                paid = 500;
-            }
-            Transaction tran = new Transaction(id.getValue(), transactionType.ENR, 500, paid, new Date());
-            ArchivedProduct archProd = new ArchivedProduct("Inscription", 1, 5);
-            tran.addArchivedProduct(archProd);
-            KaiceModel.getHistoric().addTransaction(tran);
         }
         u.setName(name.getText());
         u.setFirstName(firstName.getText());
@@ -217,6 +205,18 @@ class PanelMemberDetails extends JPanel {
         u.setPhoneNumber(tel.getText());
         if (newMember) {
             col.addMember(u);
+            int res = JOptionPane.showConfirmDialog(null,
+                    "Le payment a-t-il été effectué en luiquide ?", "Payement",
+                    JOptionPane.YES_NO_OPTION, 2);
+            int paid = 0;
+            if (res == JOptionPane.YES_OPTION) {
+                // TODO ajouter la possibilité de changer le prix de l'inscription
+                paid = 500;
+            }
+            Transaction tran = new Transaction(id.getValue(), transactionType.ENR, 500, paid, new Date());
+            ArchivedProduct archProd = new ArchivedProduct("Inscription", 1, 5, -1);
+            tran.addArchivedProduct(archProd);
+            KaiceModel.getHistoric().addTransaction(tran);
         } else {
             col.updateDisplayList();
             col.serialize();
