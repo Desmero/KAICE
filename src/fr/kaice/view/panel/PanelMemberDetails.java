@@ -208,13 +208,14 @@ class PanelMemberDetails extends JPanel {
             int res = JOptionPane.showConfirmDialog(null,
                     "Le payment a-t-il été effectué en luiquide ?", "Payement",
                     JOptionPane.YES_NO_OPTION, 2);
+            int cost = 500;
             int paid = 0;
             if (res == JOptionPane.YES_OPTION) {
                 // TODO ajouter la possibilité de changer le prix de l'inscription
-                paid = 500;
+                paid = cost;
             }
-            Transaction tran = new Transaction(id.getValue(), transactionType.ENR, 500, paid, new Date());
-            ArchivedProduct archProd = new ArchivedProduct("Inscription", 1, 5, -1);
+            Transaction tran = new Transaction(u.getMemberId(), transactionType.ENR, cost, paid, new Date());
+            ArchivedProduct archProd = new ArchivedProduct(u.getFullName(), 1, 5, -1);
             tran.addArchivedProduct(archProd);
             KaiceModel.getHistoric().addTransaction(tran);
         } else {

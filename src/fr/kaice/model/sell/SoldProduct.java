@@ -9,10 +9,8 @@ import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * This class represent one kind of sold product. <br/>
@@ -24,26 +22,28 @@ import java.util.Map.Entry;
  *  - And a collection of {@link RawMaterial}.
  *
  * @author Raphaël Merkling
- * @version 2.0
+ * @version 2.1
  *
  */
-public class SoldProduct extends DTableModel implements GenericProduct {
+public class SoldProduct extends DTableModel implements GenericProduct, Serializable {
     
-    private static final int COL_NUM_ID = -1;
-    private static final int COL_NUM_NAME = 0;
-    private static final int COL_NUM_USED = 1;
-    private static final int COL_NUM_STOCK = 2;
-    private static final int COL_NUM_PRICE = 3;
-    // private static DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final DTableColumnModel colUsed = new DTableColumnModel("Quantité utilisée", Integer.class, true);
-    private static final DTableColumnModel colStock = new DTableColumnModel("Stock", Integer.class, false);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
+    private static transient final int COL_NUM_ID = -1;
+    private static transient final int COL_NUM_NAME = 0;
+    private static transient final int COL_NUM_USED = 1;
+    private static transient final int COL_NUM_STOCK = 2;
+    private static transient final int COL_NUM_PRICE = 3;
+    private static transient final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
+    private static transient final DTableColumnModel colUsed = new DTableColumnModel("Quantité utilisée", Integer.class, true);
+    private static transient final DTableColumnModel colStock = new DTableColumnModel("Stock", Integer.class, false);
+    private static transient final DTableColumnModel colPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
+    private static final long serialVersionUID = 1464945659775641259L;
     private final int id;
-    private final Map<RawMaterial, Integer> listRawMat;
     private final prodType type;
+    private
+    ListRawMaterial listRawMat;
     private String name;
     private int salePrice;
+    private boolean hidden;
     
     /**
      * SoldProduct constructor.
@@ -62,7 +62,7 @@ public class SoldProduct extends DTableModel implements GenericProduct {
         this.id = id;
         this.name = name;
         this.salePrice = salePrice;
-        this.listRawMat = new HashMap<>();
+        this.listRawMat = new ListRawMaterial();
         this.type = type;
     }
     
@@ -73,8 +73,9 @@ public class SoldProduct extends DTableModel implements GenericProduct {
      */
     void sale(int number) {
         RawMaterialCollection coll = KaiceModel.getRawMatCollection();
-        for (Entry<RawMaterial, Integer> entry : listRawMat.entrySet()) {
-            coll.sale(entry.getKey(), entry.getValue() * number);
+        for (ListRawMaterial.Sample entry : listRawMat.getAll()) {
+            RawMaterial mat = KaiceModel.getRawMatCollection().getMat(entry.getId());
+            coll.sale(mat, entry.getQty() * number);
         }
     }
     
@@ -101,9 +102,9 @@ public class SoldProduct extends DTableModel implements GenericProduct {
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity equals to " + quantity + " must be positive.");
         } else if (quantity == 0) {
-            listRawMat.remove(mat);
+            listRawMat.remove(mat.getId());
         } else {
-            listRawMat.put(mat, quantity);
+            listRawMat.put(mat.getId(), quantity);
         }
     }
     
@@ -181,10 +182,9 @@ public class SoldProduct extends DTableModel implements GenericProduct {
      */
     public int getBuyPrice() {
         int price = 0;
-        int qtt;
-        for (RawMaterial mat : listRawMat.keySet()) {
-            qtt = listRawMat.get(mat);
-            price += qtt * mat.getPrice();
+        for (ListRawMaterial.Sample s : listRawMat.getAll()) {
+            RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
+            price += s.getQty() * mat.getPrice();
         }
         return price;
     }
@@ -196,8 +196,9 @@ public class SoldProduct extends DTableModel implements GenericProduct {
      */
     public Integer getQuantity() {
         int qty = Integer.MAX_VALUE;
-        for (RawMaterial mat : listRawMat.keySet()) {
-            qty = Integer.min(qty, (mat.getStock() / listRawMat.get(mat)));
+        for (ListRawMaterial.Sample s : listRawMat.getAll()) {
+            RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
+            qty = Integer.min(qty, (mat.getStock() / s.getQty()));
         }
         if (qty == Integer.MAX_VALUE) {
             return null;
@@ -217,15 +218,15 @@ public class SoldProduct extends DTableModel implements GenericProduct {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ArrayList<RawMaterial> list = new ArrayList<>(listRawMat.keySet());
-        RawMaterial mat = list.get(rowIndex);
+        ArrayList<ListRawMaterial.Sample> list = listRawMat.getAll();
+        RawMaterial mat = KaiceModel.getRawMatCollection().getMat(list.get(rowIndex).getId());
         switch (columnIndex) {
             case COL_NUM_ID:
                 return mat.getId();
             case COL_NUM_NAME:
                 return mat.getName();
             case COL_NUM_USED:
-                return listRawMat.get(mat);
+                return list.get(rowIndex).getQty();
             case COL_NUM_STOCK:
                 return mat.getStock();
             case COL_NUM_PRICE:

@@ -86,20 +86,6 @@ class PanelChoseSoldProduct extends JPanel implements Observer{
     }
     
     /**
-     * Reset the selection af all tables except one.
-     *
-     * @param missTable {@link DTablePanel} - The table to KEEP the selection.
-     * @see DTablePanel#clearSelection()
-     */
-    private void resetSelectionWithout(DTablePanel missTable) {
-        for (DTablePanel table : tables) {
-            if (table != missTable) {
-                table.clearSelection();
-            }
-        }
-    }
-    
-    /**
      * Add the selected {@link SoldProduct} to the {@link CurrentTransaction}.
      */
     public void addSelection() {
@@ -114,7 +100,21 @@ class PanelChoseSoldProduct extends JPanel implements Observer{
             }
         }
         resetSelection();
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
+    }
+    
+    /**
+     * Reset the selection af all tables except one.
+     *
+     * @param missTable {@link DTablePanel} - The table to KEEP the selection.
+     * @see DTablePanel#clearSelection()
+     */
+    private void resetSelectionWithout(DTablePanel missTable) {
+        for (DTablePanel table : tables) {
+            if (table != missTable) {
+                table.clearSelection();
+            }
+        }
     }
     
     /**
@@ -130,10 +130,11 @@ class PanelChoseSoldProduct extends JPanel implements Observer{
     
     @Override
     public void update(Observable o, Object arg) {
-        for (int i = 0; i < tables.length; i++) {
-            tableModels[i].updateCollection();
-            tables[i].resizeColumnWidth();
+        if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT)) {
+            for (int i = 0; i < tables.length; i++) {
+                tableModels[i].updateCollection();
+                tables[i].resizeColumnWidth();
+            }
         }
     }
-    
 }

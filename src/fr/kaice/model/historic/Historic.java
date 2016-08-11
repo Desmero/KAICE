@@ -136,7 +136,7 @@ public class Historic extends DTableModel {
     /**
      * Serialize the historic, and save-it in a file.
      */
-    public void serialize() {
+    private void serialize() {
         try {
             FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathHistoric);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -160,7 +160,7 @@ public class Historic extends DTableModel {
                 displayList.add(tran);
             }
         }
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.HISTORIC);
     }
     
     /**
@@ -205,13 +205,17 @@ public class Historic extends DTableModel {
             case COL_NUM_TRAN:
                 switch (transaction.getType()) {
                     case ADD:
-                        return "Ajout stock" + displayList.get(rowIndex).toString();
+                        return "Ajout stock " + displayList.get(rowIndex).toString();
                     case SUB:
-                        return "Retrait stock" + displayList.get(rowIndex).toString();
+                        return "Retrait stock " + displayList.get(rowIndex).toString();
                     case CANCEL:
-                        return "Vente annulée" + displayList.get(rowIndex).toString();
-                    case ENR:
+                        return "Vente annulée " + displayList.get(rowIndex).toString();
+                    case SELL:
                         return displayList.get(rowIndex).toString();
+                    case BUY:
+                        return "Courses " + displayList.get(rowIndex).toString();
+                    case ENR:
+                        return "Inscription " + displayList.get(rowIndex).toString();
                 }
             case COL_NUM_PRICE:
                 return DMonetarySpinner.intToDouble(transaction.getPrice());

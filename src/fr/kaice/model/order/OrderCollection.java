@@ -53,6 +53,7 @@ public class OrderCollection extends DTableModel {
     
     /**
      * Add an existing {@link Order} several times to the table.
+     * This send an alert to the model about some data modifications.
      *
      * @param order
      *          {@link Order} - The order to add into the table.
@@ -63,11 +64,12 @@ public class OrderCollection extends DTableModel {
         for (int i = 0; i < number; i++) {
             list.add(order.clone());
         }
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.ORDER);
     }
     
     /**
      * Cancel an order, and save how much has been refund. This add a new line in the historic.
+     * This send an alert to the model about some data modifications.
      *
      * @param row
      *          int - The row number of the order.
@@ -83,22 +85,24 @@ public class OrderCollection extends DTableModel {
         ArchivedProduct archProd = new ArchivedProduct(prod.getName(), 1, -prod.getPrice(), prod.getId());
         tran.addArchivedProduct(archProd);
         KaiceModel.getHistoric().addTransaction(tran);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.ORDER);
     }
     
     /**
      * Valid an order. The product is delivered, so the order can be erase.
+     * This send an alert to the model about some data modifications.
      *
      * @param row
      *          int - The row of the order.
      */
     public void validOrder(int row) {
         list.remove(row);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.ORDER);
     }
     
     /**
      * Valid multiple order. All those products are delivered, so the orders cas be erase.
+     * This send an alert to the model about some data modifications.
      *
      * @param rows
      *          int[] - All the rows of the orders.
@@ -108,7 +112,7 @@ public class OrderCollection extends DTableModel {
             System.out.println("2 " + rows[i]);
             list.remove(rows[i]);
         }
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.ORDER);
     }
     
     @Override
@@ -134,5 +138,4 @@ public class OrderCollection extends DTableModel {
         }
         return null;
     }
-    
 }

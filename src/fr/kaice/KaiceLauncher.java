@@ -22,7 +22,7 @@ public abstract class KaiceLauncher {
             saveRep.mkdir();
         }
         new MainWindow();
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.ALL);
     }
 
 }

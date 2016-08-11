@@ -21,15 +21,24 @@ import java.util.Observable;
  */
 public class KaiceModel extends Observable {
     
+    public static final int ALL = 0;
+    public static final int RAW_MATERIAL = 1;
+    public static final int PURCHASED_PRODUCT = 2;
+    public static final int SOLD_PRODUCT = 3;
+    public static final int MEMBER = 4;
+    public static final int HISTORIC = 5;
+    public static final int DETAILS = 6;
+    public static final int ORDER = 7;
+    public static final int TRANSACTION = 8;
+    public static final int RESTOCK = 9;
     private static final RawMaterialCollection rawMatColl = new RawMaterialCollection();
     private static final SoldProductCollection soldProdColl = new SoldProductCollection();
     private static final PurchasedProductCollection purProdColl = new PurchasedProductCollection();
-    
     private static final CurrentTransaction curTran = new CurrentTransaction();
     private static final OrderCollection ordColl = new OrderCollection();
-    
     private static final MemberCollection memColl = new MemberCollection();
     private static final Historic hist = new Historic();
+    private static final boolean[] change = new boolean[10];
     
     private static final KaiceModel model = new KaiceModel();
     private JPanel details;
@@ -141,6 +150,16 @@ public class KaiceModel extends Observable {
     }
     
     /**
+     * Return true if the asked part has been modified.
+     *
+     * @param part int - The part of the programe.
+     * @return True if the asked part has been modified.
+     */
+    public static boolean isPartModified(int part) {
+        return change[part] || change[ALL];
+    }
+    
+    /**
      * Return the current {@link JPanel} to display in the details section.
      *
      * @return The current {@link JPanel} to display in the details section.
@@ -151,24 +170,45 @@ public class KaiceModel extends Observable {
     
     /**
      * Set the current {@link JPanel} to display in the details section.
-     * Warning ! This method call {@link this#update()}.
+     * Warning ! This method call {@link this#update(int...)}.
      *
      * @param details {@link JPanel} - The new {@link JPanel} to display in the details section.
      */
     public void setDetails(JPanel details) {
         this.details = details;
-        update();
+        update(DETAILS);
     }
     
     /**
      * Call {@link Observable#setChanged()} and {@link Observable#notifyObservers()} methods.
      * Warning ! Call this function with caution, nothing prevent a infinite loop of update.
+     * Update only concerned part.
      *
+     *@param part int - The graphical part to update.
      * @see Observable
      */
-    public static void update() {
-        model.setChanged();
-        model.notifyObservers();
+    public static void update(int... part) {
+        boolean update = false;
+        for (int i :
+                part) {
+            if (!change[i]) {
+                update = true;
+                change[i] = true;
+                System.out.println("Model update " + i);
+            } else {
+                System.out.printf("  OUT update " + i);
+            }
+        }
+        if (update) {
+            model.setChanged();
+            model.notifyObservers();
+        } else {
+            System.out.printf("   NO update ");
+            return;
+        }
+        for (int i :
+                part) {
+            change[i] = false;
+        }
     }
-
 }

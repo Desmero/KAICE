@@ -2,13 +2,17 @@ package fr.kaice.model.sell;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.sell.SoldProduct.prodType;
+import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +47,7 @@ public class SoldProductCollection extends DTableModel {
     private static final DTableColumnModel colBuyPrice = new DTableColumnModel("Prix d'achat", Double.class, false);
     private static final DTableColumnModel colBenef = new DTableColumnModel("Bénéfices", Double.class, false);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité disponible", Integer.class, false);
-    private final Map<Integer, SoldProduct> map;
+    private Map<Integer, SoldProduct> map;
     private List<SoldProduct> alphabeticList;
     
     /**
@@ -56,23 +60,56 @@ public class SoldProductCollection extends DTableModel {
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_SELL_PRICE] = colSellPrice;
-        map = new HashMap<>();
-        alphabeticList = new ArrayList<>();
+        deserialize();
+        updateAlphabeticalList();
+    }
+    
+    /**
+     * Load a serialized historic and deserialize-it. Erase completely the current collection.
+     */
+    private void deserialize() {
+        try {
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProduct);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (HashMap) in.readObject();
+            in.close();
+            fileIn.close();
+            System.out.println(KFilesParameters.pathSoldProduct + " read successful.");
+        } catch (IOException i) {
+            System.err.println(KFilesParameters.pathSoldProduct + " read error : file not found.");
+            map = new HashMap<>();
+        } catch (ClassNotFoundException c) {
+            System.out.println("HashMap<Integer, PurchasedProduct> class not found");
+            c.printStackTrace();
+        }
+    }
+    
+    /**
+     * Update the alphabetical sorted list.
+     */
+    private void updateAlphabeticalList() {
+        ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+        alphabeticList = newList;
     }
     
     /**
      * Create and store a new {@link SoldProduct}, id auto-generate.
+     * This send an alert to the model about some data modifications.
      *
      * @param product {@link String} - The name of the new {@link SoldProduct}.
      * @param price   int - The price of the new {@link SoldProduct}.
      * @param type    {@link prodType} - The type of the new {@link SoldProduct}.
+     * @return The new {@link SoldProduct}.
      */
     public SoldProduct addNewSoldProduct(String product, int price, prodType type) {
         int id = getNewId();
-        SoldProduct newMaterial = new SoldProduct(id, product, price, type);
-        map.put(id, newMaterial);
+        SoldProduct soldProduct = new SoldProduct(id, product, price, type);
+        map.put(id, soldProduct);
+        serialize();
         updateAlphabeticalList();
-        return newMaterial;
+        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
+        return soldProduct;
     }
     
     /**
@@ -90,12 +127,18 @@ public class SoldProductCollection extends DTableModel {
     }
     
     /**
-     * Update the alphabetical sorted list.
+     * Serialize the historic, and save-it in a file.
      */
-    private void updateAlphabeticalList() {
-        ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
-        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
-        alphabeticList = newList;
+    public void serialize() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathSoldProduct);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(map);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
     }
     
     /**
@@ -156,7 +199,7 @@ public class SoldProductCollection extends DTableModel {
                 return null;
         }
     }
-    
+
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         SoldProduct prod = alphabeticList.get(rowIndex);
@@ -170,7 +213,8 @@ public class SoldProductCollection extends DTableModel {
             default:
                 break;
         }
-        KaiceModel.update();
+        serialize();
+        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
     }
     
     @Override
@@ -180,5 +224,4 @@ public class SoldProductCollection extends DTableModel {
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
-    
 }

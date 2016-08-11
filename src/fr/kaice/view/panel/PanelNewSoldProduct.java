@@ -79,7 +79,7 @@ class PanelNewSoldProduct extends JPanel {
             for (RawMaterial mat : tmCompo.getAllRawMaterial()) {
                 prod.setRawMaterial(mat, tmCompo.getQuantity(mat));
             }
-            KaiceModel.update();
+            KaiceModel.update(KaiceModel.SOLD_PRODUCT);
         });
         name.setColumns(10);
         type.addItem(SoldProduct.prodType.DRINK);

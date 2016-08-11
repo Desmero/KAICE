@@ -21,17 +21,18 @@ import java.util.Date;
  *  - And a unit price automatically calculated; <br/>
  *
  * @author Raphaël Merkling
- * @version 2.0
+ * @version 2.1
  *
  */
 public class RawMaterial implements GenericProduct, Serializable {
     
+    private static final long serialVersionUID = -8634053620056195331L;
     private final int id;
-    private final int unitPrice;
+    private int unitPrice;
     private String name;
     private int stock;
     private int alert;
-    // TODO Calculate average price
+    private boolean hidden;
     private transient int restockNum; // Used for average unit price calculation
     private transient int restockCost; // Used for average unit price calculation
     
@@ -99,6 +100,57 @@ public class RawMaterial implements GenericProduct, Serializable {
     }
     
     /**
+     * Return the number of the {@link RawMaterial} to buy to increase the stock to the double of the alert value.
+     *
+     * @return The number of the {@link RawMaterial} to buy.
+     */
+    public int getNumberToBuy() {
+        return Integer.max(0, (alert * 2 - stock));
+    }
+    
+    /**
+     * Return a color depending of the stock state of the {@link RawMaterial}. This state depends of the current stock
+     * and alert values : <br/>
+     * - stock > alert => White; <br/>
+     * - alert > stock > 0 => Orange; <br/>
+     * - stock = 0 => Red; <br/>
+     * - stock < 0 (Error) => Gray <br/>
+     *
+     * @return The color of the state of the current stock.
+     */
+    public Color getColor() {
+        Color col = DColor.WHITE;
+        if (stock < 0) {
+            col = DColor.GRAY;
+        } else if (stock == 0) {
+            col = DColor.RED;
+        } else if (stock < alert) {
+            col = DColor.ORANGE;
+        }
+        return col;
+    }
+    
+    /**
+     * Reduce the stock by the given value. This method should be used to reduce the stock, when a
+     * {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct} is sold.
+     *
+     * @param number int - The value to subtract to the stock.
+     */
+    public void consumption(int number) {
+        stock -= number;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() == this.getClass()) {
+            RawMaterial material = (RawMaterial) obj;
+            return this.getName().equals(material.getName()) && this.getId() == material.getId();
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Return the id of the {@link RawMaterial}.
      *
      * @return The id of the {@link RawMaterial}.
@@ -134,50 +186,25 @@ public class RawMaterial implements GenericProduct, Serializable {
         return unitPrice;
     }
     
-    /**
-     * Return the number of the {@link RawMaterial} to buy to increase the stock to the double of the alert value.
-     *
-     * @return The number of the {@link RawMaterial} to buy.
-     */
-    public int getNumberToBuy() {
-        return Integer.max(0, (alert * 2 - stock));
-    }
-    
     @Override
     public String toString() {
         return name;
     }
     
-    /**
-     * Return a color depending of the stock state of the {@link RawMaterial}. This state depends of the current stock
-     * and alert values : <br/>
-     * - stock > alert => White; <br/>
-     * - alert > stock > 0 => Orange; <br/>
-     * - stock = 0 => Red; <br/>
-     * - stock < 0 (Error) => Gray <br/>
-     *
-     * @return The color of the state of the current stock.
-     */
-    public Color getColor() {
-        Color col = DColor.WHITE;
-        if (stock < 0) {
-            col = DColor.GRAY;
-        } else if (stock == 0) {
-            col = DColor.RED;
-        } else if (stock < alert) {
-            col = DColor.ORANGE;
+    public void addRestockNum(int addNum) {
+        this.restockNum += addNum;
+    }
+    
+    public void addRestockCost(int addCost) {
+        this.restockCost = addCost;
+    }
+    
+    void validRestock() {
+        if (restockNum != 0) {
+            unitPrice = restockCost / restockNum;
+            stock += restockNum;
+            restockNum = 0;
+            restockCost = 0;
         }
-        return col;
     }
-    
-    /**
-     * Reduce the stock by the given value. This method should be used to reduce the stock, when a
-     * {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct} is sold.
-     *
-     * @param number int - The value to subtract to the stock.
-     */
-    public void consumption(int number) {
-        stock -= number;
-    }
-    
 }

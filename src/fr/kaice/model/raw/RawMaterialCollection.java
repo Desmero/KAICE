@@ -95,6 +95,7 @@ public class RawMaterialCollection extends DTableModel {
     /**
      * Create and store a new {@link RawMaterial}, id auto-generate and stock,
      * alert and price initialize to 0.
+     * This send an alert to the model about some data modifications.
      *
      * @param product {@link String} - The name of the new {@link RawMaterial}.
      */
@@ -102,7 +103,6 @@ public class RawMaterialCollection extends DTableModel {
         int id = getNewId();
         RawMaterial newMaterial = new RawMaterial(id, product);
         addRawMaterial(newMaterial);
-        KaiceModel.update();
     }
     
     /**
@@ -120,6 +120,7 @@ public class RawMaterialCollection extends DTableModel {
     
     /**
      * Store an existing {@link RawMaterial}.
+     * This send an alert to the model about some data modifications.
      *
      * @param mat {@link RawMaterial} - The raw material to store in the collection.
      */
@@ -131,6 +132,7 @@ public class RawMaterialCollection extends DTableModel {
         map.put(id, mat);
         serialize();
         updateAlphabeticalList();
+        KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
     
     /**
@@ -151,13 +153,14 @@ public class RawMaterialCollection extends DTableModel {
     /**
      * Use a given amount af a given {@link RawMaterial} by selling a
      * {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct}.
+     * This send an alert to the model about some data modifications.
      *
      * @param mat    {@link RawMaterial} - The material used in the product sold.
      * @param number int - The number of the raw material used.
      */
     public void sale(RawMaterial mat, int number) {
         mat.consumption(number);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
     
     /**
@@ -229,6 +232,18 @@ public class RawMaterialCollection extends DTableModel {
         return tab;
     }
     
+    /**
+     * Calculate the new stock and unit price for each {@link RawMaterial}.
+     */
+    public void validRestock() {
+        for (RawMaterial mat :
+                map.values()) {
+            mat.validRestock();
+        }
+        serialize();
+        KaiceModel.update(KaiceModel.RAW_MATERIAL);
+    }
+    
     @Override
     public int getRowCount() {
         return map.size();
@@ -264,6 +279,7 @@ public class RawMaterialCollection extends DTableModel {
                 mat.setAlert((int) aValue);
                 break;
         }
+        KaiceModel.update(KaiceModel.RAW_MATERIAL);
         serialize();
     }
     

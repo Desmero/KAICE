@@ -26,7 +26,8 @@ import java.util.Observer;
 public class PanelPurchasedProduct extends JPanel implements Observer {
     
     private final JLabel price;
-    private final JPanel shoppingPanel;
+    private final DMonetarySpinner paid;
+    private final PanelShoppingList panelShoppingList;
     
     /**
      * Create a new {@link PanelPurchasedProduct}
@@ -37,19 +38,26 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JButton valid = new JButton("Valider"), cancel = new JButton("Annuler");
         JButton shopping = new JButton("Liste de courses");
-        DMonetarySpinner paid = new DMonetarySpinner(0.01);
+        paid = new DMonetarySpinner(0.01);
         JCheckBox cash = new JCheckBox("Paiement liquide");
         JPanel ctrl = new JPanel(new BorderLayout());
         JPanel tablePanel = new JPanel(new BorderLayout());
         JPanel tableCtrl = new JPanel();
         JPanel paidCtrl = new JPanel();
         JPanel tradCtrl = new JPanel();
-        shoppingPanel = new PanelShoppingList();
+        panelShoppingList = new PanelShoppingList();
         price = new JLabel("0.00 " + DFormat.EURO);
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
-        shopping.addActionListener(e -> KaiceModel.getInstance().setDetails(shoppingPanel));
         view.setEnabled(false);
+        valid.addActionListener(e -> reset(KaiceModel.getPurchasedProdCollection().validBought(paid.getIntValue(), cash.isSelected())));
+        cancel.addActionListener(e -> {
+            KaiceModel.getPurchasedProdCollection().resetBought();
+            reset(true);
+        });
+        shopping.addActionListener(e -> {
+            KaiceModel.getInstance().setDetails(panelShoppingList);
+        });
         
         table.setMultiSelection(false);
         
@@ -78,11 +86,19 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         tradCtrl.add(shopping);
     }
     
-    @Override
-    public void update(Observable o, Object arg) {
-        PurchasedProductCollection coll = KaiceModel.getPurchasedProdCollection();
-        double p = DMonetarySpinner.intToDouble(coll.getTotalPrice());
-        price.setText("" + DFormat.MONEY_FORMAT.format(p) + " " + DFormat.EURO);
+    private void reset(boolean res) {
+        if (res) {
+            paid.setValue(0);
+        }
     }
     
+    @Override
+    public void update(Observable o, Object arg) {
+        if (KaiceModel.isPartModified(KaiceModel.PURCHASED_PRODUCT)
+                || KaiceModel.isPartModified(KaiceModel.RESTOCK)) {
+            PurchasedProductCollection coll = KaiceModel.getPurchasedProdCollection();
+            double p = DMonetarySpinner.intToDouble(coll.getTotalPrice());
+            price.setText("" + DFormat.MONEY_FORMAT.format(p) + " " + DFormat.EURO);
+        }
+    }
 }

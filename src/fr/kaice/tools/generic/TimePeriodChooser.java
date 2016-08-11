@@ -31,8 +31,8 @@ public class TimePeriodChooser extends JPanel {
      * Create a new {@link TimePeriodChooser}.
      */
     public TimePeriodChooser() {
-        start = new JDateChooser(new Date(), "dd/MM/yyyy HH:mm:ss");
-        end = new JDateChooser(new Date(), "dd/MM/yyyy HH:mm:ss");
+        start = new JDateChooser(new Date(), "dd/MM/yyyy");
+        end = new JDateChooser(new Date(), "dd/MM/yyyy");
         
         PropertyChangeListener listener = evt -> KaiceModel.getHistoric().setDateSelect(getStart(), getEnd());
         start.addPropertyChangeListener(listener);
@@ -44,9 +44,9 @@ public class TimePeriodChooser extends JPanel {
         selec.addItem("Aujourd'hui");
         selec.addItem("Cette semaine");
         selec.addItem("Ce mois");
-        selec.addItem("Cette ann?e");
+        selec.addItem("Cette année");
         selec.addItem("Tout");
-        selec.addItem("Personalis?");
+        selec.addItem("Personalisé");
         selec.addActionListener(e -> updateDate(selec.getSelectedIndex()));
         
         JPanel top = new JPanel();

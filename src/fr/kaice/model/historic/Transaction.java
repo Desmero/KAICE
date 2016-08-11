@@ -48,6 +48,7 @@ public class Transaction extends DTableModel implements Serializable {
     private static final transient DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
     private static final transient DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
     private static final transient DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final long serialVersionUID = -8468280991560540628L;
     private final List<ArchivedProduct> productList;
     private final transactionType type;
     private final Integer clientId;
@@ -100,7 +101,10 @@ public class Transaction extends DTableModel implements Serializable {
      * @return The full name of the client
      */
     public String getClient() {
-        if (clientId == 0) {
+        if (clientId <= 0) {
+            if (clientId == -1) {
+                return "CENS";
+            }
             return "...";
         }
         return KaiceModel.getMemberCollection().getMember(clientId).getFullName();

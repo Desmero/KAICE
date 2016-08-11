@@ -48,7 +48,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         currentTran = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getCurrentTransaction(), 10);
         PanelChoseSoldProduct product = new PanelChoseSoldProduct();
         cash = new DMonetarySpinner(0.1);
-        cash.addChangeListener(e -> KaiceModel.update());
+        cash.addChangeListener(e -> KaiceModel.update(KaiceModel.TRANSACTION));
         cashBack = new JLabel();
         cashBackText = new JLabel("Rendu : ");
         total = new JLabel("Total : 0.00?");
@@ -74,7 +74,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         rem.setIcon(new ImageIcon("icon/upArrow.png"));
         rem.addActionListener(e -> {
             removeProduct();
-            KaiceModel.update();
+            KaiceModel.update(KaiceModel.TRANSACTION);
         });
         JButton valide = new JButton("Valider");
         valide.setIcon(new ImageIcon("icon/valid.png"));
@@ -184,37 +184,38 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         cash.setValue(0.);
         KaiceModel.getCurrentTransaction().reset();
         KaiceModel.getMemberCollection().clearSelectedMember();
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.TRANSACTION);
     }
     
     @Override
     public void update(Observable o, Object arg) {
-        CurrentTransaction tran = KaiceModel.getCurrentTransaction();
-        int price = tran.getPrice();
-        int add = cash.getIntValue() - price;
+        if (KaiceModel.isPartModified(KaiceModel.TRANSACTION)) {
+            CurrentTransaction tran = KaiceModel.getCurrentTransaction();
+            int price = tran.getPrice();
+            int add = cash.getIntValue() - price;
         
-        total.setText("Total : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(price)) + " ?");
-        if (add > 0) {
-            cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
-            cashBack.setForeground(Color.BLACK);
-            cashBackText.setForeground(Color.BLACK);
-        } else {
-            add = 0;
-            cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
-            cashBack.setForeground(Color.LIGHT_GRAY);
-            cashBackText.setForeground(Color.LIGHT_GRAY);
-        }
-        Member mem = KaiceModel.getMemberCollection().getSelectedMember();
-        if (mem == null) {
-            memberName.setText("");
-            memberFirstName.setText("");
-            memberId.setValue(0);
-        } else {
-            memberName.setText(mem.getName());
-            memberFirstName.setText(mem.getFirstName());
-            memberId.setValue(mem.getMemberId());
+            total.setText("Total : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(price)) + " ?");
+            if (add > 0) {
+                cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
+                cashBack.setForeground(Color.BLACK);
+                cashBackText.setForeground(Color.BLACK);
+            } else {
+                add = 0;
+                cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
+                cashBack.setForeground(Color.LIGHT_GRAY);
+                cashBackText.setForeground(Color.LIGHT_GRAY);
+            }
+            Member mem = KaiceModel.getMemberCollection().getSelectedMember();
+            if (mem == null) {
+                memberName.setText("");
+                memberFirstName.setText("");
+                memberId.setValue(0);
+            } else {
+                memberName.setText(mem.getName());
+                memberFirstName.setText(mem.getFirstName());
+                memberId.setValue(mem.getMemberId());
             
+            }
         }
     }
-    
 }

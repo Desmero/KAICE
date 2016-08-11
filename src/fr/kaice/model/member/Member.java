@@ -25,6 +25,7 @@ import java.util.Date;
  */
 public class Member implements Serializable {
     
+    private static final long serialVersionUID = -3707505691830630156L;
     private final int memberId; // also call membership number
     private String name;
     private String firstName;

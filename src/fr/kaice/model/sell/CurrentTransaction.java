@@ -64,6 +64,7 @@ public class CurrentTransaction extends DTableModel {
     
     /**
      * Add a {@link SoldProduct} to the collection with a specified quantity.
+     * This send an alert to the model about some data modifications.
      *
      * @param prod
      *          {@link SoldProduct} - The product to add.
@@ -76,21 +77,25 @@ public class CurrentTransaction extends DTableModel {
             add += listArticles.get(prod);
         }
         listArticles.put(prod, add);
+        KaiceModel.update(KaiceModel.TRANSACTION);
     }
     
     /**
      * Remove a {@link SoldProduct} from the collection.
+     * This send an alert to the model about some data modifications.
      *
      * @param prod
      *          {@link SoldProduct} - The product to remove.
      */
     public void removeSoldProduct(SoldProduct prod) {
         listArticles.remove(prod);
+        KaiceModel.update(KaiceModel.TRANSACTION);
     }
     
     /**
      * Valid the {@link CurrentTransaction}.
      * This method decrease te stock, add a line in the historic and reset the current transaction.
+     * This send an alert to the model about some data modifications.
      *
      * @param cashIn
      *          int - The amount paid in cash.
@@ -111,7 +116,7 @@ public class CurrentTransaction extends DTableModel {
             ordColl.addOrder(ord, article.getValue());
         }
         KaiceModel.getHistoric().addTransaction(tran);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.HISTORIC, KaiceModel.TRANSACTION);
     }
     
     /**
@@ -142,10 +147,11 @@ public class CurrentTransaction extends DTableModel {
     
     /**
      * Reset the {@link CurrentTransaction}.
+     * This send an alert to the model about some data modifications.
      */
     public void reset() {
         listArticles.clear();
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.TRANSACTION);
     }
     
     /**
@@ -199,7 +205,7 @@ public class CurrentTransaction extends DTableModel {
             ArrayList<SoldProduct> list = new ArrayList<>(listArticles.keySet());
             SoldProduct prod = list.get(rowIndex);
             listArticles.put(prod, (Integer) aValue);
-            KaiceModel.update();
+            KaiceModel.update(KaiceModel.TRANSACTION);
         }
     }
     

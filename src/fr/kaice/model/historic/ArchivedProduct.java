@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class ArchivedProduct implements GenericProduct, Serializable {
     
+    private static final long serialVersionUID = -3226767896061224384L;
     private final String name;
     private final int quantity;
     private final int price;

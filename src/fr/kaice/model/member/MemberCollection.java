@@ -150,11 +150,13 @@ public class MemberCollection extends DTableModel {
     }
     
     /**
-     * Update the display list with a new generated one (generated with {@link MemberCollection#getDisplayList(String, String, int)}).
+     * Update the display list with a new generated one (generated with
+     * {@link MemberCollection#getDisplayList(String, String, int)}).
+     * This send an alert to the model about some data modifications.
      */
     public void updateDisplayList() {
         displayList = getDisplayList(searchName, searchFirstName, sortCol);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.MEMBER);
     }
 
     /**
@@ -230,7 +232,7 @@ public class MemberCollection extends DTableModel {
      */
     public void setSelectedMember(int row) {
         selectedMember = getRow(row);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.MEMBER);
     }
     
     /**
@@ -257,7 +259,7 @@ public class MemberCollection extends DTableModel {
      */
     public void setSelectedMemberById(int id) {
         selectedMember = map.get(id);
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.MEMBER);
     }
     
     /**
@@ -270,7 +272,7 @@ public class MemberCollection extends DTableModel {
         ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID);
         if (list.size() == 1) {
             selectedMember = list.get(0);
-            KaiceModel.update();
+            KaiceModel.update(KaiceModel.MEMBER);
         } else {
             selectedMember = null;
         }

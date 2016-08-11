@@ -1,18 +1,18 @@
 package fr.kaice.model.buy;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class store all {@link PurchasedProduct} the programme need to know.
@@ -38,12 +38,15 @@ public class PurchasedProductCollection extends DTableModel {
     private static final int COL_NUM_UNIT_PRICE = 1;
     private static final int COL_NUM_QTY = 2;
     private static final int COL_NUM_TOTAL_PRICE = 3;
+    private static final int COL_NUM_RAW_MATERIAL = 4;
+    private static final int COL_NUM_RAW_QTY = 5;
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private static final DTableColumnModel colTotalPrice = new DTableColumnModel("Prix total", Double.class, false);
     private Map<Integer, PurchasedProduct> map;
     private List<PurchasedProduct> alphabeticList;
+    private List<PurchasedProduct> variantList;
     
     /**
      * Construct a {@link PurchasedProductCollection}. This should be only call one time, and by {@link KaiceModel}.
@@ -55,7 +58,7 @@ public class PurchasedProductCollection extends DTableModel {
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_TOTAL_PRICE] = colTotalPrice;
         deserialize();
-        updateAlphabeticalList();
+        updateLists();
     }
     
     /**
@@ -81,14 +84,76 @@ public class PurchasedProductCollection extends DTableModel {
     /**
      * Update the alphabetical sorted list.
      */
-    private void updateAlphabeticalList() {
+    private void updateLists() {
         ArrayList<PurchasedProduct> newList = new ArrayList<>(map.values());
         newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+        variantList = newList;
         alphabeticList = newList;
     }
     
     /**
+     * Valid the bought of {@link PurchasedProduct}. Return a boolean who check the success of the method.
+     *
+     * @param cost int - The value paid.
+     * @return True if the validation was successful.
+     */
+    public boolean validBought(int cost, boolean cash) {
+        if (cost == getTotalPrice()) {
+            int paid = 0;
+            if (cash) {
+                paid = cost;
+            }
+            Transaction tran = new Transaction(-1, Transaction.transactionType.BUY, cost, paid, new Date());
+            for (PurchasedProduct prod :
+                    map.values()) {
+                if (prod.getNumberBought() > 0) {
+                    RawMaterial mat = prod.getRawMat();
+                    mat.addRestockNum(prod.getNumberBought() * prod.getQuantity());
+                    mat.addRestockCost(prod.getTotalPrice());
+                    ArchivedProduct arProd = new ArchivedProduct(prod.getName(), prod.getNumberBought(),
+                            prod.getTotalPrice(), prod.getId());
+                    tran.addArchivedProduct(arProd);
+                }
+            }
+            KaiceModel.getRawMatCollection().validRestock();
+            KaiceModel.getHistoric().addTransaction(tran);
+        
+            resetBought();
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "La somme payé ne correspond pas au prix calculé",
+                    "Prix", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+    
+    /**
+     * Return the price in cents of all bought product. This calls {@link PurchasedProduct#getTotalPrice()}.
+     *
+     * @return The price in cents of all bought product.
+     */
+    public int getTotalPrice() {
+        int price = 0;
+        for (PurchasedProduct prod : alphabeticList) {
+            price += prod.getTotalPrice();
+        }
+        return price;
+    }
+    
+    /**
+     * Reset for each {@link PurchasedProduct} the number bought to 0.
+     */
+    public void resetBought() {
+        for (PurchasedProduct prod :
+                map.values()) {
+            prod.setNumberBought(0);
+        }
+        KaiceModel.update(KaiceModel.PURCHASED_PRODUCT);
+    }
+    
+    /**
      * Create and store a new {@link PurchasedProduct}. The Id is auto-generated, and the quantity is set to 0.
+     * This send an alert to the model about some data modifications.
      *
      * @param name           {@link String} - The name of the product.
      * @param purchasedPrice int - The price in cents of the product.
@@ -101,8 +166,8 @@ public class PurchasedProductCollection extends DTableModel {
         PurchasedProduct newProduct = new PurchasedProduct(id, name, purchasedPrice, mat, quantity);
         map.put(id, newProduct);
         serialize();
-        updateAlphabeticalList();
-        KaiceModel.update();
+        updateLists();
+        KaiceModel.update(KaiceModel.PURCHASED_PRODUCT);
     }
     
     /**
@@ -135,19 +200,6 @@ public class PurchasedProductCollection extends DTableModel {
     }
     
     /**
-     * Return the price in cents of all bought product. This calls {@link PurchasedProduct#getTotalPrice()}.
-     *
-     * @return The price in cents of all bought product.
-     */
-    public int getTotalPrice() {
-        int price = 0;
-        for (PurchasedProduct prod : alphabeticList) {
-            price += prod.getTotalPrice();
-        }
-        return price;
-    }
-    
-    /**
      * Return the {@link PurchasedProduct} corresponding to the given id. If the id is not used, return null.
      *
      * @param id int - The id of the wanted {@link PurchasedProduct}.
@@ -155,6 +207,31 @@ public class PurchasedProductCollection extends DTableModel {
      */
     public PurchasedProduct getProd(int id) {
         return map.get(id);
+    }
+    
+    /**
+     * Return a variant of the display list. this one can contains hidden products.
+     *
+     * @return A variant display list of purchased products.
+     */
+    public List<PurchasedProduct> getVariantList() {
+        return variantList;
+    }
+    
+    /**
+     * Return all {@link PurchasedProduct} that contains the specified {@link RawMaterial}.
+     *
+     * @param material {@link RawMaterial} - The specified material.
+     * @return All {@link PurchasedProduct} that contains the specified {@link RawMaterial}.
+     */
+    public ArrayList<PurchasedProduct> getContainers(RawMaterial material) {
+        ArrayList<PurchasedProduct> list = new ArrayList<>();
+        for (PurchasedProduct product : map.values()) {
+            if (product.getRawMat().equals(material)) {
+                list.add(product);
+            }
+        }
+        return list;
     }
     
     @Override
@@ -174,6 +251,10 @@ public class PurchasedProductCollection extends DTableModel {
                 return prod.getNumberBought();
             case COL_NUM_TOTAL_PRICE:
                 return DMonetarySpinner.intToDouble(prod.getTotalPrice());
+            case COL_NUM_RAW_MATERIAL:
+                return prod.getRawMat().getName();
+            case COL_NUM_RAW_QTY:
+                return prod.getQuantity();
             default:
                 return null;
         }
@@ -192,8 +273,11 @@ public class PurchasedProductCollection extends DTableModel {
             case COL_NUM_QTY:
                 prod.setNumberBought((int) aValue);
                 break;
+            case COL_NUM_RAW_QTY:
+                prod.setQuantity((int) aValue);
+                break;
         }
         serialize();
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.PURCHASED_PRODUCT);
     }
 }

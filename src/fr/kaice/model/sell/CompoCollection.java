@@ -66,19 +66,7 @@ public class CompoCollection extends DTableModel {
         } else {
             composition.put(mat, 1);
         }
-        KaiceModel.update();
-    }
-    
-    /**
-     * Set the quantity of a {@link RawMaterial}.
-     *
-     * @param mat
-     *          {@link RawMaterial} - The raw material.
-     * @param number
-     *          int - The quantity.
-     */
-    public void setRawMaterial(RawMaterial mat, int number) {
-        composition.put(mat, number);
+        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
     }
     
     /**
@@ -182,7 +170,17 @@ public class CompoCollection extends DTableModel {
                     setRawMaterial(mat, (Integer) aValue);
             }
         }
-        KaiceModel.update();
+        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
+    }
+    
+    /**
+     * Set the quantity of a {@link RawMaterial}.
+     *
+     * @param mat    {@link RawMaterial} - The raw material.
+     * @param number int - The quantity.
+     */
+    public void setRawMaterial(RawMaterial mat, int number) {
+        composition.put(mat, number);
     }
     
     /**

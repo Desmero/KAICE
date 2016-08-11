@@ -40,7 +40,9 @@ public class PanelEMailList extends JPanel implements Observer{
     
     @Override
     public void update(Observable arg0, Object arg1) {
-        emails.setText(KaiceModel.getEMailList());
-        System.out.println("email : \n" + KaiceModel.getEMailList());
+        if (KaiceModel.isPartModified(KaiceModel.MEMBER)) {
+            emails.setText(KaiceModel.getEMailList());
+            System.out.println("email : \n" + KaiceModel.getEMailList());
+        }
     }
 }

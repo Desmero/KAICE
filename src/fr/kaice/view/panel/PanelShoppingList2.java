@@ -21,20 +21,13 @@ import java.util.Observer;
  * @see JPanel
  * @see KaiceModel
  */
-class PanelShoppingList extends JPanel implements Observer {
+class PanelShoppingList2 extends JPanel implements Observer {
     
     /**
-     * Create a new {@link PanelShoppingList}
+     * Create a new {@link PanelShoppingList2}
      */
-    public PanelShoppingList() {
+    public PanelShoppingList2() {
         KaiceModel.getInstance().addObserver(this);
-        build();
-    }
-    
-    /**
-     * Reconstruct all the panel.
-     */
-    public void build() {
         JPanel list = new JPanel();
         JScrollPane scroll = new JScrollPane(list);
         
@@ -46,46 +39,34 @@ class PanelShoppingList extends JPanel implements Observer {
         
         GroupLayout.SequentialGroup vGroup = groupLayout.createSequentialGroup();
         GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
-        
-        ArrayList<GroupLayout.ParallelGroup> hPGroupList = new ArrayList<>();
+        GroupLayout.ParallelGroup hPGroup = groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         
         for (RawMaterial mat : map.keySet()) {
             ArrayList<PurchasedProduct> matList = KaiceModel.getPurchasedProdCollection().getContainers(mat);
-            int i = 0;
-            GroupLayout.ParallelGroup vPGroupe = groupLayout.createParallelGroup();
             for (PurchasedProduct product : matList) {
-                if (hPGroupList.size() <= i) {
-                    hPGroupList.add(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING));
-                }
                 int number = map.get(mat) / product.getQuantity();
                 if (map.get(mat) % product.getQuantity() != 0) {
                     number++;
                 }
                 ShoppingCheckBox box = new ShoppingCheckBox(product, number);
-                hPGroupList.get(i).addComponent(box);
-                vPGroupe.addComponent(box);
-                i++;
+                hPGroup.addComponent(box);
+                vGroup.addGroup(groupLayout.createParallelGroup().addComponent(box));
             }
-            vGroup.addGroup(vPGroupe);
         }
-        for (GroupLayout.ParallelGroup pGroup : hPGroupList) {
-            hGroup.addGroup(pGroup);
-        }
+        hGroup.addGroup(hPGroup);
         groupLayout.setVerticalGroup(vGroup);
         groupLayout.setHorizontalGroup(hGroup);
         list.setLayout(groupLayout);
         
-        this.removeAll();
         this.setLayout(new BorderLayout());
         this.add(scroll, BorderLayout.CENTER);
-        this.repaint();
     }
     
     @Override
     public void update(Observable o, Object arg) {
         if (KaiceModel.isPartModified(KaiceModel.PURCHASED_PRODUCT)
                 || KaiceModel.isPartModified(KaiceModel.RAW_MATERIAL)) {
-            build();
+            KaiceModel.getInstance().setDetails(new PanelShoppingList2());
         }
     }
 }

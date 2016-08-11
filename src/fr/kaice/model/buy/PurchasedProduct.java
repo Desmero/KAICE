@@ -1,5 +1,6 @@
 package fr.kaice.model.buy;
 
+import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.GenericProduct;
 
@@ -15,17 +16,19 @@ import java.io.Serializable;
  *  - And the quantity of {@link RawMaterial}.
  *
  * @author Raphaël Merkling
- * @version 2.0
+ * @version 2.1
  *
  */
 public class PurchasedProduct implements GenericProduct, Serializable {
     
+    private static final long serialVersionUID = -2994362280899753885L;
     private final int id;
-    private final RawMaterial rawMat;
+    private final int materialId;
     private String name;
     private int purchasedPrice;
     private int quantity;
     private transient int numberBought;
+    private boolean hidden;
     
     /**
      * Simple constructor. This use a auto-generate id.
@@ -41,7 +44,7 @@ public class PurchasedProduct implements GenericProduct, Serializable {
         this.id = id;
         this.name = name;
         this.purchasedPrice = purchasedPrice;
-        this.rawMat = mat;
+        this.materialId = mat.getId();
         this.quantity = quantity;
         this.numberBought = 0;
     }
@@ -89,7 +92,7 @@ public class PurchasedProduct implements GenericProduct, Serializable {
      *
      * @return The number of {@link PurchasedProduct} bought.
      */
-    int getNumberBought() {
+    public int getNumberBought() {
         return numberBought;
     }
     
@@ -98,7 +101,7 @@ public class PurchasedProduct implements GenericProduct, Serializable {
      *
      * @param numberBought int - The number of {@link PurchasedProduct} bought.
      */
-    void setNumberBought(int numberBought) {
+    public void setNumberBought(int numberBought) {
         this.numberBought = numberBought;
     }
     
@@ -144,7 +147,7 @@ public class PurchasedProduct implements GenericProduct, Serializable {
      * @return The {@link RawMaterial} contains in the {@link PurchasedProduct}.
      */
     public RawMaterial getRawMat() {
-        return rawMat;
+        return KaiceModel.getRawMatCollection().getMat(materialId);
     }
     
     @Override
