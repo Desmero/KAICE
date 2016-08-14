@@ -12,7 +12,8 @@ public class AlreadyUsedIdException extends RuntimeException {
     /**
      * Create a new {@link AlreadyUsedIdException}.
      *
-     * @param arg0 {@link String} - The detail message. The message should contains the incriminate membership number (id).
+     * @param arg0 {@link String} - The detail message. The message should contains the incriminate membership number
+     *             (id).
      */
     public AlreadyUsedIdException(String arg0) {
         super(arg0);

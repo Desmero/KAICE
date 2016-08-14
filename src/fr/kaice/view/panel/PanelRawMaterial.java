@@ -21,7 +21,7 @@ import java.awt.*;
 public class PanelRawMaterial extends JPanel {
     
     /**
-     *  Create a new {@link PanelRawMaterial}
+     * Create a new {@link PanelRawMaterial}
      */
     public PanelRawMaterial() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getRawMatCollection());

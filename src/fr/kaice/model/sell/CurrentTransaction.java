@@ -66,10 +66,8 @@ public class CurrentTransaction extends DTableModel {
      * Add a {@link SoldProduct} to the collection with a specified quantity.
      * This send an alert to the model about some data modifications.
      *
-     * @param prod
-     *          {@link SoldProduct} - The product to add.
-     * @param quantity
-     *          int - The quantity of the product.
+     * @param prod     {@link SoldProduct} - The product to add.
+     * @param quantity int - The quantity of the product.
      */
     public void addSoldProduct(SoldProduct prod, int quantity) {
         int add = quantity;
@@ -84,8 +82,7 @@ public class CurrentTransaction extends DTableModel {
      * Remove a {@link SoldProduct} from the collection.
      * This send an alert to the model about some data modifications.
      *
-     * @param prod
-     *          {@link SoldProduct} - The product to remove.
+     * @param prod {@link SoldProduct} - The product to remove.
      */
     public void removeSoldProduct(SoldProduct prod) {
         listArticles.remove(prod);
@@ -97,8 +94,7 @@ public class CurrentTransaction extends DTableModel {
      * This method decrease te stock, add a line in the historic and reset the current transaction.
      * This send an alert to the model about some data modifications.
      *
-     * @param cashIn
-     *          int - The amount paid in cash.
+     * @param cashIn int - The amount paid in cash.
      */
     public void validTransaction(int cashIn) {
         if (getNumberArticle() == 0) {

@@ -56,8 +56,7 @@ public class CompoCollection extends DTableModel {
      * Add a {@link RawMaterial} to the collection and set his quantity to 1.
      * If the {@link RawMaterial} is already present, increase the quantity by 1.
      *
-     * @param mat
-     *          {@link RawMaterial} - The raw material to add.
+     * @param mat {@link RawMaterial} - The raw material to add.
      */
     public void addRawMaterial(RawMaterial mat) {
         Integer oldNum = composition.get(mat);
@@ -72,8 +71,7 @@ public class CompoCollection extends DTableModel {
     /**
      * Return the quantity of {@link RawMaterial} needed.
      *
-     * @param mat
-     *          {@link RawMaterial} - The raw material.
+     * @param mat {@link RawMaterial} - The raw material.
      * @return The quantity of {@link RawMaterial} needed.
      */
     public int getQuantity(RawMaterial mat) {
@@ -83,8 +81,7 @@ public class CompoCollection extends DTableModel {
     /**
      * Remove the selected {@link RawMaterial} from the collection.
      *
-     * @param select
-     *          int - The row number of the {@link RawMaterial}.
+     * @param select int - The row number of the {@link RawMaterial}.
      */
     public void removeSelectedRows(int select) {
         ArrayList<RawMaterial> list = new ArrayList<>(composition.keySet());

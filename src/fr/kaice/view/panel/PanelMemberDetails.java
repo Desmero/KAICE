@@ -55,8 +55,7 @@ class PanelMemberDetails extends JPanel {
     /**
      * Create a new {@link PanelMemberDetails} in visualisation mode.
      *
-     * @param memberId
-     *          int - The membership number of the {@link Member}.
+     * @param memberId int - The membership number of the {@link Member}.
      */
     public PanelMemberDetails(int memberId) {
         this(memberId, false);
@@ -65,10 +64,8 @@ class PanelMemberDetails extends JPanel {
     /**
      * Create a new {@link PanelMemberDetails}.
      *
-     * @param memberId
-     *          int - The membership number of the {@link Member}.
-     * @param edition
-     *          boolean - True for edition mode, false for visualisation mode.
+     * @param memberId int - The membership number of the {@link Member}.
+     * @param edition  boolean - True for edition mode, false for visualisation mode.
      */
     public PanelMemberDetails(int memberId, boolean edition) {
         this.edition = edition;

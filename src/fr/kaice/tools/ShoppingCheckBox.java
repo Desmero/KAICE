@@ -7,13 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This class is a {@link JCheckBox} linked to a {@link PurchasedProduct} with a quantity to buy. <br/>
- * The box have 3 states : <br/>
- * - Check : the bought quantity of the corresponding product is equal to the quantity to buy. <br/>
- * - Not check : the bought quantity is equal to 0. <br/>
- * - Not determined : the bought quantity is equal to something else. <br/>
- * The not determined state was inspired by a code found on
- * http://stackoverflow.com/questions/2701817/java-swing-jcheckbox-with-3-states-full-selected-partially-selected-and-dese
+ * This class is a {@link JCheckBox} linked to a {@link PurchasedProduct} with a quantity to buy. <br/> The box have 3
+ * states : <br/> - Check : the bought quantity of the corresponding product is equal to the quantity to buy. <br/> -
+ * Not check : the bought quantity is equal to 0. <br/> - Not determined : the bought quantity is equal to something
+ * else. <br/> The not determined state was inspired by a code found on http://stackoverflow.com/questions/2701817/java-swing-jcheckbox-with-3-states-full-selected-partially-selected-and-dese
  *
  * @author Raphaël Merkling
  * @version 1.1

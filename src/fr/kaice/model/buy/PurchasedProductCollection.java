@@ -128,7 +128,7 @@ public class PurchasedProductCollection extends DTableModel {
             }
             KaiceModel.getRawMatCollection().validRestock();
             KaiceModel.getHistoric().addTransaction(tran);
-        
+    
             resetBought();
             return true;
         } else {
@@ -253,7 +253,7 @@ public class PurchasedProductCollection extends DTableModel {
     public int getRowCount() {
         return displayList.size();
     }
-
+    
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         PurchasedProduct prod = displayList.get(rowIndex);

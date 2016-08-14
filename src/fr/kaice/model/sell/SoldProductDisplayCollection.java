@@ -38,8 +38,7 @@ public class SoldProductDisplayCollection extends DTableModel {
     /**
      * Construct a {@link SoldProductDisplayCollection} of a given type.
      *
-     * @param type
-     *          {@link SoldProductCollection.prodType} - The type of the collection.
+     * @param type {@link SoldProductCollection.prodType} - The type of the collection.
      */
     public SoldProductDisplayCollection(SoldProductCollection.prodType type) {
         this.type = type;
@@ -61,8 +60,7 @@ public class SoldProductDisplayCollection extends DTableModel {
     /**
      * Return the {@link SoldProduct} at the given row.
      *
-     * @param row
-     *          int - The row number of the {@link SoldProduct}
+     * @param row int - The row number of the {@link SoldProduct}
      * @return The {@link SoldProduct} at the given row.
      */
     public SoldProduct getSoldProduct(int row) {

@@ -10,7 +10,6 @@ import java.io.Serializable;
  *
  * @author Raphaël Merkling
  * @version 1.1
- *
  * @see AbstractTableModel
  * @see DCellRender
  * @see javax.swing.table.TableModel

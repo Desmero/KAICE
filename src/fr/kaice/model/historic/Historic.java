@@ -14,17 +14,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class store all past {@link Transaction}.
- * This should be construct only by {@link KaiceModel}, and one time.
- * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
- * In a table, it display 5 columns : <br/>
- * - "Date", witch display dates (non editable {@link Date});<br/>
- * - "Client", witch display clients's name (non editable {@link String});<br/>
- * - "Transaction", witch display the names of all products concerned, the color of the cell depends of the {@link Transaction#type} (non editable {@link Double});<br/>
- * - "Prix", witch display prices (editable {@link Double});<br/>
- * - "Espece", witch display given cash (nne editable {@link Double}).<br/>
- * And a summary of all {@link Transaction} on the last line.
- * The table entries are sorted by dates.
+ * This class store all past {@link Transaction}. This should be construct only by {@link KaiceModel}, and one time. It
+ * extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/> In a table, it display 5 columns : <br/>
+ * - "Date", witch display dates (non editable {@link Date});<br/> - "Client", witch display clients's name (non
+ * editable {@link String});<br/> - "Transaction", witch display the names of all products concerned, the color of the
+ * cell depends of the {@link Transaction#type} (non editable {@link Double});<br/> - "Prix", witch display prices
+ * (editable {@link Double});<br/> - "Espece", witch display given cash (nne editable {@link Double}).<br/> And a
+ * summary of all {@link Transaction} on the last line. The table entries are sorted by dates.
  *
  * @author Raphaël Merkling
  * @version 2.2

@@ -52,6 +52,7 @@ public class KaiceModel extends Observable {
      * Return the instance of the class {@link KaiceModel}.
      *
      * @return The instance of the class {@link KaiceModel}.
+     *
      * @see KaiceModel
      */
     public static KaiceModel getInstance() {
@@ -184,7 +185,7 @@ public class KaiceModel extends Observable {
      * Warning ! Call this function with caution, nothing prevent a infinite loop of update.
      * Update only concerned part.
      *
-     *@param part int - The graphical part to update.
+     * @param part int - The graphical part to update.
      * @see Observable
      */
     public static void update(int... part) {

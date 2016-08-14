@@ -12,17 +12,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * This class represent one kind of basic item that compose {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct} <br/>
- *
- * It contains : <br/>
- *  - A name; <br/>
- *  - A stock value; <br/>
- *  - A alert value; <br/>
- *  - And a unit price automatically calculated; <br/>
+ * This class represent one kind of basic item that compose {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct}
+ * <br/>
+ * <p>
+ * It contains : <br/> - A name; <br/> - A stock value; <br/> - A alert value; <br/> - And a unit price automatically
+ * calculated; <br/>
  *
  * @author Raphaël Merkling
  * @version 2.1
- *
  */
 public class RawMaterial implements GenericProduct, Serializable {
     

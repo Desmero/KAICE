@@ -92,18 +92,19 @@ public class MemberCollection extends DTableModel {
     }
     
     /**
-     * Generate a new display list, with a name filter, a first name filter and a sort method (by membership number, name or first name)
+     * Generate a new display list, with a name filter, a first name filter and a sort method (by membership number,
+     * name or first name)
      *
      * @param name      {@link String} - The name filter sub-string.
      * @param firstName {@link String} - The first name filter sub-string.
-     * @param sotMethod int - the sort method ({@value COL_NUM_ID} for id, {@value COL_NUM_NAME} for name,
-     *                  {@value COL_NUM_FIRST_NAME} for first name).
+     * @param sotMethod int - the sort method ({@value COL_NUM_ID} for id, {@value COL_NUM_NAME} for name, {@value
+     *                  COL_NUM_FIRST_NAME} for first name).
      * @return A new list of {@link Member}, corresponding to the filter, and sort parameters.
      */
     private ArrayList<Member> getDisplayList(String name, String firstName, int sotMethod) {
         ArrayList<Member> newList = map.values().stream().filter(mem ->
                 mem.getName().toLowerCase().contains(name.toLowerCase())
-                && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase()))
+                        && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase()))
                 .collect(Collectors.toCollection(ArrayList::new));
         newList.sort((arg0, arg1) -> {
             switch (sotMethod) {
@@ -158,7 +159,7 @@ public class MemberCollection extends DTableModel {
         displayList = getDisplayList(searchName, searchFirstName, sortCol);
         KaiceModel.update(KaiceModel.MEMBER);
     }
-
+    
     /**
      * Auto-generate a new free membership number for this collection of {@link Member}.
      * A membership number is composed of 6 digits, the firsts 2 are thr current year code given by
@@ -206,8 +207,8 @@ public class MemberCollection extends DTableModel {
     }
     
     /**
-     * Set the filter by first name.
-     * Update the display list in order to only keep {@link Member}'s first names who contains the searchName sub-string.
+     * Set the filter by first name. Update the display list in order to only keep {@link Member}'s first names who
+     * contains the searchName sub-string.
      *
      * @param searchFirstName {@link String} - A sub-string filter for first name.
      */
@@ -215,7 +216,7 @@ public class MemberCollection extends DTableModel {
         this.searchFirstName = searchFirstName;
         updateDisplayList();
     }
-
+    
     /**
      * Return the selected {@link Member} for the current transaction.
      *
@@ -298,8 +299,8 @@ public class MemberCollection extends DTableModel {
     }
     
     /**
-     * Create one {@link String} with the correct e-mail address of every {@link Member} who subscribe to the newsletter.
-     * Each address is separated by a semicolon ';'.
+     * Create one {@link String} with the correct e-mail address of every {@link Member} who subscribe to the
+     * newsletter. Each address is separated by a semicolon ';'.
      *
      * @return A {@link String} containing e-mail address.
      */

@@ -8,15 +8,13 @@ import javax.swing.table.AbstractTableModel;
 
 
 /**
- * This class is NOT a real collection, just an variant way to display data of
- * {@link PurchasedProductCollection} <br/><br/>
+ * This class is NOT a real collection, just an variant way to display data of {@link PurchasedProductCollection}
+ * <br/><br/>
  * <p>
- * In a table, it display 2 columns : <br/>
- * - "Nom", witch display names (editable {@link String});<br/>
- * - "Prix unitaire", witch display unitary price (editable {@link Double});<br/>
- * - "Produit brute", witch display corresponding {@link fr.kaice.model.raw.RawMaterial} (not editable {@link String}); <br/>
- * - "Quantité", witch display raw material's quantity(editable {@link Integer}). <br/>
- * The table entries are sorted by names.
+ * In a table, it display 2 columns : <br/> - "Nom", witch display names (editable {@link String});<br/> - "Prix
+ * unitaire", witch display unitary price (editable {@link Double});<br/> - "Produit brute", witch display corresponding
+ * {@link fr.kaice.model.raw.RawMaterial} (not editable {@link String}); <br/> - "Quantité", witch display raw
+ * material's quantity(editable {@link Integer}). <br/> The table entries are sorted by names.
  *
  * @author Raphaël Merkling
  * @version 1.0

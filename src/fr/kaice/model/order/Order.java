@@ -20,10 +20,8 @@ public class Order {
     /**
      * Create a new {@link Order}.
      *
-     * @param member
-     *          {@link Member} - The member client.
-     * @param product
-     *          {@link SoldProduct} - The product sold to the member.
+     * @param member  {@link Member} - The member client.
+     * @param product {@link SoldProduct} - The product sold to the member.
      */
     public Order(Member member, SoldProduct product) {
         this.member = member;

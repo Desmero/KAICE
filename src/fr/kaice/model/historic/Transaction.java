@@ -16,21 +16,16 @@ import java.util.List;
 /**
  * This class represent one trade (buy, sell, stock change, ...).<br/><br/>
  * <p>
- * It contains : <br/>
- * - a collection of {@link ArchivedProduct}; <br/>
- * - the client's id; <br/>
- * - the price in cents; <br/>
- * - the cash given; <br/>
- * - the {@link Date}; <br/>
- * - and the type of the transaction ({@link transactionType}). <br/><br/>
+ * It contains : <br/> - a collection of {@link ArchivedProduct}; <br/> - the client's id; <br/> - the price in cents;
+ * <br/> - the cash given; <br/> - the {@link Date}; <br/> - and the type of the transaction ({@link transactionType}).
+ * <br/><br/>
  * <p>
- * It extends {@link DTableModel}, a custom {@linkplain javax.swing.table.AbstractTableModel AbstractTableModel}.<br/><br/>
- * In a table, it display the {@link ArchivedProduct} collection with 4 columns : <br/>
- * - "Nom", witch display names (non editable {@link String});<br/>
- * - "Prix unitaire", witch display unitary price (non editable {@link Double});<br/>
- * - "Quantité", witch display the bought quantity (non editable {@link Integer});<br/>
- * - "Prix", witch display the total price (non editable {@link Double}).<br/>
- * And a summary of all {@link ArchivedProduct} on the last line.
+ * It extends {@link DTableModel}, a custom {@linkplain javax.swing.table.AbstractTableModel
+ * AbstractTableModel}.<br/><br/> In a table, it display the {@link ArchivedProduct} collection with 4 columns : <br/> -
+ * "Nom", witch display names (non editable {@link String});<br/> - "Prix unitaire", witch display unitary price (non
+ * editable {@link Double});<br/> - "Quantité", witch display the bought quantity (non editable {@link Integer});<br/> -
+ * "Prix", witch display the total price (non editable {@link Double}).<br/> And a summary of all {@link
+ * ArchivedProduct} on the last line.
  *
  * @author Raphaël Merkling
  * @version 2.2
@@ -59,17 +54,12 @@ public class Transaction extends DTableModel implements Serializable {
     /**
      * Create a new {@link Transaction}.
      *
-     * @param clientId
-     *          {@link Integer} - The membership number of the concerned client for a sell, canceling or an enrolment.
-     *          Null for something else.
-     * @param type
-     *          {@link transactionType} - The type of transaction.
-     * @param price
-     *          int - The transaction's price.
-     * @param paid
-     *          int - The amount paid in cash.
-     * @param date
-     *          {@link Date} - The date of the transaction.
+     * @param clientId {@link Integer} - The membership number of the concerned client for a sell, canceling or an
+     *                 enrolment. Null for something else.
+     * @param type     {@link transactionType} - The type of transaction.
+     * @param price    int - The transaction's price.
+     * @param paid     int - The amount paid in cash.
+     * @param date     {@link Date} - The date of the transaction.
      */
     public Transaction(Integer clientId, transactionType type, int price, int paid, Date date) {
         this.clientId = clientId;
@@ -162,8 +152,7 @@ public class Transaction extends DTableModel implements Serializable {
     /**
      * Return the {@link Color} to display for the {@link transactionType}.
      *
-     * @param type
-     *          {@link transactionType} - The type of transaction.
+     * @param type {@link transactionType} - The type of transaction.
      * @return The color for this kind ot transaction.
      */
     private static Color getTypeColor(transactionType type) {
@@ -244,14 +233,14 @@ public class Transaction extends DTableModel implements Serializable {
     }
     
     /**
-     * This enum represent the type of transaction. This type is mostly a graphical distinction. <br/>
-     * This enum contains : <br/>
-     *  - {@link transactionType#SELL} : for {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct} sold to members; <br/>
-     *  - {@link transactionType#BUY} : for {@linkplain fr.kaice.model.buy.PurchasedProduct PurchasedProduct} bought by the association; <br/>
-     *  - {@link transactionType#ADD} : for {@linkplain fr.kaice.model.raw.RawMaterial RawMaterial} add to the stock; <br/>
-     *  - {@link transactionType#SUB} : for {@linkplain fr.kaice.model.raw.RawMaterial RawMaterial} remove from the stock; <br/>
-     *  - {@link transactionType#CANCEL} : for {@linkplain fr.kaice.model.order.Order Order} canceled by members; <br/>
-     *  - {@link transactionType#ENR} : for {@linkplain Member Member}s's enrolment.
+     * This enum represent the type of transaction. This type is mostly a graphical distinction. <br/> This enum
+     * contains : <br/> - {@link transactionType#SELL} : for {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct}
+     * sold to members; <br/> - {@link transactionType#BUY} : for {@linkplain fr.kaice.model.buy.PurchasedProduct
+     * PurchasedProduct} bought by the association; <br/> - {@link transactionType#ADD} : for {@linkplain
+     * fr.kaice.model.raw.RawMaterial RawMaterial} add to the stock; <br/> - {@link transactionType#SUB} : for
+     * {@linkplain fr.kaice.model.raw.RawMaterial RawMaterial} remove from the stock; <br/> - {@link
+     * transactionType#CANCEL} : for {@linkplain fr.kaice.model.order.Order Order} canceled by members; <br/> - {@link
+     * transactionType#ENR} : for {@linkplain Member Member}s's enrolment.
      */
     public enum transactionType {
         SELL(true), BUY(true), ADD(true), SUB(true), CANCEL(true), ENR(true);

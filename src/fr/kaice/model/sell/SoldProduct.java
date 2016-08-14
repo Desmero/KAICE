@@ -17,15 +17,14 @@ import static fr.kaice.model.sell.SoldProductTableModel.*;
 /**
  * This class represent one kind of sold product. <br/>
  * It is composed by : <br/>
- *  - An id; <br/>
- *  - A name; <br/>
- *  - A sale price; <br/>
- *  - A type; <br/>
- *  - And a collection of {@link RawMaterial}.
+ * - An id; <br/>
+ * - A name; <br/>
+ * - A sale price; <br/>
+ * - A type; <br/>
+ * - And a collection of {@link RawMaterial}.
  *
  * @author Raphaël Merkling
  * @version 2.1
- *
  */
 public class SoldProduct extends DTableModel implements GenericProduct, Serializable {
     
@@ -86,8 +85,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * The quantity must be positive. If the quantity is equals to 0, the
      * {@link RawMaterial} is remove to collection.
      *
-     * @param mat      /!\
-     *                 {@link RawMaterial} - The raw material.
+     * @param mat      /!\ {@link RawMaterial} - The raw material.
      * @param quantity int - The quantity, must be positive or equals to 0.
      */
     public void setRawMaterial(RawMaterial mat, int quantity) {

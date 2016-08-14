@@ -20,12 +20,9 @@ public class CellRenderRawMaterial extends DCellRender {
     /**
      * Create a {@link CellRenderRawMaterial} extending of {@link DCellRender}.
      *
-     * @param colClass
-     *          {@link Class} - The class of object contains in the cells.
-     * @param editable
-     *          boolean - True if the cells are editable, false if not.
-     * @param totalLine
-     *          boolean - True if the last cell is use for a summary.
+     * @param colClass  {@link Class} - The class of object contains in the cells.
+     * @param editable  boolean - True if the cells are editable, false if not.
+     * @param totalLine boolean - True if the last cell is use for a summary.
      */
     public CellRenderRawMaterial(Class<?> colClass, boolean editable, boolean totalLine) {
         super(colClass, editable, totalLine);

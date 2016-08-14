@@ -24,5 +24,5 @@ public abstract class KaiceLauncher {
         new MainWindow();
         KaiceModel.update(KaiceModel.ALL);
     }
-
+    
 }

@@ -7,18 +7,18 @@ import java.util.Date;
 
 /**
  * This class represent one member of the association. <br/>
- *
+ * <p>
  * It contains : <br/>
- *  - Name; <br/>
- *  - First name; <br/>
- *  - Gender; <br/>
- *  - Birth date; <br/>
- *  - Phone number; <br/>
- *  - Address; <br/>
- *  - E-mail address; <br/>
- *  - News letters registration; <br/>
- *  - Studies; <br/>
- *  - And an id. <br/>
+ * - Name; <br/>
+ * - First name; <br/>
+ * - Gender; <br/>
+ * - Birth date; <br/>
+ * - Phone number; <br/>
+ * - Address; <br/>
+ * - E-mail address; <br/>
+ * - News letters registration; <br/>
+ * - Studies; <br/>
+ * - And an id. <br/>
  *
  * @author Raphaël Merkling
  * @version 2.2
@@ -62,7 +62,7 @@ public class Member implements Serializable {
     /**
      * Create a new {@link Member} with all fields. All empty parameters are replace with generic ones.
      *
-     * @param memberId         int - Membership number.
+     * @param memberId       int - Membership number.
      * @param name           {@link String} - Mame of the member.
      * @param firstName      {@link String} - First name of the member.
      * @param gender         boolean - Gender of the member (true = male, false = female).

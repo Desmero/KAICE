@@ -22,8 +22,7 @@ class PanelTransaction extends JPanel {
     /**
      * Create a new {@link PanelTransaction} who display the details of the given {@link Transaction}.
      *
-     * @param tran
-     *          {@link Transaction} - The transaction to visualise.
+     * @param tran {@link Transaction} - The transaction to visualise.
      */
     public PanelTransaction(Transaction tran) {
         

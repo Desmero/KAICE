@@ -35,10 +35,8 @@ public abstract class DFunction {
     /**
      * Fuse 2 {@link Color} correctly, and return the fused color.
      *
-     * @param color1
-     *          {@link Color} - The first color to fuse.
-     * @param color2
-     *          {@link Color} - The second color to fuse.
+     * @param color1 {@link Color} - The first color to fuse.
+     * @param color2 {@link Color} - The second color to fuse.
      * @return The fused color.
      */
     public static Color colorFusion(Color color1, Color color2) {

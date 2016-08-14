@@ -9,15 +9,14 @@ import java.io.Serializable;
 /**
  * This class represent one kind of purchased product. <br/>
  * It is composed of : <br/>
- *  - An Id; <br/>
- *  - A name; <br/>
- *  - A price in cents; <br/>
- *  - A {@link RawMaterial}; <br/>
- *  - And the quantity of {@link RawMaterial}.
+ * - An Id; <br/>
+ * - A name; <br/>
+ * - A price in cents; <br/>
+ * - A {@link RawMaterial}; <br/>
+ * - And the quantity of {@link RawMaterial}.
  *
  * @author Raphaël Merkling
  * @version 2.1
- *
  */
 public class PurchasedProduct implements GenericProduct, Serializable {
     
@@ -35,10 +34,8 @@ public class PurchasedProduct implements GenericProduct, Serializable {
      *
      * @param name           {@link String} - The name of the product.
      * @param purchasedPrice int - The purchase price in cents of the product.
-     * @param mat            {@link RawMaterial} - The {@link RawMaterial} that corresponds to
-     *                       the product.
-     * @param quantity       int - The number of the {@link RawMaterial} that contains the
-     *                       product.
+     * @param mat            {@link RawMaterial} - The {@link RawMaterial} that corresponds to the product.
+     * @param quantity       int - The number of the {@link RawMaterial} that contains the product.
      */
     public PurchasedProduct(int id, String name, int purchasedPrice, RawMaterial mat, int quantity) {
         this.id = id;

@@ -18,12 +18,9 @@ class WindowInform extends JDialog {
      * Create a new {@link WindowInform} witch display the windowName on top, the mainPanel in the center, and can block
      * or not the focus on that window.
      *
-     * @param windowName
-     *          {@link String} - The name of the window.
-     * @param block
-     *          boolean - True if the focus must stay on this window.
-     * @param mainPanel
-     *          {@link JPanel} - The panel to display in the window.
+     * @param windowName {@link String} - The name of the window.
+     * @param block      boolean - True if the focus must stay on this window.
+     * @param mainPanel  {@link JPanel} - The panel to display in the window.
      */
     public WindowInform(String windowName, boolean block, JPanel mainPanel) {
         super((JFrame) null, windowName, block);

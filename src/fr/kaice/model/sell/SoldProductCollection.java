@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  *
  * @author Raphaël Merkling
  * @version 2.1
- *
  * @see SoldProduct
  * @see DTableModel
  * @see AbstractTableModel
@@ -237,7 +236,8 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     }
     
     /**
-     * Return all {@link SoldProduct} of a certain type, with a positive available quantity value, in a {@link ArrayList}.
+     * Return all {@link SoldProduct} of a certain type, with a positive available quantity value, in a {@link
+     * ArrayList}.
      *
      * @param type {@link prodType} - The type of the product.
      * @return All available product of the given type in a {@link ArrayList}.
@@ -284,7 +284,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
                 return null;
         }
     }
-
+    
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         SoldProduct prod = displayList.get(rowIndex);

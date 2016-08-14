@@ -18,7 +18,7 @@ import java.util.Observer;
  * @author Raphaël Merkling
  * @version 1.0
  */
-public class DTablePanel extends JPanel implements Observer{
+public class DTablePanel extends JPanel implements Observer {
     
     private DTableModel tableModel;
     private JTable table;
@@ -41,8 +41,7 @@ public class DTablePanel extends JPanel implements Observer{
      * Initialise everything needed at the creation of the object.
      * The should only be used by a constructor.
      *
-     * @param tableModel
-     *          {@link DTableModel} - The model of the table.
+     * @param tableModel {@link DTableModel} - The model of the table.
      */
     private void construct(DTableModel tableModel) {
         this.setLayout(new BorderLayout());
@@ -155,8 +154,8 @@ public class DTablePanel extends JPanel implements Observer{
      * Copied from {@link JTable}. <br/>
      * Returns the indices of all selected rows.
      *
-     * @return an array of integers containing the indices of all selected rows,
-     * or an empty array if no row is selected
+     * @return an array of integers containing the indices of all selected rows, or an empty array if no row is selected
+     *
      * @see #getSelectedRow
      */
     public int[] getSelectedRows() {

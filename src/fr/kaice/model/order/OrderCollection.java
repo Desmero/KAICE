@@ -55,10 +55,8 @@ public class OrderCollection extends DTableModel {
      * Add an existing {@link Order} several times to the table.
      * This send an alert to the model about some data modifications.
      *
-     * @param order
-     *          {@link Order} - The order to add into the table.
-     * @param number
-     *          int - The number of copy to add in the table.
+     * @param order  {@link Order} - The order to add into the table.
+     * @param number int - The number of copy to add in the table.
      */
     public void addOrder(Order order, int number) {
         for (int i = 0; i < number; i++) {
@@ -71,10 +69,8 @@ public class OrderCollection extends DTableModel {
      * Cancel an order, and save how much has been refund. This add a new line in the historic.
      * This send an alert to the model about some data modifications.
      *
-     * @param row
-     *          int - The row number of the order.
-     * @param cashBack
-     *          int - The cash refund in cents.
+     * @param row      int - The row number of the order.
+     * @param cashBack int - The cash refund in cents.
      */
     public void cancelOrder(int row, int cashBack) {
         Order order = list.get(row);
@@ -92,8 +88,7 @@ public class OrderCollection extends DTableModel {
      * Valid an order. The product is delivered, so the order can be erase.
      * This send an alert to the model about some data modifications.
      *
-     * @param row
-     *          int - The row of the order.
+     * @param row int - The row of the order.
      */
     public void validOrder(int row) {
         list.remove(row);
@@ -104,8 +99,7 @@ public class OrderCollection extends DTableModel {
      * Valid multiple order. All those products are delivered, so the orders cas be erase.
      * This send an alert to the model about some data modifications.
      *
-     * @param rows
-     *          int[] - All the rows of the orders.
+     * @param rows int[] - All the rows of the orders.
      */
     public void validOrders(int[] rows) {
         for (int i = rows.length - 1; i >= 0; i--) {

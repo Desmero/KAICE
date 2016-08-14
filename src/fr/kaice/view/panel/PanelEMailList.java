@@ -19,7 +19,7 @@ import java.util.Observer;
  * @see fr.kaice.model.member.Member
  * @see MemberCollection
  */
-public class PanelEMailList extends JPanel implements Observer{
+public class PanelEMailList extends JPanel implements Observer {
     
     private static final long serialVersionUID = 1L;
     private final JTextArea emails;

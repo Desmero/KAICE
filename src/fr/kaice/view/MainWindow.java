@@ -19,7 +19,7 @@ import java.util.Observer;
  * @see JFrame
  * @see Observer
  */
-public class MainWindow extends JFrame implements Observer{
+public class MainWindow extends JFrame implements Observer {
     
     private final JPanel details;
     private final JSplitPane splitCenterIn;

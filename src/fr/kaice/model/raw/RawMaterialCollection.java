@@ -28,7 +28,6 @@ import java.util.Map;
  *
  * @author Raphaël Merkling
  * @version 2.1
- *
  * @see RawMaterial
  * @see DTableModel
  * @see AbstractTableModel
@@ -187,8 +186,8 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
     }
     
     /**
-     * Return the {@link Color} of a {@link RawMaterial} choose by a row number, depending of his stock and alert value, using
-     * {@link RawMaterial#getColor()}.
+     * Return the {@link Color} of a {@link RawMaterial} choose by a row number, depending of his stock and alert value,
+     * using {@link RawMaterial#getColor()}.
      *
      * @param row int - The row of the {@link RawMaterial}.
      * @return The color of the {@link RawMaterial} chosen by the row number.
@@ -215,8 +214,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
     /**
      * Return the {@link RawMaterial} at the given row.
      *
-     * @param row
-     *          int - The row number.
+     * @param row int - The row number.
      * @return The {@link RawMaterial} at the given row.
      */
     public RawMaterial getMaterialAtRow(int row) {
@@ -281,7 +279,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
                 return null;
         }
     }
-
+    
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         RawMaterial mat = displayList.get(rowIndex);

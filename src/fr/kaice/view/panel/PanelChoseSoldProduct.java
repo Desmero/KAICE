@@ -24,7 +24,7 @@ import java.util.Observer;
  * @see SoldProduct
  * @see CurrentTransaction
  */
-class PanelChoseSoldProduct extends JPanel implements Observer{
+class PanelChoseSoldProduct extends JPanel implements Observer {
     
     private final DTablePanel[] tables;
     private final SoldProductDisplayCollection[] tableModels;
