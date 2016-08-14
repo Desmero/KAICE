@@ -207,4 +207,12 @@ public class RawMaterial implements GenericProduct, Serializable {
             restockCost = 0;
         }
     }
+    
+    public boolean isHidden() {
+        return hidden;
+    }
+    
+    public void changeHiddenState() {
+        hidden = !hidden;
+    }
 }

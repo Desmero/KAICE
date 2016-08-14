@@ -13,7 +13,7 @@ import java.awt.*;
  * This panel display all information about a {@link SoldProduct}.
  * The interface allow to edit a member the composition of the product.
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.0
  * @see JPanel
  * @see SoldProduct
@@ -31,16 +31,16 @@ class PanelSoldProductDetails extends JPanel {
         name.setHorizontalAlignment(JLabel.CENTER);
         JLabel type = new JLabel("" + prod.getType());
         type.setHorizontalAlignment(JLabel.CENTER);
-        JLabel quantity = new JLabel("Quantitï¿½ : " + prod.getQuantity());
+        JLabel quantity = new JLabel("Quantité : " + prod.getQuantity());
         quantity.setHorizontalAlignment(JLabel.CENTER);
         JLabel price = new JLabel(
-                "Prix : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getPrice())) + " ï¿½");
+                "Prix : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getPrice())) + " ?");
         price.setHorizontalAlignment(JLabel.CENTER);
         JLabel cost = new JLabel(
-                "Coï¿½t : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getBuyPrice())) + " ï¿½");
+                "Coût : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getBuyPrice())) + " ?");
         cost.setHorizontalAlignment(JLabel.CENTER);
         JLabel profit = new JLabel(
-                "Bï¿½nï¿½fice : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getProfit())) + " ï¿½");
+                "Bénéfice : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getProfit())) + " ?");
         profit.setHorizontalAlignment(JLabel.CENTER);
         
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), prod, 6);
@@ -56,15 +56,19 @@ class PanelSoldProductDetails extends JPanel {
         // d = tableSell.getPreferredSize();
         // scrollPaneSell.setPreferredSize(new Dimension(d.width,
         // tableSell.getRowHeight() * 16));
-        
+    
+        JPanel all = new JPanel(new BorderLayout());
+        PanelTitle title = new PanelTitle("Détails d'un article en vente", e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel detail = new JPanel(new BorderLayout());
         JPanel detailUp = new JPanel(new GridLayout(1, 3));
         JPanel detailDown = new JPanel(new GridLayout(1, 3));
         JPanel center = new JPanel(new BorderLayout());
-        
+    
         this.setLayout(new BorderLayout());
-        this.add(detail, BorderLayout.NORTH);
-        this.add(center, BorderLayout.CENTER);
+        this.add(title, BorderLayout.NORTH);
+        this.add(all, BorderLayout.CENTER);
+        all.add(detail, BorderLayout.NORTH);
+        all.add(center, BorderLayout.CENTER);
         
         center.add(table, BorderLayout.NORTH);
         // center.add(scrollPaneSell, BorderLayout.CENTER);

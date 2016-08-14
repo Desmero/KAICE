@@ -67,8 +67,10 @@ public class ShoppingCheckBox extends JCheckBox implements Icon {
     private void checkChange() {
         if (this.isSelected()) {
             product.setNumberBought(quantity);
+            state = SELECTED;
         } else {
             product.setNumberBought(0);
+            state = NOT_SELECTED;
         }
         KaiceModel.update(KaiceModel.RESTOCK);
     }
@@ -76,7 +78,9 @@ public class ShoppingCheckBox extends JCheckBox implements Icon {
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
         icon.paintIcon(c, g, x, y);
-        if (state != UNCOMPLETED) return;
+        if (state != UNCOMPLETED) {
+            return;
+        }
         
         int w = getIconWidth();
         int h = getIconHeight();

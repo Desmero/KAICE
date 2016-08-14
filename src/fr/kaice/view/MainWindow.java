@@ -1,6 +1,7 @@
 package fr.kaice.view;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.generic.CloseListener;
 import fr.kaice.view.panel.*;
 
 import javax.swing.*;
@@ -20,7 +21,8 @@ import java.util.Observer;
  */
 public class MainWindow extends JFrame implements Observer{
     
-    private final JPanel centerSouth;
+    private final JPanel details;
+    private final JSplitPane splitCenterIn;
     
     /**
      * Create a new {@link MainWindow}.
@@ -29,61 +31,78 @@ public class MainWindow extends JFrame implements Observer{
         super("KAICE v2.0");
         
         KaiceModel.getInstance().addObserver(this);
-        
-        Dimension d;
-        
+    
         JPanel center = new JPanel(new BorderLayout());
-        JPanel east = new JPanel(new BorderLayout());
+        JPanel members = new JPanel(new BorderLayout());
         JPanel west = new JPanel(new BorderLayout());
-        
-        JSplitPane splitEastOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, center, east);
+    
+        JSplitPane splitEastOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, center, members);
         splitEastOut.setResizeWeight(1);
         JSplitPane splitWestOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, west, splitEastOut);
         splitWestOut.setResizeWeight(0);
-        
-        this.setLayout(new BorderLayout());
         this.add(splitWestOut);
-        
-        JPanel centerNorth = new JPanel(new BorderLayout());
-        centerSouth = new JPanel(new BorderLayout());
-        JPanel westNorth = new JPanel(new BorderLayout());
-        JPanel westSouth = new JPanel(new BorderLayout());
-        
-        JSplitPane splitCenterIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, centerNorth, centerSouth);
+    
+        JPanel transaction = new JPanel(new BorderLayout());
+        details = new JPanel(new BorderLayout());
+        JPanel order = new JPanel(new BorderLayout());
+        JPanel lists = new JPanel(new BorderLayout());
+    
+        splitCenterIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, transaction, details);
         splitCenterIn.setResizeWeight(1);
-        JSplitPane splitWestIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, westNorth, westSouth);
+        JSplitPane splitWestIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, order, lists);
         splitWestIn.setResizeWeight(0.5);
         
         center.add(splitCenterIn, BorderLayout.CENTER);
         west.add(splitWestIn, BorderLayout.CENTER);
-        
-        JTabbedPane tablePaneNorth = new JTabbedPane();
-        tablePaneNorth.add("Ventes", new PanelCurrentTransaction());
-        tablePaneNorth.add("Achats", new PanelPurchasedProduct());
-        JTabbedPane tablePaneSouth = new JTabbedPane();
-        tablePaneSouth.add("Produits bruts", new PanelRawMaterial());
-        tablePaneSouth.add("Articles en vente", new PanelSoldProduct());
-        tablePaneSouth.add("Articles achetés", new PanelPurchasedProductLight());
-        tablePaneSouth.add("Historique", new PanelHistoric());
-        PanelMember memberColl = new PanelMember();
-        PanelOrder order = new PanelOrder();
-        JPanel details = KaiceModel.getInstance().getDetails();
-        
-        centerNorth.add(tablePaneNorth, BorderLayout.CENTER);
-        centerNorth.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
-        centerSouth.add(details, BorderLayout.CENTER);
-        westNorth.add(order, BorderLayout.CENTER);
-        westNorth.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
-        westSouth.add(tablePaneSouth, BorderLayout.CENTER);
-        east.add(memberColl, BorderLayout.CENTER);
-        
-        Dimension dim = centerSouth.getPreferredSize();
-        dim.setSize(dim.getWidth(), 20);
-        centerSouth.setPreferredSize(dim);
-        
-        
-        d = new Dimension(1600, 900);
-        setPreferredSize(d);
+    
+        JTabbedPane tabbedPaneTransaction = new JTabbedPane();
+        tabbedPaneTransaction.add("Ventes", new PanelCurrentTransaction());
+        tabbedPaneTransaction.add("Achats", new PanelPurchasedProduct());
+        JTabbedPane tabbedPaneLists = new JTabbedPane();
+        tabbedPaneLists.add("Produits bruts", new PanelRawMaterial());
+        tabbedPaneLists.add("Articles en vente", new PanelSoldProduct());
+        tabbedPaneLists.add("Articles achetés", new PanelPurchasedProductVal());
+        tabbedPaneLists.add("Historique", new PanelHistoric());
+    
+        transaction.add(new PanelTitle("Transactions"), BorderLayout.NORTH);
+        transaction.add(tabbedPaneTransaction, BorderLayout.CENTER);
+        details.add(KaiceModel.getInstance().getDetails(), BorderLayout.CENTER);
+        order.add(new PanelTitle("Commandes"), BorderLayout.NORTH);
+        order.add(new PanelOrder(), BorderLayout.CENTER);
+        lists.add(new PanelTitle("Listes"), BorderLayout.NORTH);
+        lists.add(tabbedPaneLists, BorderLayout.CENTER);
+        members.add(new PanelTitle("Membres"), BorderLayout.NORTH);
+        members.add(new PanelMember(), BorderLayout.CENTER);
+    
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menuFile = new JMenu("Fichier");
+        JMenu menuEdit = new JMenu("Édition");
+        JMenu menuView = new JMenu("Affichage");
+        JMenu menuHelp = new JMenu("Aide");
+    
+        JMenuItem mIExit = new JMenuItem("Quitter");
+        mIExit.addActionListener(new CloseListener(this));
+        JMenuItem mIExport = new JMenuItem("Exporter");
+        JMenuItem mIHidden = new JCheckBoxMenuItem("Produits masqués");
+        mIHidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
+    
+        menuFile.add(mIExport);
+        menuFile.add(new JPopupMenu.Separator());
+        menuFile.add(mIExit);
+        menuBar.add(menuFile);
+    
+        menuBar.add(menuEdit);
+    
+        menuView.add(mIHidden);
+        menuBar.add(menuView);
+    
+        menuBar.add(menuHelp);
+    
+        this.setJMenuBar(menuBar);
+    
+        Dimension windowDim;
+        windowDim = new Dimension(1600, 900);
+        setPreferredSize(windowDim);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
         pack();
@@ -93,10 +112,12 @@ public class MainWindow extends JFrame implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         setPreferredSize(getSize());
-        JPanel details = KaiceModel.getInstance().getDetails();
-        centerSouth.removeAll();
-        centerSouth.add(details, BorderLayout.CENTER);
-        centerSouth.repaint();
+        JPanel newDetails = KaiceModel.getInstance().getDetails();
+    
+        details.removeAll();
+        details.add(newDetails, BorderLayout.CENTER);
+    
+        splitCenterIn.setDividerLocation(-1);
         pack();
     }
     

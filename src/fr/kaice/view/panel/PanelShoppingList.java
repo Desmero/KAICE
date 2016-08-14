@@ -48,11 +48,15 @@ class PanelShoppingList extends JPanel implements Observer {
         GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
         
         ArrayList<GroupLayout.ParallelGroup> hPGroupList = new ArrayList<>();
+    
+        int line = 1;
+        boolean addLine;
         
         for (RawMaterial mat : map.keySet()) {
             ArrayList<PurchasedProduct> matList = KaiceModel.getPurchasedProdCollection().getContainers(mat);
             int i = 0;
-            GroupLayout.ParallelGroup vPGroupe = groupLayout.createParallelGroup();
+            addLine = false;
+            GroupLayout.ParallelGroup vPGroup = groupLayout.createParallelGroup();
             for (PurchasedProduct product : matList) {
                 if (hPGroupList.size() <= i) {
                     hPGroupList.add(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING));
@@ -63,10 +67,14 @@ class PanelShoppingList extends JPanel implements Observer {
                 }
                 ShoppingCheckBox box = new ShoppingCheckBox(product, number);
                 hPGroupList.get(i).addComponent(box);
-                vPGroupe.addComponent(box);
+                vPGroup.addComponent(box);
                 i++;
+                addLine = true;
             }
-            vGroup.addGroup(vPGroupe);
+            if (addLine) {
+                line++;
+            }
+            vGroup.addGroup(vPGroup);
         }
         for (GroupLayout.ParallelGroup pGroup : hPGroupList) {
             hGroup.addGroup(pGroup);
@@ -77,7 +85,11 @@ class PanelShoppingList extends JPanel implements Observer {
         
         this.removeAll();
         this.setLayout(new BorderLayout());
+        this.add(new PanelTitle("Liste des courses", e -> KaiceModel.getInstance().setDetails(new JPanel())), BorderLayout.NORTH);
         this.add(scroll, BorderLayout.CENTER);
+    
+        this.setMinimumSize(new Dimension(this.getWidth(), Integer.min(200, line * 28)));
+        
         this.repaint();
     }
     

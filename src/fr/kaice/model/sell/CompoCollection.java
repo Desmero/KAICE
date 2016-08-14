@@ -136,7 +136,7 @@ public class CompoCollection extends DTableModel {
      *
      * @return The total cost in cents of all the {@link RawMaterial}.
      */
-    public int getTotalPrice() {
+    private int getTotalPrice() {
         int price = 0;
         ArrayList<RawMaterial> list = new ArrayList<>(composition.keySet());
         for (RawMaterial mat : list) {

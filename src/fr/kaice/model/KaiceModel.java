@@ -31,20 +31,21 @@ public class KaiceModel extends Observable {
     public static final int ORDER = 7;
     public static final int TRANSACTION = 8;
     public static final int RESTOCK = 9;
+    private static final KaiceModel model = new KaiceModel();
     private static final RawMaterialCollection rawMatColl = new RawMaterialCollection();
     private static final SoldProductCollection soldProdColl = new SoldProductCollection();
     private static final PurchasedProductCollection purProdColl = new PurchasedProductCollection();
     private static final CurrentTransaction curTran = new CurrentTransaction();
     private static final OrderCollection ordColl = new OrderCollection();
-    private static final MemberCollection memColl = new MemberCollection();
     private static final Historic hist = new Historic();
+    private static final MemberCollection memColl = new MemberCollection();
     private static final boolean[] change = new boolean[10];
-    
-    private static final KaiceModel model = new KaiceModel();
+    private boolean showHidden;
     private JPanel details;
     
     private KaiceModel() {
         details = new JPanel();
+        showHidden = false;
     }
     
     /**
@@ -58,30 +59,12 @@ public class KaiceModel extends Observable {
     }
     
     /**
-     * Return the main {@link RawMaterialCollection} use by the programme.
-     *
-     * @return The main {@link RawMaterialCollection} use by the programme.
-     */
-    public static RawMaterialCollection getRawMatCollection() {
-        return rawMatColl;
-    }
-    
-    /**
      * Return the main {@link SoldProductCollection} use by the programme.
      *
      * @return The main {@link SoldProductCollection} use by the programme.
      */
     public static SoldProductCollection getSoldProdCollection() {
         return soldProdColl;
-    }
-    
-    /**
-     * Return the main {@link PurchasedProductCollection} use by the programme.
-     *
-     * @return The main {@link PurchasedProductCollection} use by the programme.
-     */
-    public static PurchasedProductCollection getPurchasedProdCollection() {
-        return purProdColl;
     }
     
     /**
@@ -160,6 +143,123 @@ public class KaiceModel extends Observable {
     }
     
     /**
+     * Return true is the hidden items must be shown.
+     *
+     * @return True is the hidden items must be shown.
+     */
+    public boolean isShowHidden() {
+        return showHidden;
+    }
+    
+    /**
+     * Change the state of showHidden.
+     */
+    public void changeShowHiddenState() {
+        this.showHidden = !showHidden;
+        KaiceModel.getRawMatCollection().updateDisplayList();
+        KaiceModel.getPurchasedProdCollection().updateLists();
+        KaiceModel.update(KaiceModel.RAW_MATERIAL, KaiceModel.PURCHASED_PRODUCT, KaiceModel.SOLD_PRODUCT);
+    }
+    
+    /**
+     * Return the main {@link RawMaterialCollection} use by the programme.
+     *
+     * @return The main {@link RawMaterialCollection} use by the programme.
+     */
+    public static RawMaterialCollection getRawMatCollection() {
+        return rawMatColl;
+    }
+    
+    /**
+     * Return the main {@link PurchasedProductCollection} use by the programme.
+     *
+     * @return The main {@link PurchasedProductCollection} use by the programme.
+     */
+    public static PurchasedProductCollection getPurchasedProdCollection() {
+        return purProdColl;
+    }
+    
+    /**
+     * Call {@link Observable#setChanged()} and {@link Observable#notifyObservers()} methods.
+     * Warning ! Call this function with caution, nothing prevent a infinite loop of update.
+     * Update only concerned part.
+     *
+     *@param part int - The graphical part to update.
+     * @see Observable
+     */
+    public static void update(int... part) {
+        System.out.println(">>>>");
+        boolean update = false;
+        for (int i :
+                part) {
+            if (!change[i]) {
+                update = true;
+                change[i] = true;
+                printUpdateCode(i, "   IN   ");
+            } else {
+                printUpdateCode(i, "   OUT  ");
+            }
+        }
+        if (update) {
+            model.setChanged();
+            model.notifyObservers();
+        } else {
+            System.out.println("   NO   update ");
+            System.out.println("<<<<");
+            return;
+        }
+        for (int i :
+                part) {
+            change[i] = false;
+        }
+        System.out.println("<<<<");
+    }
+    
+    /**
+     * Print on the terminal the name of the sector updated with a little message. Use only for test.
+     *
+     * @param message {@link String} - A little message to display.
+     * @param code    int - The code of the sector.
+     */
+    private static void printUpdateCode(int code, String message) {
+        System.out.print(message + " " + code + " ");
+        switch (code) {
+            case ALL:
+                System.out.println("ALL");
+                break;
+            case RAW_MATERIAL:
+                System.out.println("RAW_MATERIAL");
+                break;
+            case PURCHASED_PRODUCT:
+                System.out.println("PURCHASED_PRODUCT");
+                break;
+            case SOLD_PRODUCT:
+                System.out.println("SOLD_PRODUCT");
+                break;
+            case MEMBER:
+                System.out.println("MEMBER");
+                break;
+            case HISTORIC:
+                System.out.println("HISTORIC");
+                break;
+            case DETAILS:
+                System.out.println("DETAILS");
+                break;
+            case ORDER:
+                System.out.println("ORDER");
+                break;
+            case TRANSACTION:
+                System.out.println("TRANSACTION");
+                break;
+            case RESTOCK:
+                System.out.println("RESTOCK");
+                break;
+            default:
+                System.out.println("???");
+        }
+    }
+    
+    /**
      * Return the current {@link JPanel} to display in the details section.
      *
      * @return The current {@link JPanel} to display in the details section.
@@ -177,38 +277,5 @@ public class KaiceModel extends Observable {
     public void setDetails(JPanel details) {
         this.details = details;
         update(DETAILS);
-    }
-    
-    /**
-     * Call {@link Observable#setChanged()} and {@link Observable#notifyObservers()} methods.
-     * Warning ! Call this function with caution, nothing prevent a infinite loop of update.
-     * Update only concerned part.
-     *
-     *@param part int - The graphical part to update.
-     * @see Observable
-     */
-    public static void update(int... part) {
-        boolean update = false;
-        for (int i :
-                part) {
-            if (!change[i]) {
-                update = true;
-                change[i] = true;
-                System.out.println("Model update " + i);
-            } else {
-                System.out.printf("  OUT update " + i);
-            }
-        }
-        if (update) {
-            model.setChanged();
-            model.notifyObservers();
-        } else {
-            System.out.printf("   NO update ");
-            return;
-        }
-        for (int i :
-                part) {
-            change[i] = false;
-        }
     }
 }

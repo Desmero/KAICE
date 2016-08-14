@@ -51,7 +51,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         cash.addChangeListener(e -> KaiceModel.update(KaiceModel.TRANSACTION));
         cashBack = new JLabel();
         cashBackText = new JLabel("Rendu : ");
-        total = new JLabel("Total : 0.00?");
+        total = new JLabel("Total : 0.00 " + DFormat.EURO);
         total.setBorder(new LineBorder(Color.RED));
         total.setFont(new Font(total.getFont().getFontName(), Font.BOLD, 20));
         
@@ -113,8 +113,8 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         ctrlButton.add(cancel);
         ctrlButton.add(add);
         ctrlButton.add(rem);
-        
-        ctrlMember.add(new JLabel("Pr?nom : "));
+    
+        ctrlMember.add(new JLabel("Prénom : "));
         ctrlMember.add(memberFirstName);
         ctrlMember.add(new JLabel("Nom : "));
         ctrlMember.add(memberName);
@@ -164,10 +164,10 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         //noinspection ConstantConditions
         if (res == JOptionPane.YES_OPTION && add < 0) {
             res = JOptionPane.showConfirmDialog(null,
-                    "Le payment en espece est inssufisant, voulez-vous d?biter le compte ?", "Espece insuffisant",
+                    "Le payment en espece est inssufisant, voulez-vous débiter le compte ?", "Espece insuffisant",
                     JOptionPane.YES_NO_OPTION, 2);
             if (res == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(this, "Pensez ? d?biter le compte dans le carnet de comptes, merci",
+                JOptionPane.showMessageDialog(this, "Pensez à débiter le compte dans le carnet de comptes, merci",
                         "Comptes", JOptionPane.WARNING_MESSAGE);
             }
         }
@@ -193,15 +193,15 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
             CurrentTransaction tran = KaiceModel.getCurrentTransaction();
             int price = tran.getPrice();
             int add = cash.getIntValue() - price;
-        
-            total.setText("Total : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(price)) + " ?");
+    
+            total.setText("Total : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(price)) + " " + DFormat.EURO);
             if (add > 0) {
-                cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
+                cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " " + DFormat.EURO);
                 cashBack.setForeground(Color.BLACK);
                 cashBackText.setForeground(Color.BLACK);
             } else {
                 add = 0;
-                cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " ?");
+                cashBack.setText("" + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(add)) + " " + DFormat.EURO);
                 cashBack.setForeground(Color.LIGHT_GRAY);
                 cashBackText.setForeground(Color.LIGHT_GRAY);
             }

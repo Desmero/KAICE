@@ -1,7 +1,6 @@
 package fr.kaice.model.sell;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.model.sell.SoldProduct.prodType;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.generic.*;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
  * @see AbstractTableModel
  * @see KaiceModel
  */
-public class SoldProductCollection extends DTableModel {
+public class SoldProductCollection extends DTableModel implements IHiddenCollection {
     
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_SELL_PRICE = 1;
@@ -48,7 +47,7 @@ public class SoldProductCollection extends DTableModel {
     private static final DTableColumnModel colBenef = new DTableColumnModel("Bénéfices", Double.class, false);
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité disponible", Integer.class, false);
     private Map<Integer, SoldProduct> map;
-    private List<SoldProduct> alphabeticList;
+    private List<SoldProduct> displayList;
     
     /**
      * Construct a {@link SoldProductCollection}. This should be only call one time, and by {@link KaiceModel}.
@@ -61,13 +60,63 @@ public class SoldProductCollection extends DTableModel {
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_SELL_PRICE] = colSellPrice;
         deserialize();
-        updateAlphabeticalList();
+        updateDisplayList();
+    }
+    
+    private void deserialize() {
+        SoldProduct product;
+        map = new HashMap<>();
+        int i = 0;
+        do {
+            product = deserialize(i++);
+            if (product != null) {
+                map.put(product.getId(), product);
+            }
+        } while (product != null);
+    }
+    
+    /**
+     * Update the alphabetical sorted list.
+     */
+    private void updateDisplayList() {
+        ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
+        if (!KaiceModel.getInstance().isShowHidden()) {
+            for (int i = newList.size() - 1; i > 0; i--) {
+                if (newList.get(i).isHidden()) {
+                    newList.remove(i);
+                }
+            }
+        }
+        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+        displayList = newList;
     }
     
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize() {
+    private SoldProduct deserialize(int num) {
+        SoldProduct product = null;
+        try {
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            product = (SoldProduct) in.readObject();
+            in.close();
+            fileIn.close();
+            System.out.println(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext + " read successful.");
+        } catch (IOException i) {
+            System.err.println(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext + " read error : file not found.");
+            return null;
+        } catch (ClassNotFoundException c) {
+            System.out.println("HashMap<Integer, PurchasedProduct> class not found");
+            c.printStackTrace();
+        }
+        return product;
+    }
+    
+    /**
+     * Load a serialized historic and deserialize-it. Erase completely the current collection.
+     */
+    private void deserialize2() {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProduct);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -85,12 +134,38 @@ public class SoldProductCollection extends DTableModel {
     }
     
     /**
-     * Update the alphabetical sorted list.
+     * Hide the {@link SoldProduct} at a specific row.
+     *
+     * @param row int - The row of the material.
      */
-    private void updateAlphabeticalList() {
-        ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
-        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
-        alphabeticList = newList;
+    public void hideRow(int row) {
+        displayList.get(row).changeHiddenState();
+        serialize();
+        updateDisplayList();
+        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
+    }
+    
+    public void serialize() {
+        int i = 0;
+        for (SoldProduct product :
+                map.values()) {
+            serialize(product, i++);
+        }
+    }
+    
+    /**
+     * Serialize the historic, and save-it in a file.
+     */
+    public void serialize(SoldProduct product, int num) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(product);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
     }
     
     /**
@@ -107,7 +182,7 @@ public class SoldProductCollection extends DTableModel {
         SoldProduct soldProduct = new SoldProduct(id, product, price, type);
         map.put(id, soldProduct);
         serialize();
-        updateAlphabeticalList();
+        updateDisplayList();
         KaiceModel.update(KaiceModel.SOLD_PRODUCT);
         return soldProduct;
     }
@@ -129,7 +204,7 @@ public class SoldProductCollection extends DTableModel {
     /**
      * Serialize the historic, and save-it in a file.
      */
-    public void serialize() {
+    public void serialize2() {
         try {
             FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathSoldProduct);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -152,13 +227,23 @@ public class SoldProductCollection extends DTableModel {
     }
     
     /**
+     * Return the {@link SoldProduct} corresponding to the given row.
+     *
+     * @param row int - The row of the product.
+     * @return The {@link SoldProduct} corresponding to the given row.
+     */
+    public SoldProduct getSoldProductAtRow(int row) {
+        return displayList.get(row);
+    }
+    
+    /**
      * Return all {@link SoldProduct} of a certain type, with a positive available quantity value, in a {@link ArrayList}.
      *
      * @param type {@link prodType} - The type of the product.
      * @return All available product of the given type in a {@link ArrayList}.
      */
-    ArrayList<SoldProduct> getAvailableProduct(SoldProduct.prodType type) {
-        return alphabeticList.stream().filter(prod -> prod.getType() == type).collect(Collectors.toCollection(ArrayList::new));
+    ArrayList<SoldProduct> getAvailableProduct(prodType type) {
+        return displayList.stream().filter(prod -> prod.getType() == type).collect(Collectors.toCollection(ArrayList::new));
     }
     
     /**
@@ -168,7 +253,7 @@ public class SoldProductCollection extends DTableModel {
      * @return {@link DColor#RED} if the product is unavailable.
      */
     public Color getRowColor(int row) {
-        Integer qtty = alphabeticList.get(row).getQuantity();
+        Integer qtty = displayList.get(row).getQuantity();
         if (qtty != null && qtty == 0) {
             return DColor.RED;
         } else {
@@ -183,7 +268,7 @@ public class SoldProductCollection extends DTableModel {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SoldProduct prod = alphabeticList.get(rowIndex);
+        SoldProduct prod = displayList.get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 return prod.getName();
@@ -202,7 +287,7 @@ public class SoldProductCollection extends DTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        SoldProduct prod = alphabeticList.get(rowIndex);
+        SoldProduct prod = displayList.get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 prod.setName((String) aValue);
@@ -223,5 +308,36 @@ public class SoldProductCollection extends DTableModel {
             return new CellRenderSoldProduct(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
+    }
+    
+    @Override
+    public boolean isHiddenRow(int row) {
+        return displayList.get(row).isHidden();
+    }
+    
+    /**
+     * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
+     * or MISC.
+     *
+     * @author Raph
+     */
+    public enum prodType {
+        FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
+        
+        private final String name;
+        
+        /**
+         * Create a new element of the enumeration {@link prodType} with a display name.
+         *
+         * @param name {@link String} - The display name of the type.
+         */
+        prodType(String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

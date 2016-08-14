@@ -20,7 +20,7 @@ public abstract class DFunction {
     /**
      * Function found on the Internet. <br/>
      * Return a random element of an enum. <br/>
-     * TODO find who use the function.
+     * TODO find how to use the function.
      *
      * @param clazz I don't remember...
      * @param <T>   I don't remember...

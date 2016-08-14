@@ -19,18 +19,19 @@ import java.awt.*;
  * @see PurchasedProductCollectionVar
  * @see fr.kaice.model.buy.PurchasedProduct
  */
-public class PanelPurchasedProductLight extends JPanel {
+public class PanelPurchasedProductVal extends JPanel {
     
     /**
      * Create a new {@link PurchasedProductCollectionVar}
      */
-    public PanelPurchasedProductLight() {
+    public PanelPurchasedProductVal() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), new PurchasedProductCollectionVar());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
+        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), hide = new JButton("Cacher");
         JPanel ctrl = new JPanel();
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
-        view.setEnabled(false);
+        view.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(KaiceModel.getPurchasedProdCollection().getProductAtRow(table.getSelectedRow()))));
+        hide.addActionListener(e -> KaiceModel.getPurchasedProdCollection().hideRow(table.getSelectedRow()));
         
         table.setMultiSelection(false);
         
@@ -39,5 +40,6 @@ public class PanelPurchasedProductLight extends JPanel {
         this.add(ctrl, BorderLayout.SOUTH);
         ctrl.add(add);
         ctrl.add(view);
+        ctrl.add(hide);
     }
 }

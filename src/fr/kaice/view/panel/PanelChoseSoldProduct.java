@@ -3,6 +3,7 @@ package fr.kaice.view.panel;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.sell.CurrentTransaction;
 import fr.kaice.model.sell.SoldProduct;
+import fr.kaice.model.sell.SoldProductCollection;
 import fr.kaice.model.sell.SoldProductDisplayCollection;
 import fr.kaice.tools.generic.DTablePanel;
 
@@ -33,7 +34,7 @@ class PanelChoseSoldProduct extends JPanel implements Observer{
      */
     public PanelChoseSoldProduct() {
         KaiceModel.getInstance().addObserver(this);
-        SoldProduct.prodType[] types = SoldProduct.prodType.class.getEnumConstants();
+        SoldProductCollection.prodType[] types = SoldProductCollection.prodType.class.getEnumConstants();
         tables = new DTablePanel[types.length];
         tableModels = new SoldProductDisplayCollection[types.length];
         

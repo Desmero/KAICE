@@ -2,12 +2,10 @@ package fr.kaice.model.raw;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.KFilesParameters;
+import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.cells.CellRenderRawMaterial;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
-import fr.kaice.tools.generic.DCellRender;
-import fr.kaice.tools.generic.DMonetarySpinner;
-import fr.kaice.tools.generic.DTableColumnModel;
-import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -36,7 +34,7 @@ import java.util.Map;
  * @see AbstractTableModel
  * @see KaiceModel
  */
-public class RawMaterialCollection extends DTableModel {
+public class RawMaterialCollection extends DTableModel implements IHiddenCollection {
     
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_QTY = 1;
@@ -48,7 +46,7 @@ public class RawMaterialCollection extends DTableModel {
     private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Integer.class, true);
     
     private Map<Integer, RawMaterial> map;
-    private List<RawMaterial> alphabeticList;
+    private List<RawMaterial> displayList;
     
     /**
      * Construct a {@link RawMaterialCollection}. This should be only call one time, and by {@link KaiceModel}.
@@ -60,7 +58,7 @@ public class RawMaterialCollection extends DTableModel {
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_ALERT] = colAlert;
         deserialize();
-        updateAlphabeticalList();
+        updateDisplayList();
     }
     
     /**
@@ -86,10 +84,17 @@ public class RawMaterialCollection extends DTableModel {
     /**
      * Update the alphabetical sorted list.
      */
-    private void updateAlphabeticalList() {
+    public void updateDisplayList() {
         ArrayList<RawMaterial> newList = new ArrayList<>(map.values());
+        if (!KaiceModel.getInstance().isShowHidden()) {
+            for (int i = newList.size() - 1; i > 0; i--) {
+                if (newList.get(i).isHidden()) {
+                    newList.remove(i);
+                }
+            }
+        }
         newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
-        alphabeticList = newList;
+        displayList = newList;
     }
     
     /**
@@ -131,7 +136,7 @@ public class RawMaterialCollection extends DTableModel {
         }
         map.put(id, mat);
         serialize();
-        updateAlphabeticalList();
+        updateDisplayList();
         KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
     
@@ -172,9 +177,9 @@ public class RawMaterialCollection extends DTableModel {
     public HashMap<RawMaterial, Integer> getShoppingList() {
         HashMap<RawMaterial, Integer> list = new HashMap<>();
         int buyNum;
-        for (RawMaterial mat : alphabeticList) {
+        for (RawMaterial mat : displayList) {
             buyNum = mat.getNumberToBuy();
-            if (buyNum > 0) {
+            if (buyNum > 0 && !mat.isHidden()) {
                 list.put(mat, buyNum);
             }
         }
@@ -189,7 +194,7 @@ public class RawMaterialCollection extends DTableModel {
      * @return The color of the {@link RawMaterial} chosen by the row number.
      */
     public Color getRowColor(int row) {
-        return alphabeticList.get(row).getColor();
+        return displayList.get(row).getColor();
     }
     
     /**
@@ -204,7 +209,7 @@ public class RawMaterialCollection extends DTableModel {
     
     // TODO remove this method
     public int getIdAtRow(int row) {
-        return alphabeticList.get(row).getId();
+        return displayList.get(row).getId();
     }
     
     /**
@@ -215,7 +220,7 @@ public class RawMaterialCollection extends DTableModel {
      * @return The {@link RawMaterial} at the given row.
      */
     public RawMaterial getMaterialAtRow(int row) {
-        return alphabeticList.get(row);
+        return displayList.get(row);
     }
     
     /**
@@ -224,12 +229,24 @@ public class RawMaterialCollection extends DTableModel {
      * @return An array contening all {@link RawMaterial}.
      */
     public RawMaterial[] getAllRawMaterial() {
-        RawMaterial[] tab = new RawMaterial[alphabeticList.size()];
+        RawMaterial[] tab = new RawMaterial[displayList.size()];
         int i = 0;
-        for (RawMaterial mat : alphabeticList) {
+        for (RawMaterial mat : displayList) {
             tab[i++] = mat;
         }
         return tab;
+    }
+    
+    /**
+     * Hide the {@link RawMaterial} at a specific row.
+     *
+     * @param row int - The row of the material.
+     */
+    public void hideRow(int row) {
+        displayList.get(row).changeHiddenState();
+        serialize();
+        updateDisplayList();
+        KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
     
     /**
@@ -246,20 +263,20 @@ public class RawMaterialCollection extends DTableModel {
     
     @Override
     public int getRowCount() {
-        return map.size();
+        return displayList.size();
     }
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case COL_NUM_NAME:
-                return alphabeticList.get(rowIndex).getName();
+                return displayList.get(rowIndex).getName();
             case COL_NUM_QTY:
-                return alphabeticList.get(rowIndex).getStock();
+                return displayList.get(rowIndex).getStock();
             case COL_NUM_PRICE:
-                return DMonetarySpinner.intToDouble(alphabeticList.get(rowIndex).getPrice());
+                return DMonetarySpinner.intToDouble(displayList.get(rowIndex).getPrice());
             case COL_NUM_ALERT:
-                return alphabeticList.get(rowIndex).getAlert();
+                return displayList.get(rowIndex).getAlert();
             default:
                 return null;
         }
@@ -267,7 +284,7 @@ public class RawMaterialCollection extends DTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        RawMaterial mat = alphabeticList.get(rowIndex);
+        RawMaterial mat = displayList.get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 mat.setName((String) aValue);
@@ -285,9 +302,16 @@ public class RawMaterialCollection extends DTableModel {
     
     @Override
     public DCellRender getColumnModel(int col) {
-        if (col == COL_NUM_QTY) {
+        if (col == COL_NUM_NAME) {
+            return new CellRenderHiddenProduct(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
+        } else if (col == COL_NUM_QTY) {
             return new CellRenderRawMaterial(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
+    }
+    
+    @Override
+    public boolean isHiddenRow(int row) {
+        return displayList.get(row).isHidden();
     }
 }

@@ -25,8 +25,8 @@ public class PanelHistoric extends JPanel {
      */
     public PanelHistoric() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getHistoric());
-        TimePeriodChooser dateChooser = new TimePeriodChooser();
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
+        TimePeriodChooser dateChooser = new TimePeriodChooser(KaiceModel.getHistoric());
+        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), options = new JButton("Options");
         JPanel ctrl = new JPanel();
         
         add.setEnabled(false);
@@ -36,6 +36,7 @@ public class PanelHistoric extends JPanel {
                 KaiceModel.getInstance().setDetails(new PanelTransaction(tran));
             }
         });
+        options.setEnabled(false);
         
         table.setMultiSelection(false);
         
@@ -48,5 +49,6 @@ public class PanelHistoric extends JPanel {
         this.add(ctrl, BorderLayout.SOUTH);
         ctrl.add(add);
         ctrl.add(view);
+        ctrl.add(options);
     }
 }

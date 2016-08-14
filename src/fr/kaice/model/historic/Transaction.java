@@ -95,6 +95,14 @@ public class Transaction extends DTableModel implements Serializable {
         productList.add(prod);
     }
     
+    public boolean containsProdId(int id) {
+        for (ArchivedProduct prod :
+                productList) {
+            if (prod.getId() == id) return true;
+        }
+        return false;
+    }
+    
     /**
      * Return the full name of the client.
      *
@@ -108,6 +116,10 @@ public class Transaction extends DTableModel implements Serializable {
             return "...";
         }
         return KaiceModel.getMemberCollection().getMember(clientId).getFullName();
+    }
+    
+    public Integer getClientId() {
+        return clientId;
     }
     
     /**
@@ -242,7 +254,21 @@ public class Transaction extends DTableModel implements Serializable {
      *  - {@link transactionType#ENR} : for {@linkplain Member Member}s's enrolment.
      */
     public enum transactionType {
-        SELL, BUY, ADD, SUB, CANCEL, ENR
+        SELL(true), BUY(true), ADD(true), SUB(true), CANCEL(true), ENR(true);
+    
+        private boolean display;
+    
+        transactionType(boolean display) {
+            this.display = display;
+        }
+    
+        public boolean isDisplay() {
+            return display;
+        }
+    
+        public void setDisplay(boolean display) {
+            this.display = display;
+        }
     }
     
 }

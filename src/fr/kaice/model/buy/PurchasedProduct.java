@@ -155,4 +155,11 @@ public class PurchasedProduct implements GenericProduct, Serializable {
         return name + "(" + id + ")";
     }
     
+    public boolean isHidden() {
+        return hidden;
+    }
+    
+    public void changeHiddenState() {
+        hidden = !hidden;
+    }
 }

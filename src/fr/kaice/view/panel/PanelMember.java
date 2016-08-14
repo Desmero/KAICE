@@ -5,7 +5,10 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * This panel display all {@linkplain fr.kaice.model.member.Member Member} contains in the
@@ -78,13 +81,14 @@ public class PanelMember extends JPanel {
         
         table.setWidth(300);
         table.setMultiSelection(false);
-        
+    
         this.setLayout(new BorderLayout());
         this.add(table, BorderLayout.CENTER);
         this.add(select, BorderLayout.NORTH);
         this.add(ctrl, BorderLayout.SOUTH);
         
         select.add(search, BorderLayout.CENTER);
+        select.setBorder(BorderFactory.createTitledBorder("Recherche"));
         
         search.add(new JLabel("Nom :"));
         search.add(name);

@@ -6,18 +6,18 @@ import java.util.ArrayList;
 /**
  * Created by merkling on 11/08/16.
  */
-public class ListRawMaterial implements Serializable {
+public class compositionAdapter implements Serializable {
     
     private static final long serialVersionUID = -4704593307846210023L;
-    private final ArrayList<Sample> list;
+    private ArrayList<Element> list;
     
-    public ListRawMaterial() {
+    public compositionAdapter() {
         list = new ArrayList<>();
     }
     
     public void remove(int id) {
-        Sample toRemove = null;
-        for (Sample s :
+        Element toRemove = null;
+        for (Element s :
                 list) {
             if (s.getId() == id) {
                 toRemove = s;
@@ -26,11 +26,11 @@ public class ListRawMaterial implements Serializable {
         list.remove(toRemove);
     }
     
-    public void put(int id, int qty) {
-        list.add(new Sample(id, qty));
+    public void add(int id, int qty) {
+        list.add(new Element(id, qty));
     }
     
-    public ArrayList<Sample> getAll() {
+    public ArrayList<Element> getAll() {
         return list;
     }
     
@@ -38,11 +38,12 @@ public class ListRawMaterial implements Serializable {
         return list.size();
     }
     
-    public class Sample implements Serializable {
+    public class Element implements Serializable {
         
+        private static final long serialVersionUID = -5591738933022922716L;
         private int id, qty;
         
-        Sample(int id, int qty) {
+        Element(int id, int qty) {
             this.id = id;
             this.qty = qty;
         }

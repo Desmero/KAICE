@@ -2,6 +2,7 @@ package fr.kaice.model.historic;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.KFilesParameters;
+import fr.kaice.tools.PeriodGetter;
 import fr.kaice.tools.cells.CellRenderTransaction;
 import fr.kaice.tools.generic.*;
 
@@ -32,7 +33,7 @@ import java.util.List;
  * @see AbstractTableModel
  * @see KaiceModel
  */
-public class Historic extends DTableModel {
+public class Historic extends DTableModel implements PeriodGetter {
     
     private static final int COL_NUM_DATE = 0;
     private static final int COL_NUM_CLIENT = 1;
@@ -46,6 +47,7 @@ public class Historic extends DTableModel {
     private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
     private final List<Transaction> displayList;
     private List<Transaction> fullList;
+    private boolean displayTypeNames;
     private Date start;
     private Date end;
     
@@ -61,6 +63,8 @@ public class Historic extends DTableModel {
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_CASH] = colCash;
     
+        displayTypeNames = false;
+        
         deserialize();
         displayList = new ArrayList<>();
         
@@ -169,10 +173,38 @@ public class Historic extends DTableModel {
      * @param start {@link Date} - Beginning of the period of time.
      * @param end   {@link Date} - End of the period of time.
      */
-    public void setDateSelect(Date start, Date end) {
+    @Override
+    public void setPeriod(Date start, Date end) {
         this.start = start;
         this.end = end;
         updateDisplayList();
+    }
+    
+    public ArrayList<Transaction> getPartialHistoric(PartialHistoric.historicType type, int id, Date start, Date end) {
+        ArrayList<Transaction> newList = new ArrayList<>();
+        switch (type) {
+            case MEMBER:
+                for (Transaction tran :
+                        fullList) {
+                    if (tran.getClientId() == id) {
+                        newList.add(tran);
+                    }
+                }
+                break;
+            case RAW:
+                break;
+            case BUY:
+                for (Transaction tran :
+                        fullList) {
+                    if (tran.getType() == Transaction.transactionType.BUY && tran.containsProdId(id) && tran.getDate().after(start) && tran.getDate().before(end)) {
+                        newList.add(tran);
+                    }
+                }
+                break;
+            case SOLD:
+                break;
+        }
+        return newList;
     }
     
     @Override
@@ -187,11 +219,11 @@ public class Historic extends DTableModel {
                 case COL_NUM_CLIENT:
                     return "Total :";
                 case COL_NUM_TRAN:
-                    return "" + 0 + " opérations";
+                    return "" + rowIndex + " opérations";
                 case COL_NUM_PRICE:
-                    return 0;
+                    return DMonetarySpinner.intToDouble(getTotalDisplayPrice());
                 case COL_NUM_CASH:
-                    return 0;
+                    return DMonetarySpinner.intToDouble(getTotalDisplayCash());
                 default:
                     return null;
             }
@@ -203,19 +235,23 @@ public class Historic extends DTableModel {
             case COL_NUM_CLIENT:
                 return transaction.getClient();
             case COL_NUM_TRAN:
-                switch (transaction.getType()) {
-                    case ADD:
-                        return "Ajout stock " + displayList.get(rowIndex).toString();
-                    case SUB:
-                        return "Retrait stock " + displayList.get(rowIndex).toString();
-                    case CANCEL:
-                        return "Vente annulée " + displayList.get(rowIndex).toString();
-                    case SELL:
-                        return displayList.get(rowIndex).toString();
-                    case BUY:
-                        return "Courses " + displayList.get(rowIndex).toString();
-                    case ENR:
-                        return "Inscription " + displayList.get(rowIndex).toString();
+                if (isDisplayTypeNames()) {
+                    switch (transaction.getType()) {
+                        case ADD:
+                            return "Ajout stock " + displayList.get(rowIndex).toString();
+                        case SUB:
+                            return "Retrait stock " + displayList.get(rowIndex).toString();
+                        case CANCEL:
+                            return "Vente annulée " + displayList.get(rowIndex).toString();
+                        case SELL:
+                            return displayList.get(rowIndex).toString();
+                        case BUY:
+                            return "Courses " + displayList.get(rowIndex).toString();
+                        case ENR:
+                            return "Inscription " + displayList.get(rowIndex).toString();
+                    }
+                } else {
+                    return displayList.get(rowIndex).toString();
                 }
             case COL_NUM_PRICE:
                 return DMonetarySpinner.intToDouble(transaction.getPrice());
@@ -224,6 +260,42 @@ public class Historic extends DTableModel {
             default:
                 return null;
         }
+    }
+    
+    /**
+     * Return the total of the price of all display operations.
+     *
+     * @return The total of the price of all display operations.
+     */
+    public int getTotalDisplayPrice() {
+        int priceTotal = 0;
+        for (Transaction tran :
+                displayList) {
+            priceTotal += tran.getPrice();
+        }
+        return priceTotal;
+    }
+    
+    /**
+     * Return the total of the cash exchange of all display operations.
+     *
+     * @return The total of the cash exchange of all display operations.
+     */
+    public int getTotalDisplayCash() {
+        int cashTotal = 0;
+        for (Transaction tran :
+                displayList) {
+            cashTotal += tran.getPaid();
+        }
+        return cashTotal;
+    }
+    
+    public boolean isDisplayTypeNames() {
+        return displayTypeNames;
+    }
+    
+    public void setDisplayTypeNames(boolean displayTypeNames) {
+        this.displayTypeNames = displayTypeNames;
     }
     
     @Override

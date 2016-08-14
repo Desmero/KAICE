@@ -45,7 +45,7 @@ public class PurchasedProductCollection extends DTableModel {
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private static final DTableColumnModel colTotalPrice = new DTableColumnModel("Prix total", Double.class, false);
     private Map<Integer, PurchasedProduct> map;
-    private List<PurchasedProduct> alphabeticList;
+    private List<PurchasedProduct> displayList;
     private List<PurchasedProduct> variantList;
     
     /**
@@ -84,11 +84,22 @@ public class PurchasedProductCollection extends DTableModel {
     /**
      * Update the alphabetical sorted list.
      */
-    private void updateLists() {
-        ArrayList<PurchasedProduct> newList = new ArrayList<>(map.values());
-        newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
-        variantList = newList;
-        alphabeticList = newList;
+    public void updateLists() {
+        ArrayList<PurchasedProduct> newDisplayList = new ArrayList<>(map.values());
+        newDisplayList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+        for (int i = newDisplayList.size() - 1; i >= 0; i--) {
+            if (newDisplayList.get(i).isHidden()) {
+                newDisplayList.remove(i);
+            }
+        }
+        if (KaiceModel.getInstance().isShowHidden()) {
+            ArrayList<PurchasedProduct> newVariantList = new ArrayList<>(map.values());
+            newVariantList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
+            variantList = newVariantList;
+        } else {
+            variantList = newDisplayList;
+        }
+        displayList = newDisplayList;
     }
     
     /**
@@ -103,7 +114,7 @@ public class PurchasedProductCollection extends DTableModel {
             if (cash) {
                 paid = cost;
             }
-            Transaction tran = new Transaction(-1, Transaction.transactionType.BUY, cost, paid, new Date());
+            Transaction tran = new Transaction(-1, Transaction.transactionType.BUY, -cost, -paid, new Date());
             for (PurchasedProduct prod :
                     map.values()) {
                 if (prod.getNumberBought() > 0) {
@@ -134,7 +145,7 @@ public class PurchasedProductCollection extends DTableModel {
      */
     public int getTotalPrice() {
         int price = 0;
-        for (PurchasedProduct prod : alphabeticList) {
+        for (PurchasedProduct prod : displayList) {
             price += prod.getTotalPrice();
         }
         return price;
@@ -227,21 +238,25 @@ public class PurchasedProductCollection extends DTableModel {
     public ArrayList<PurchasedProduct> getContainers(RawMaterial material) {
         ArrayList<PurchasedProduct> list = new ArrayList<>();
         for (PurchasedProduct product : map.values()) {
-            if (product.getRawMat().equals(material)) {
+            if (product.getRawMat().equals(material) && !product.isHidden()) {
                 list.add(product);
             }
         }
         return list;
     }
     
+    public PurchasedProduct getProductAtRow(int row) {
+        return displayList.get(row);
+    }
+    
     @Override
     public int getRowCount() {
-        return map.size();
+        return displayList.size();
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        PurchasedProduct prod = alphabeticList.get(rowIndex);
+        PurchasedProduct prod = displayList.get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 return prod.getName();
@@ -260,9 +275,21 @@ public class PurchasedProductCollection extends DTableModel {
         }
     }
     
+    /**
+     * Hide the {@link PurchasedProduct} at a specific row.
+     *
+     * @param row int - The row of the material.
+     */
+    public void hideRow(int row) {
+        variantList.get(row).changeHiddenState();
+        serialize();
+        updateLists();
+        KaiceModel.update(KaiceModel.PURCHASED_PRODUCT);
+    }
+    
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        PurchasedProduct prod = alphabeticList.get(rowIndex);
+        PurchasedProduct prod = displayList.get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 prod.setName((String) aValue);

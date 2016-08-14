@@ -26,16 +26,18 @@ public class PanelSoldProduct extends JPanel {
      */
     public PanelSoldProduct() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getSoldProdCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
+        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), hide = new JButton("Cacher");
         JPanel ctrl = new JPanel();
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewSoldProduct()));
         view.addActionListener(e -> {
             if (table.getSelectedRow() != -1) {
-                SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProduct(table.getSelectedRow());
+                SoldProduct prod = KaiceModel.getSoldProdCollection().getSoldProductAtRow(table.getSelectedRow());
                 KaiceModel.getInstance().setDetails(new PanelSoldProductDetails(prod));
             }
         });
+        hide.addActionListener(e -> KaiceModel.getSoldProdCollection().hideRow(table.getSelectedRow()));
+        hide.setEnabled(false);
         
         table.setMultiSelection(false);
         
@@ -44,5 +46,6 @@ public class PanelSoldProduct extends JPanel {
         this.add(ctrl, BorderLayout.SOUTH);
         ctrl.add(add);
         ctrl.add(view);
+        ctrl.add(hide);
     }
 }

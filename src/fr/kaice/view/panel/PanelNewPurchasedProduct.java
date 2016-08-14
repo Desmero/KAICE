@@ -53,11 +53,13 @@ class PanelNewPurchasedProduct extends JPanel {
         });
         
         this.setLayout(new BorderLayout());
+        PanelTitle title = new PanelTitle("Nouvel article à l'achat", e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel centerPlace = new JPanel(new GridLayout(1, 2));
         JPanel centerField = new JPanel();
         JPanel center = new JPanel(new GridLayout(4, 2));
         JPanel ctrl = new JPanel();
     
+        this.add(title, BorderLayout.NORTH);
         this.add(centerPlace, BorderLayout.CENTER);
         this.add(ctrl, BorderLayout.SOUTH);
     

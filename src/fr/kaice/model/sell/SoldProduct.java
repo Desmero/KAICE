@@ -12,6 +12,8 @@ import fr.kaice.tools.generic.DTableModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static fr.kaice.model.sell.SoldProductTableModel.*;
+
 /**
  * This class represent one kind of sold product. <br/>
  * It is composed by : <br/>
@@ -27,20 +29,10 @@ import java.util.ArrayList;
  */
 public class SoldProduct extends DTableModel implements GenericProduct, Serializable {
     
-    private static transient final int COL_NUM_ID = -1;
-    private static transient final int COL_NUM_NAME = 0;
-    private static transient final int COL_NUM_USED = 1;
-    private static transient final int COL_NUM_STOCK = 2;
-    private static transient final int COL_NUM_PRICE = 3;
-    private static transient final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static transient final DTableColumnModel colUsed = new DTableColumnModel("Quantité utilisée", Integer.class, true);
-    private static transient final DTableColumnModel colStock = new DTableColumnModel("Stock", Integer.class, false);
-    private static transient final DTableColumnModel colPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
     private static final long serialVersionUID = 1464945659775641259L;
-    private final int id;
-    private final prodType type;
-    private
-    ListRawMaterial listRawMat;
+    private int id;
+    private SoldProductCollection.prodType type;
+    private compositionAdapter listRawMat;
     private String name;
     private int salePrice;
     private boolean hidden;
@@ -51,9 +43,9 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * @param id        int - The id of the product.
      * @param name      {@link String} - The name of the product.
      * @param salePrice int - The sale price of the product.
-     * @param type      {@link prodType} - The type of the product.
+     * @param type      {@link SoldProductCollection.prodType} - The type of the product.
      */
-    public SoldProduct(int id, String name, int salePrice, prodType type) {
+    public SoldProduct(int id, String name, int salePrice, SoldProductCollection.prodType type) {
         colModel = new DTableColumnModel[4];
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_PRICE] = colPrice;
@@ -62,7 +54,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         this.id = id;
         this.name = name;
         this.salePrice = salePrice;
-        this.listRawMat = new ListRawMaterial();
+        this.listRawMat = new compositionAdapter();
         this.type = type;
     }
     
@@ -73,7 +65,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      */
     void sale(int number) {
         RawMaterialCollection coll = KaiceModel.getRawMatCollection();
-        for (ListRawMaterial.Sample entry : listRawMat.getAll()) {
+        for (compositionAdapter.Element entry : listRawMat.getAll()) {
             RawMaterial mat = KaiceModel.getRawMatCollection().getMat(entry.getId());
             coll.sale(mat, entry.getQty() * number);
         }
@@ -104,7 +96,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         } else if (quantity == 0) {
             listRawMat.remove(mat.getId());
         } else {
-            listRawMat.put(mat.getId(), quantity);
+            listRawMat.add(mat.getId(), quantity);
         }
     }
     
@@ -157,11 +149,11 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     }
     
     /**
-     * Return the {@link prodType} of the {@link SoldProduct}.
+     * Return the {@link SoldProductCollection.prodType} of the {@link SoldProduct}.
      *
-     * @return The {@link prodType} of the {@link SoldProduct}.
+     * @return The {@link SoldProductCollection.prodType} of the {@link SoldProduct}.
      */
-    public prodType getType() {
+    public SoldProductCollection.prodType getType() {
         return type;
     }
     
@@ -182,11 +174,19 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      */
     public int getBuyPrice() {
         int price = 0;
-        for (ListRawMaterial.Sample s : listRawMat.getAll()) {
+        for (compositionAdapter.Element s : listRawMat.getAll()) {
             RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
             price += s.getQty() * mat.getPrice();
         }
         return price;
+    }
+    
+    public boolean isHidden() {
+        return hidden;
+    }
+    
+    public void changeHiddenState() {
+        hidden = !hidden;
     }
     
     /**
@@ -195,15 +195,19 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * @return The available quantity of the {@link SoldProduct}.
      */
     public Integer getQuantity() {
+        return listRawMat.size();
+/*
         int qty = Integer.MAX_VALUE;
-        for (ListRawMaterial.Sample s : listRawMat.getAll()) {
+        for (compositionAdapter.Element s : listRawMat.getAll()) {
             RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
             qty = Integer.min(qty, (mat.getStock() / s.getQty()));
         }
         if (qty == Integer.MAX_VALUE) {
             return null;
         }
+        System.out.println(name + " : " + listRawMat.size());
         return qty;
+*/
     }
     
     @Override
@@ -218,7 +222,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ArrayList<ListRawMaterial.Sample> list = listRawMat.getAll();
+        ArrayList<compositionAdapter.Element> list = listRawMat.getAll();
         RawMaterial mat = KaiceModel.getRawMatCollection().getMat(list.get(rowIndex).getId());
         switch (columnIndex) {
             case COL_NUM_ID:
@@ -233,32 +237,6 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
                 return DMonetarySpinner.intToDouble(mat.getPrice());
             default:
                 return null;
-        }
-    }
-    
-    /**
-     * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
-     * or MISC.
-     *
-     * @author Raph
-     */
-    public enum prodType {
-        FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
-        
-        private final String name;
-        
-        /**
-         * Create a new element of the enumeration {@link prodType} with a display name.
-         *
-         * @param name {@link String} - The display name of the type.
-         */
-        prodType(String name) {
-            this.name = name;
-        }
-        
-        @Override
-        public String toString() {
-            return name;
         }
     }
 }

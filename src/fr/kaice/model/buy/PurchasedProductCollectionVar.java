@@ -1,12 +1,10 @@
 package fr.kaice.model.buy;
 
 import fr.kaice.model.KaiceModel;
-import fr.kaice.tools.generic.DMonetarySpinner;
-import fr.kaice.tools.generic.DTableColumnModel;
-import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.tools.cells.CellRenderHiddenProduct;
+import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.List;
 
 
 /**
@@ -26,7 +24,7 @@ import java.util.List;
  * @see DTableModel
  * @see PurchasedProductCollection
  */
-public class PurchasedProductCollectionVar extends DTableModel {
+public class PurchasedProductCollectionVar extends DTableModel implements IHiddenCollection {
     
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_UNIT_PRICE = 1;
@@ -49,14 +47,21 @@ public class PurchasedProductCollectionVar extends DTableModel {
     }
     
     @Override
+    public DCellRender getColumnModel(int col) {
+        if (col == COL_NUM_NAME) {
+            return new CellRenderHiddenProduct(colName.getColClass(), colName.isEditable(), totalLine, this);
+        }
+        return super.getColumnModel(col);
+    }
+    
+    @Override
     public int getRowCount() {
-        return KaiceModel.getPurchasedProdCollection().getRowCount();
+        return KaiceModel.getPurchasedProdCollection().getVariantList().size();
     }
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        List<PurchasedProduct> list = KaiceModel.getPurchasedProdCollection().getVariantList();
-        PurchasedProduct prod = list.get(rowIndex);
+        PurchasedProduct prod = KaiceModel.getPurchasedProdCollection().getVariantList().get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 return prod.getName();
@@ -72,9 +77,13 @@ public class PurchasedProductCollectionVar extends DTableModel {
     }
     
     @Override
+    public boolean isHiddenRow(int row) {
+        return KaiceModel.getPurchasedProdCollection().getVariantList().get(row).isHidden();
+    }
+    
+    @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        List<PurchasedProduct> list = KaiceModel.getPurchasedProdCollection().getVariantList();
-        PurchasedProduct prod = list.get(rowIndex);
+        PurchasedProduct prod = KaiceModel.getPurchasedProdCollection().getVariantList().get(rowIndex);
         switch (columnIndex) {
             case COL_NUM_NAME:
                 prod.setName((String) aValue);

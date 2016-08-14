@@ -1,0 +1,19 @@
+KAICE Todo list :
+
+  - PanelChoseSoldProduct : verify the spelling
+
+  - PurchasedProduct : warning (unused method)
+
+  - Member : Set the current member in the current transaction (not in the members collection)
+
+  - __Product : add hidden boolean
+
+  - update : reduce the historic update calls
+
+  - javadoc : alert all update
+            : Change @Override docs
+            : change term "part" by "sector"
+            : update (de)serialize
+
+  - others : change tabulation order in Member details
+           : erase the square in the tri-states checkbox

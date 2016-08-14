@@ -3,12 +3,14 @@ package fr.kaice.view.panel;
 import com.toedter.calendar.JDateChooser;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.PartialHistoric;
 import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.historic.Transaction.transactionType;
 import fr.kaice.model.member.Member;
 import fr.kaice.model.member.MemberCollection;
 import fr.kaice.tools.IdSpinner;
 import fr.kaice.tools.generic.DFormat;
+import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,27 +28,29 @@ import java.util.Date;
  */
 class PanelMemberDetails extends JPanel {
     
+    private final PanelTitle title;
+    private final JTabbedPane jTabbedPane;
+    private final JPanel historic;
+    private final IdSpinner id; // also call membership number
+    private final JTextField name;
+    private final JTextField firstName;
+    private final JPanel pBirth;
+    private final JLabel lBirthDate;
+    private final JDateChooser birthDate;
+    private final JPanel pGender;
+    private final JLabel lGender;
+    private final JButton bGender;
+    private final JTextField studies;
+    private final JTextField mailStreet;
+    private final JTextField mailPostalCode;
+    private final JTextField mailTown;
+    private final JTextField eMail;
+    private final JCheckBox newsLetter;
+    private final JTextField tel;
+    private final JButton edit;
+    private final JButton editValid;
     private boolean gender;
     private boolean edition;
-    
-    private IdSpinner id; // also call membership number
-    private JTextField name;
-    private JTextField firstName;
-    private JPanel pBirth;
-    private JLabel lBirthDate;
-    private JDateChooser birthDate;
-    private JPanel pGender;
-    private JLabel lGender;
-    private JButton bGender;
-    private JTextField studies;
-    private JTextField mailStreet;
-    private JTextField mailPostalCode;
-    private JTextField mailTown;
-    private JTextField eMail;
-    private JCheckBox newsLetter;
-    private JTextField tel;
-    private JButton edit;
-    private JButton editValid;
     
     /**
      * Create a new {@link PanelMemberDetails} in visualisation mode.
@@ -55,8 +59,7 @@ class PanelMemberDetails extends JPanel {
      *          int - The membership number of the {@link Member}.
      */
     public PanelMemberDetails(int memberId) {
-        edition = false;
-        construct(memberId);
+        this(memberId, false);
     }
     
     /**
@@ -69,16 +72,6 @@ class PanelMemberDetails extends JPanel {
      */
     public PanelMemberDetails(int memberId, boolean edition) {
         this.edition = edition;
-        construct(memberId);
-    }
-    
-    /**
-     * Method coll only by the constructors, used to initialise the {@link PanelMemberDetails}.
-     *
-     * @param memberId
-     *          int - The membership number of the {@link Member}
-     */
-    private void construct(int memberId) {
         int col = 10;
         
         id = new IdSpinner();
@@ -114,25 +107,35 @@ class PanelMemberDetails extends JPanel {
         
         edit = new JButton("Éditer");
         edit.addActionListener(e -> {
-            edition = !edition;
+            this.edition = !this.edition;
             update();
         });
         editValid = new JButton("Valider");
         editValid.addActionListener(e -> {
             editProfile();
-            edition = false;
+            this.edition = false;
             update();
         });
+    
+        title = new PanelTitle("Détail membre", e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        JPanel allDetails = new JPanel(new BorderLayout());
+        historic = new JPanel(new BorderLayout());
+    
+        jTabbedPane = new JTabbedPane();
+        jTabbedPane.add("Membre", allDetails);
+        jTabbedPane.add("Historique", historic);
+    
+        this.setLayout(new BorderLayout());
+        this.add(title, BorderLayout.NORTH);
+        this.add(jTabbedPane, BorderLayout.CENTER);
         
-        // TODO test BorderLayout bl = new BorderLayout();
         JPanel center = new JPanel(new BorderLayout());
         JPanel details = new JPanel(new BorderLayout());
         JPanel detailsCenter = new JPanel(new GridLayout(6, 4));
         JPanel detailsEdit = new JPanel();
-        
-        this.setLayout(new BorderLayout());
-        this.add(center, BorderLayout.CENTER);
-        this.add(details, BorderLayout.NORTH);
+    
+        allDetails.add(center, BorderLayout.CENTER);
+        allDetails.add(details, BorderLayout.NORTH);
         
         details.add(detailsCenter, BorderLayout.CENTER);
         details.add(detailsEdit, BorderLayout.SOUTH);
@@ -176,7 +179,6 @@ class PanelMemberDetails extends JPanel {
         int newId = id.getValue();
         // TODO display member's historic
         // tableModel.setId(newId);
-        // TODO Test if correct (KaiceModel.getMemberCollection().getMember(newId) could be null)
         gender = !KaiceModel.getMemberCollection().isIdUsed(newId) || KaiceModel.getMemberCollection().getMember(newId).isMale();
         update();
     }
@@ -258,7 +260,7 @@ class PanelMemberDetails extends JPanel {
             if (m == null) {
                 edit.setText("Ajouter");
             } else {
-                edit.setText("?diter");
+                edit.setText("Éditer");
             }
         }
         editValid.setVisible(edition);
@@ -275,6 +277,14 @@ class PanelMemberDetails extends JPanel {
         tel.setEditable(edition);
         
         if (m != null) {
+            if (edition) {
+                title.setTitle(m.getFullName() + " (édition)");
+            } else {
+                title.setTitle(m.getFullName());
+            }
+            jTabbedPane.setEnabledAt(1, true);
+            historic.removeAll();
+            historic.add(new DTablePanel(KaiceModel.getInstance(), new PartialHistoric(m)), BorderLayout.CENTER);
             gender = m.isMale();
             name.setText(m.getName());
             firstName.setText(m.getFirstName());
@@ -301,6 +311,12 @@ class PanelMemberDetails extends JPanel {
             newsLetter.setSelected(m.isNewsLetter());
             tel.setText(m.getPhoneNumber());
         } else {
+            if (edition) {
+                title.setTitle("Nouveau membre");
+            } else {
+                title.setTitle("Personne");
+            }
+            jTabbedPane.setEnabledAt(1, false);
             name.setText("...");
             firstName.setText("...");
             Calendar cal = Calendar.getInstance();

@@ -232,7 +232,7 @@ public class MemberCollection extends DTableModel {
      */
     public void setSelectedMember(int row) {
         selectedMember = getRow(row);
-        KaiceModel.update(KaiceModel.MEMBER);
+        KaiceModel.update(KaiceModel.TRANSACTION);
     }
     
     /**
@@ -272,7 +272,7 @@ public class MemberCollection extends DTableModel {
         ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID);
         if (list.size() == 1) {
             selectedMember = list.get(0);
-            KaiceModel.update(KaiceModel.MEMBER);
+            KaiceModel.update(KaiceModel.TRANSACTION);
         } else {
             selectedMember = null;
         }

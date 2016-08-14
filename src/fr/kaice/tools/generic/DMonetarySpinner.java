@@ -42,6 +42,10 @@ public class DMonetarySpinner extends JSpinner {
         });
     }
     
+    public static String intToString(int value) {
+        return "" + intToDouble(value) + " " + DFormat.EURO;
+    }
+    
     /**
      * Convert a cents value in integer into a common monetary value in double.
      *

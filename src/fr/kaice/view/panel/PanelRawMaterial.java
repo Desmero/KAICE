@@ -25,7 +25,7 @@ public class PanelRawMaterial extends JPanel {
      */
     public PanelRawMaterial() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getRawMatCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
+        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), hide = new JButton("Cacher");
         JPanel ctrl = new JPanel();
         
         add.addActionListener(arg0 -> {
@@ -37,6 +37,7 @@ public class PanelRawMaterial extends JPanel {
             }
         });
         view.setEnabled(false);
+        hide.addActionListener(e -> KaiceModel.getRawMatCollection().hideRow(table.getSelectedRow()));
         
         table.setMultiSelection(false);
         
@@ -45,5 +46,6 @@ public class PanelRawMaterial extends JPanel {
         this.add(ctrl, BorderLayout.SOUTH);
         ctrl.add(add);
         ctrl.add(view);
+        ctrl.add(hide);
     }
 }

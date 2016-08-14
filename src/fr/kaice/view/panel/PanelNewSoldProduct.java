@@ -4,7 +4,8 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.sell.CompoCollection;
 import fr.kaice.model.sell.SoldProduct;
-import fr.kaice.model.sell.SoldProduct.prodType;
+import fr.kaice.model.sell.SoldProductCollection;
+import fr.kaice.model.sell.SoldProductCollection.prodType;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
 
@@ -17,7 +18,7 @@ import java.awt.event.MouseEvent;
  * This panel allow the user to create a new {@link SoldProduct} and store it in the
  * {@linkplain fr.kaice.model.sell.SoldProductCollection SoldProductCollection} known by the {@link KaiceModel}
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.0
  * @see JPanel
  * @see KaiceModel
@@ -37,7 +38,7 @@ class PanelNewSoldProduct extends JPanel {
         JButton rem = new JButton();
         JTextField name = new JTextField();
         DMonetarySpinner price = new DMonetarySpinner(0.1);
-        JComboBox<SoldProduct.prodType> type = new JComboBox<>();
+        JComboBox<SoldProductCollection.prodType> type = new JComboBox<>();
         JList<RawMaterial> list = new JList<>(KaiceModel.getRawMatCollection().getAllRawMaterial());
         JScrollPane spListRaw = new JScrollPane(list);
         tmCompo = new CompoCollection();
@@ -82,23 +83,27 @@ class PanelNewSoldProduct extends JPanel {
             KaiceModel.update(KaiceModel.SOLD_PRODUCT);
         });
         name.setColumns(10);
-        type.addItem(SoldProduct.prodType.DRINK);
-        type.addItem(SoldProduct.prodType.FOOD);
-        type.addItem(SoldProduct.prodType.MISC);
-        type.setSelectedItem(SoldProduct.prodType.MISC);
-        
+        type.addItem(prodType.DRINK);
+        type.addItem(prodType.FOOD);
+        type.addItem(prodType.MISC);
+        type.setSelectedItem(prodType.MISC);
+    
+        JPanel all = new JPanel(new BorderLayout());
+        PanelTitle title = new PanelTitle("Nouvel article en vente", e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel param = new JPanel();
         JPanel ctrl = new JPanel();
         JPanel compo = new JPanel(new BorderLayout());
         JPanel ctrlCompoDisp = new JPanel();
         JPanel ctrlCompo = new JPanel();
         ctrlCompo.setLayout(new BoxLayout(ctrlCompo, BoxLayout.Y_AXIS));
-        
+    
         this.setLayout(new BorderLayout());
-        this.add(param, BorderLayout.NORTH);
-        this.add(ctrl, BorderLayout.SOUTH);
-        this.add(spListRaw, BorderLayout.WEST);
-        this.add(compo, BorderLayout.CENTER);
+        this.add(title, BorderLayout.NORTH);
+        this.add(all, BorderLayout.CENTER);
+        all.add(param, BorderLayout.NORTH);
+        all.add(ctrl, BorderLayout.SOUTH);
+        all.add(spListRaw, BorderLayout.WEST);
+        all.add(compo, BorderLayout.CENTER);
         
         param.add(new Label("Nom : "));
         param.add(name);

@@ -24,11 +24,11 @@ import java.util.Map.Entry;
  * In a table, it display 4 columns : <br/>
  * - "Article", witch display {@link SoldProduct}'s names (non editable {@link String});<br/>
  * - "Prix unitaire", witch display unitary prices (non editable {@link Double});<br/>
- * - "QuantitÃ©", witch display the sold quantities (editable {@link Integer});<br/>
+ * - "Quantité", witch display the sold quantities (editable {@link Integer});<br/>
  * - "Prix", witch display total sold prices (non editable {@link Double}).<br/>
  * And a summary of all {@link SoldProduct} on the last line.
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaél Merkling
  * @version 2.2
  * @see SoldProduct
  * @see DTableModel
@@ -43,7 +43,7 @@ public class CurrentTransaction extends DTableModel {
     private static final int COL_NUM_PRICE = 3;
     private static final DTableColumnModel colArticle = new DTableColumnModel("Article", String.class, false);
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("QuantitÃ©", Integer.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private final HashMap<SoldProduct, Integer> listArticles;
     

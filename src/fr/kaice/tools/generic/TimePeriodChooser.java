@@ -1,7 +1,7 @@
 package fr.kaice.tools.generic;
 
 import com.toedter.calendar.JDateChooser;
-import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.PeriodGetter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,11 +30,11 @@ public class TimePeriodChooser extends JPanel {
     /**
      * Create a new {@link TimePeriodChooser}.
      */
-    public TimePeriodChooser() {
+    public TimePeriodChooser(PeriodGetter getter) {
         start = new JDateChooser(new Date(), "dd/MM/yyyy");
         end = new JDateChooser(new Date(), "dd/MM/yyyy");
-        
-        PropertyChangeListener listener = evt -> KaiceModel.getHistoric().setDateSelect(getStart(), getEnd());
+    
+        PropertyChangeListener listener = evt -> getter.setPeriod(getStart(), getEnd());
         start.addPropertyChangeListener(listener);
         start.setPreferredSize(new Dimension(150, 25));
         end.addPropertyChangeListener(listener);

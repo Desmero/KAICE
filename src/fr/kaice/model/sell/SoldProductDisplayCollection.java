@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 /**
- * This class repertories all {@link SoldProduct} of one {@linkplain SoldProduct.prodType type}.
+ * This class repertories all {@link SoldProduct} of one {@linkplain SoldProductCollection.prodType type}.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 3 columns : <br/>
  * - "Article", witch display {@link SoldProduct}'s names (non editable {@link String});<br/>
@@ -32,17 +32,16 @@ public class SoldProductDisplayCollection extends DTableModel {
     private static final DTableColumnModel colArticle = new DTableColumnModel("Article", String.class, false);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final DTableColumnModel colQty = new DTableColumnModel("Disp.", Integer.class, false);
-    
+    private final SoldProductCollection.prodType type;
     private ArrayList<SoldProduct> collection;
-    private final SoldProduct.prodType type;
     
     /**
      * Construct a {@link SoldProductDisplayCollection} of a given type.
      *
      * @param type
-     *          {@link SoldProduct.prodType} - The type of the collection.
+     *          {@link SoldProductCollection.prodType} - The type of the collection.
      */
-    public SoldProductDisplayCollection(SoldProduct.prodType type) {
+    public SoldProductDisplayCollection(SoldProductCollection.prodType type) {
         this.type = type;
         colModel = new DTableColumnModel[3];
         colModel[COL_NUM_ARTICLE] = colArticle;
