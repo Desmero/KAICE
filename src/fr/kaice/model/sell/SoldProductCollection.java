@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @see KaiceModel
  */
 public class SoldProductCollection extends DTableModel implements IHiddenCollection {
-    
+
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_SELL_PRICE = 1;
     private static final int COL_NUM_BUY_PRICE = 2;
@@ -47,7 +47,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     private static final DTableColumnModel colQty = new DTableColumnModel("Quantité disponible", Integer.class, false);
     private Map<Integer, SoldProduct> map;
     private List<SoldProduct> displayList;
-    
+
     /**
      * Construct a {@link SoldProductCollection}. This should be only call one time, and by {@link KaiceModel}.
      */
@@ -61,19 +61,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         deserialize();
         updateDisplayList();
     }
-    
-    private void deserialize() {
-        SoldProduct product;
-        map = new HashMap<>();
-        int i = 0;
-        do {
-            product = deserialize(i++);
-            if (product != null) {
-                map.put(product.getId(), product);
-            }
-        } while (product != null);
-    }
-    
+
     /**
      * Update the alphabetical sorted list.
      */
@@ -89,33 +77,11 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         newList.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
         displayList = newList;
     }
-    
+
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    private SoldProduct deserialize(int num) {
-        SoldProduct product = null;
-        try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            product = (SoldProduct) in.readObject();
-            in.close();
-            fileIn.close();
-            System.out.println(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext + " read successful.");
-        } catch (IOException i) {
-            System.err.println(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext + " read error : file not found.");
-            return null;
-        } catch (ClassNotFoundException c) {
-            System.out.println("HashMap<Integer, PurchasedProduct> class not found");
-            c.printStackTrace();
-        }
-        return product;
-    }
-    
-    /**
-     * Load a serialized historic and deserialize-it. Erase completely the current collection.
-     */
-    private void deserialize2() {
+    private void deserialize() {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProduct);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -131,7 +97,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             c.printStackTrace();
         }
     }
-    
+
     /**
      * Hide the {@link SoldProduct} at a specific row.
      *
@@ -143,30 +109,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         updateDisplayList();
         KaiceModel.update(KaiceModel.SOLD_PRODUCT);
     }
-    
-    public void serialize() {
-        int i = 0;
-        for (SoldProduct product :
-                map.values()) {
-            serialize(product, i++);
-        }
-    }
-    
-    /**
-     * Serialize the historic, and save-it in a file.
-     */
-    public void serialize(SoldProduct product, int num) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathSoldProductRep + num + KFilesParameters.ext);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(product);
-            out.close();
-            fileOut.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-        }
-    }
-    
+
     /**
      * Create and store a new {@link SoldProduct}, id auto-generate.
      * This send an alert to the model about some data modifications.
@@ -185,7 +128,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         KaiceModel.update(KaiceModel.SOLD_PRODUCT);
         return soldProduct;
     }
-    
+
     /**
      * Generate a new free identification number for this collection of
      * {@link SoldProduct}.
@@ -199,11 +142,11 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         }
         return newId + 1;
     }
-    
+
     /**
      * Serialize the historic, and save-it in a file.
      */
-    public void serialize2() {
+    void serialize() {
         try {
             FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathSoldProduct);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -214,7 +157,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             i.printStackTrace();
         }
     }
-    
+
     /**
      * Return the {@link SoldProduct} corresponding to the given id.
      *
@@ -224,7 +167,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     public SoldProduct getSoldProduct(int id) {
         return map.get(id);
     }
-    
+
     /**
      * Return the {@link SoldProduct} corresponding to the given row.
      *
@@ -234,7 +177,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     public SoldProduct getSoldProductAtRow(int row) {
         return displayList.get(row);
     }
-    
+
     /**
      * Return all {@link SoldProduct} of a certain type, with a positive available quantity value, in a {@link
      * ArrayList}.
@@ -245,7 +188,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     ArrayList<SoldProduct> getAvailableProduct(prodType type) {
         return displayList.stream().filter(prod -> prod.getType() == type).collect(Collectors.toCollection(ArrayList::new));
     }
-    
+
     /**
      * Return a red color if the product of a given row is unavailable, null if not.
      *
@@ -260,12 +203,12 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             return null;
         }
     }
-    
+
     @Override
     public int getRowCount() {
         return map.size();
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         SoldProduct prod = displayList.get(rowIndex);
@@ -284,7 +227,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
                 return null;
         }
     }
-    
+
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         SoldProduct prod = displayList.get(rowIndex);
@@ -301,7 +244,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         serialize();
         KaiceModel.update(KaiceModel.SOLD_PRODUCT);
     }
-    
+
     @Override
     public DCellRender getColumnModel(int col) {
         if (col == COL_NUM_QTY) {
@@ -309,12 +252,12 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
-    
+
     @Override
     public boolean isHiddenRow(int row) {
         return displayList.get(row).isHidden();
     }
-    
+
     /**
      * This define the type of a {@link SoldProduct}. This could be FOOD, DRINK
      * or MISC.
@@ -323,9 +266,9 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      */
     public enum prodType {
         FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
-        
+
         private final String name;
-        
+
         /**
          * Create a new element of the enumeration {@link prodType} with a display name.
          *
@@ -334,7 +277,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         prodType(String name) {
             this.name = name;
         }
-        
+
         @Override
         public String toString() {
             return name;

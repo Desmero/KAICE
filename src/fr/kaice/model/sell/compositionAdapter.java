@@ -2,11 +2,12 @@ package fr.kaice.model.sell;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by merkling on 11/08/16.
  */
-public class compositionAdapter implements Serializable {
+public class compositionAdapter implements Serializable, Iterable<compositionAdapter.Element> {
     
     private static final long serialVersionUID = -4704593307846210023L;
     private ArrayList<Element> list;
@@ -37,7 +38,12 @@ public class compositionAdapter implements Serializable {
     public int size() {
         return list.size();
     }
-    
+
+    @Override
+    public Iterator<Element> iterator() {
+        return list.iterator();
+    }
+
     public class Element implements Serializable {
         
         private static final long serialVersionUID = -5591738933022922716L;

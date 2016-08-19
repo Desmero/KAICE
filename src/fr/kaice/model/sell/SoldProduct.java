@@ -56,7 +56,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         this.listRawMat = new compositionAdapter();
         this.type = type;
     }
-    
+
     /**
      * Reduce the stock a the {@link RawMaterial} that compose the {@link SoldProduct}.
      *
@@ -89,15 +89,28 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * @param quantity int - The quantity, must be positive or equals to 0.
      */
     public void setRawMaterial(RawMaterial mat, int quantity) {
+        setRawMaterial(mat.getId(), quantity);
+    }
+
+    /**
+     * Set the quantity of {@link RawMaterial} that need this product.
+     * The quantity must be positive. If the quantity is equals to 0, the
+     * {@link RawMaterial} is remove to collection.
+     *
+     * @param matId    int - The raw material's id.
+     * @param quantity int - The quantity, must be positive or equals to 0.
+     */
+    public void setRawMaterial(int matId, int quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity equals to " + quantity + " must be positive.");
         } else if (quantity == 0) {
-            listRawMat.remove(mat.getId());
+            listRawMat.remove(matId);
         } else {
-            listRawMat.add(mat.getId(), quantity);
+            listRawMat.add(matId, quantity);
         }
+        KaiceModel.getSoldProdCollection().serialize();
     }
-    
+
     /**
      * Set the sale price in cents of the {@link SoldProduct}.
      *
@@ -163,7 +176,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public int getProfit() {
         return getPrice() - getBuyPrice();
     }
-    
+
     /**
      * return the buy price in cents of the {@link SoldProduct}. Calculate with the price of the composing
      * {@link RawMaterial}.
@@ -193,8 +206,6 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * @return The available quantity of the {@link SoldProduct}.
      */
     public Integer getQuantity() {
-        return listRawMat.size();
-/*
         int qty = Integer.MAX_VALUE;
         for (compositionAdapter.Element s : listRawMat.getAll()) {
             RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
@@ -203,9 +214,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         if (qty == Integer.MAX_VALUE) {
             return null;
         }
-        System.out.println(name + " : " + listRawMat.size());
         return qty;
-*/
     }
     
     @Override
