@@ -87,7 +87,11 @@ public class CompoCollection extends DTableModel {
         ArrayList<RawMaterial> list = new ArrayList<>(composition.keySet());
         composition.remove(list.get(select));
     }
-    
+
+    public void clear() {
+        composition.clear();
+    }
+
     @Override
     public int getRowCount() {
         return composition.size() + 1;
