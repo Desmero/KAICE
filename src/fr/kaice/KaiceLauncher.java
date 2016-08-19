@@ -5,6 +5,7 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.view.MainWindow;
 
 import java.io.File;
+import java.io.FilePermission;
 
 /**
  * The class KaiceLauncher is the starting point of the program KAICE.
@@ -16,7 +17,7 @@ import java.io.File;
 public abstract class KaiceLauncher {
     
     public static void main(String[] args) {
-        KFilesParameters.setGlobalPath("/home/merkling/.KAICE/");
+        KFilesParameters.setGlobalPath(args[0]);
         File saveRep = new File(KFilesParameters.globalPath);
         if (!saveRep.exists()) {
             saveRep.mkdir();

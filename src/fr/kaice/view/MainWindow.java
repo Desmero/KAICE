@@ -101,7 +101,7 @@ public class MainWindow extends JFrame implements Observer {
         this.setJMenuBar(menuBar);
     
         Dimension windowDim;
-        windowDim = new Dimension(1600, 900);
+        windowDim = new Dimension(1280, 1024);
         setPreferredSize(windowDim);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         

@@ -9,16 +9,23 @@ public class KFilesParameters {
      * The path to the repositories of all files.
      */
     public static String globalPath = "/home/merkling/.KAICE/";
-    public static final String pathSoldProductRep = globalPath + "SoldProducts/";
     public static String ext = ".ser";
-    public static final String pathMembers = globalPath + "Members" + ext;
-    public static final String pathHistoric = globalPath + "Historic" + ext;
-    public static final String pathRawMaterial = globalPath + "RawMaterials" + ext;
-    public static final String pathSoldProduct = globalPath + "SoldProducts" + ext;
-    public static final String pathSoldProductCmp = globalPath + "SoldProductsCmp" + ext;
-    public static final String pathPurchasedProduct = globalPath + "PurchasedProducts" + ext;
+    public static String pathSoldProductRep = globalPath + "SoldProducts/";
+    public static String pathMembers = globalPath + "Members" + ext;
+    public static String pathHistoric = globalPath + "Historic" + ext;
+    public static String pathRawMaterial = globalPath + "RawMaterials" + ext;
+    public static String pathSoldProduct = globalPath + "SoldProducts" + ext;
+    public static String pathSoldProductCmp = globalPath + "SoldProductsCmp" + ext;
+    public static String pathPurchasedProduct = globalPath + "PurchasedProducts" + ext;
     
     public static void setGlobalPath(String globalPath) {
         KFilesParameters.globalPath = globalPath;
+        pathSoldProductRep = globalPath + "SoldProducts/";
+        pathMembers = globalPath + "Members" + ext;
+        pathHistoric = globalPath + "Historic" + ext;
+        pathRawMaterial = globalPath + "RawMaterials" + ext;
+        pathSoldProduct = globalPath + "SoldProducts" + ext;
+        pathSoldProductCmp = globalPath + "SoldProductsCmp" + ext;
+        pathPurchasedProduct = globalPath + "PurchasedProducts" + ext;
     }
 }
