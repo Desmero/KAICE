@@ -11,7 +11,7 @@ public class KFilesParameters {
     public static String globalPath = "/home/merkling/.KAICE/";
     public static String ext = ".ser";
     public static String pathSoldProductRep = globalPath + "SoldProducts/";
-    public static String pathMembers = globalPath + "Members" + ext;
+    public static String pathMembers = globalPath + "Members";
     public static String pathHistoric = globalPath + "Historic" + ext;
     public static String pathRawMaterial = globalPath + "RawMaterials" + ext;
     public static String pathSoldProduct = globalPath + "SoldProducts" + ext;
@@ -21,7 +21,7 @@ public class KFilesParameters {
     public static void setGlobalPath(String globalPath) {
         KFilesParameters.globalPath = globalPath;
         pathSoldProductRep = globalPath + "SoldProducts/";
-        pathMembers = globalPath + "Members" + ext;
+        pathMembers = globalPath + "Members";
         pathHistoric = globalPath + "Historic" + ext;
         pathRawMaterial = globalPath + "RawMaterials" + ext;
         pathSoldProduct = globalPath + "SoldProducts" + ext;

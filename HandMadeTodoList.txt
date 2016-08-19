@@ -5,6 +5,7 @@ KAICE Todo list :
   - PurchasedProduct : warning (unused method)
 
   - Member : Set the current member in the current transaction (not in the members collection)
+           : Only create new member of the current year
 
   - __Product : add hidden boolean
 

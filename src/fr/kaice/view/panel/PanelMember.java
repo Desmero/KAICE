@@ -4,6 +4,7 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -32,10 +33,11 @@ public class PanelMember extends JPanel {
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
         JPanel select = new JPanel(new BorderLayout());
-        JPanel search = new JPanel(new GridLayout(2, 2));
+        JPanel search = new JPanel(new GridLayout(3, 2));
         JTextField name = new JTextField(15);
         JTextField firstName = new JTextField(15);
-        
+        JSpinner year = new JSpinner(new SpinnerNumberModel(KaiceModel.getActualYear()+2000, 2014, KaiceModel.getActualYear()+2000, 1));
+
         add.addActionListener(e -> {
             int memberId = KaiceModel.getMemberCollection().getNewId();
             KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId, true));
@@ -78,7 +80,9 @@ public class PanelMember extends JPanel {
                 KaiceModel.getMemberCollection().setSearchFirstName(firstName.getText());
             }
         });
-        
+
+        year.addChangeListener(e -> KaiceModel.getMemberCollection().setDisplayYear((int) year.getValue() - 2000));
+
         table.setWidth(300);
         table.setMultiSelection(false);
     
@@ -94,7 +98,9 @@ public class PanelMember extends JPanel {
         search.add(name);
         search.add(new JLabel("Prénom :"));
         search.add(firstName);
-        
+        search.add(new JLabel("Année :"));
+        search.add(year);
+
         ctrl.add(add);
         ctrl.add(view);
     }

@@ -6,6 +6,7 @@ import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
+import javax.lang.model.type.ArrayType;
 import javax.swing.table.AbstractTableModel;
 import java.io.*;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class MemberCollection extends DTableModel {
     private int sortCol;
     private String searchName;
     private String searchFirstName;
+    private int displayYear;
     
     /**
      * Construct a {@link MemberCollection}. This should be only call one time, and by {@link KaiceModel}.
@@ -54,29 +56,32 @@ public class MemberCollection extends DTableModel {
         colModel[COL_NUM_ID] = colId;
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_FIRST_NAME] = colFirstName;
-        deserialize();
-//        map = new HashMap<>();
+        map = new HashMap<>();
+        deserialize(KaiceModel.getActualYear());
         selectedMember = null;
         sortCol = 0;
         searchName = "";
         searchFirstName = "";
+        displayYear = 15;
         silentUpdateDisplayList();
     }
     
     /**
      * Load a serialized members collection and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize() {
+    private void deserialize(int yearCode) {
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathMembers);
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            map = (HashMap<Integer, Member>) in.readObject();
+            ArrayList<Member> list = (ArrayList<Member>) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(KFilesParameters.pathMembers + " read successful.");
+            System.out.println(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read successful.");
+            for (Member member : list) {
+                map.put(member.getMemberId(), member);
+            }
         } catch (IOException i) {
-            System.err.println(KFilesParameters.pathMembers + " read error : file not found.");
-            map = new HashMap<>();
+            System.err.println(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read error : file not found.");
         } catch (ClassNotFoundException c) {
             System.out.println("HashMap<Integer, Member> class not found");
             c.printStackTrace();
@@ -85,12 +90,21 @@ public class MemberCollection extends DTableModel {
     
     /**
      * Update the display list with a new generated one (generated with
-     * {@link MemberCollection#getDisplayList(String, String, int)}). But not update the model.
+     * {@link MemberCollection#getDisplayList(String, String, int, int)}). But not update the model.
      */
     public void silentUpdateDisplayList() {
-        displayList = getDisplayList(searchName, searchFirstName, sortCol);
+        displayList = getDisplayList(searchName, searchFirstName, sortCol, displayYear);
     }
-    
+
+    public void setDisplayYear(int year) {
+        this.displayYear = year;
+        updateDisplayList();
+        if (getYearList(year).size() == 0) {
+            deserialize(year);
+            updateDisplayList();
+        }
+    }
+
     /**
      * Generate a new display list, with a name filter, a first name filter and a sort method (by membership number,
      * name or first name)
@@ -101,10 +115,11 @@ public class MemberCollection extends DTableModel {
      *                  COL_NUM_FIRST_NAME} for first name).
      * @return A new list of {@link Member}, corresponding to the filter, and sort parameters.
      */
-    private ArrayList<Member> getDisplayList(String name, String firstName, int sotMethod) {
+    private ArrayList<Member> getDisplayList(String name, String firstName, int sotMethod, int yearCode) {
         ArrayList<Member> newList = map.values().stream().filter(mem ->
                 mem.getName().toLowerCase().contains(name.toLowerCase())
-                        && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase()))
+                        && mem.getFirstName().toLowerCase().contains(firstName.toLowerCase())
+                        && mem.getMemberId()/10000 == yearCode)
                 .collect(Collectors.toCollection(ArrayList::new));
         newList.sort((arg0, arg1) -> {
             switch (sotMethod) {
@@ -134,15 +149,25 @@ public class MemberCollection extends DTableModel {
         serialize();
         updateDisplayList();
     }
-    
+
+    private ArrayList<Member> getYearList(int yearCode) {
+        ArrayList<Member> list = new ArrayList<>();
+        for (Member member : map.values()) {
+            if (member.getMemberId() >= yearCode * 10000 && member.getMemberId() < (yearCode + 1) * 10000) {
+                list.add(member);
+            }
+        }
+        return list;
+    }
+
     /**
      * Serialize the members collection, and save-it in a file.
      */
     public void serialize() {
         try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathMembers);
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathMembers + KaiceModel.getActualYear() + KFilesParameters.ext);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(map);
+            out.writeObject(getYearList(KaiceModel.getActualYear()));
             out.close();
             fileOut.close();
         } catch (IOException i) {
@@ -152,11 +177,11 @@ public class MemberCollection extends DTableModel {
     
     /**
      * Update the display list with a new generated one (generated with
-     * {@link MemberCollection#getDisplayList(String, String, int)}).
+     * {@link MemberCollection#getDisplayList(String, String, int, int)}).
      * This send an alert to the model about some data modifications.
      */
     public void updateDisplayList() {
-        displayList = getDisplayList(searchName, searchFirstName, sortCol);
+        displayList = getDisplayList(searchName, searchFirstName, sortCol, displayYear);
         KaiceModel.update(KaiceModel.MEMBER);
     }
     
@@ -260,7 +285,7 @@ public class MemberCollection extends DTableModel {
      */
     public void setSelectedMemberById(int id) {
         selectedMember = map.get(id);
-        KaiceModel.update(KaiceModel.MEMBER);
+        KaiceModel.update(KaiceModel.TRANSACTION);
     }
     
     /**
@@ -270,7 +295,7 @@ public class MemberCollection extends DTableModel {
      * @param firstName {@link String} The first name of the new selected {@link Member}.
      */
     public void setSelectedMemberByName(String name, String firstName) {
-        ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID);
+        ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID, displayYear);
         if (list.size() == 1) {
             selectedMember = list.get(0);
             KaiceModel.update(KaiceModel.TRANSACTION);
