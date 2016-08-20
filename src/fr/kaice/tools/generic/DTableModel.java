@@ -15,7 +15,8 @@ import java.io.Serializable;
  * @see javax.swing.table.TableModel
  */
 public abstract class DTableModel extends AbstractTableModel implements Serializable {
-    
+
+    private static final long serialVersionUID = 3402791501977226719L;
     protected DTableColumnModel[] colModel;
     protected boolean totalLine;
     
@@ -35,7 +36,11 @@ public abstract class DTableModel extends AbstractTableModel implements Serializ
     public DCellRender getColumnModel(int col) {
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
-    
+
+    public void actionCell(int row, int column) {
+        System.out.println("Click " + row + " " + column);
+    }
+
     @Override
     public int getColumnCount() {
         return colModel.length;

@@ -126,7 +126,6 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         map.put(id, soldProduct);
         serialize();
         updateDisplayList();
-        KaiceModel.update(KaiceModel.SOLD_PRODUCT);
         return soldProduct;
     }
 
@@ -187,7 +186,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @return All available product of the given type in a {@link ArrayList}.
      */
     ArrayList<SoldProduct> getAvailableProduct(prodType type) {
-        return displayList.stream().filter(prod -> prod.getType() == type && !prod.isHidden() && prod.getQuantity() > 0).collect(Collectors.toCollection(ArrayList::new));
+        return displayList.stream().filter(prod -> prod.getType() == type && !prod.isHidden() && prod.isInStock()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**

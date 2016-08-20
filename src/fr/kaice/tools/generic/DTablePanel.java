@@ -4,10 +4,7 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,11 +16,11 @@ import java.util.Observer;
  * @version 1.0
  */
 public class DTablePanel extends JPanel implements Observer {
-    
+
     private DTableModel tableModel;
     private RXTable table;
     private JScrollPane scrollPane;
-    
+
     /**
      * Create a new {@link DTablePanel}.
      *
@@ -34,43 +31,28 @@ public class DTablePanel extends JPanel implements Observer {
         if (obs != null) {
             obs.addObserver(this);
         }
-        construct(tableModel);
-    }
-    
-    /**
-     * Initialise everything needed at the creation of the object.
-     * The should only be used by a constructor.
-     *
-     * @param tableModel {@link DTableModel} - The model of the table.
-     */
-    private void construct(DTableModel tableModel) {
         this.setLayout(new BorderLayout());
         this.tableModel = tableModel;
         table = new RXTable(tableModel);
         table.setSelectAllForEdit(true);
-        table.addKeyListener(new KeyListener() {
+        table.addMouseListener(new MouseAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
-            }
-            
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
-            
-            @Override
-            public void keyReleased(KeyEvent e) {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    tableModel.actionCell(table.getSelectedRow(), table.getSelectedColumn());
+                }
             }
         });
         scrollPane = new JScrollPane(table);
         this.add(scrollPane, BorderLayout.CENTER);
-        
+
         tableModel.fireTableChanged(null);
         for (int i = 0; i < tableModel.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i)
                     .setCellRenderer(tableModel.getColumnModel(i));
         }
     }
-    
+
     /**
      * Create a new {@link DTablePanel}.
      *
@@ -79,13 +61,10 @@ public class DTablePanel extends JPanel implements Observer {
      * @param row        int - The number of row to display.
      */
     public DTablePanel(Observable obs, DTableModel tableModel, int row) {
-        if (obs != null) {
-            obs.addObserver(this);
-        }
-        construct(tableModel);
+        this(obs, tableModel);
         setNumberRow(row);
     }
-    
+
     /**
      * Set the size of the panel to display only the given number of rows.
      *
@@ -95,7 +74,7 @@ public class DTablePanel extends JPanel implements Observer {
         Dimension d = table.getPreferredSize();
         scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * row));
     }
-    
+
     /**
      * Chose the selection mode between the "multiple interval selection" or the "single selection".
      *
@@ -108,7 +87,7 @@ public class DTablePanel extends JPanel implements Observer {
             table.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         }
     }
-    
+
     /**
      * Return the {@link JTable}.
      *
@@ -117,7 +96,7 @@ public class DTablePanel extends JPanel implements Observer {
     public JTable getTable() {
         return table;
     }
-    
+
     /**
      * Set the width with a integer value, but keep the same height.
      *
@@ -127,9 +106,9 @@ public class DTablePanel extends JPanel implements Observer {
         Dimension d = this.getPreferredSize();
         d.setSize(width, d.getHeight());
         this.setPreferredSize(d);
-        
+
     }
-    
+
     /**
      * Copied from {@link JTable}. <br/>
      * Returns the index of the first selected row, -1 if no row is selected.
@@ -139,7 +118,7 @@ public class DTablePanel extends JPanel implements Observer {
     public int getSelectedRow() {
         return table.getSelectedRow();
     }
-    
+
     /**
      * Copied from {@link JTable}. <br/>
      * Returns the indices of all selected rows.
@@ -151,7 +130,7 @@ public class DTablePanel extends JPanel implements Observer {
     public int[] getSelectedRows() {
         return table.getSelectedRows();
     }
-    
+
     /**
      * Copied from {@link JTable}. <br/>
      * Deselects all selected columns and rows.
@@ -159,7 +138,7 @@ public class DTablePanel extends JPanel implements Observer {
     public void clearSelection() {
         table.clearSelection();
     }
-    
+
     @Override
     public void update(Observable arg0, Object arg1) {
         tableModel.fireTableChanged(null);
@@ -169,7 +148,7 @@ public class DTablePanel extends JPanel implements Observer {
         }
         resizeColumnWidth();
     }
-    
+
     /**
      * Method copied from internet. <br/>
      * Resize all column of the table proportionally of the size they need.
@@ -188,5 +167,5 @@ public class DTablePanel extends JPanel implements Observer {
             columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
-    
+
 }

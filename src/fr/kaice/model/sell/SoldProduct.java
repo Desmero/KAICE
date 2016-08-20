@@ -216,7 +216,15 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         }
         return qty;
     }
-    
+
+    public boolean isInStock() {
+        Integer qty = getQuantity();
+        if (qty != null && qty <= 0) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         return name;
