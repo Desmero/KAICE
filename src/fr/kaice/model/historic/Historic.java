@@ -5,6 +5,7 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.PeriodGetter;
 import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.generic.*;
+import fr.kaice.view.panel.PanelTransaction;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -163,7 +164,12 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         }
         KaiceModel.update(KaiceModel.HISTORIC);
     }
-    
+
+    @Override
+    public void actionCell(int row, int column) {
+        KaiceModel.getInstance().setDetails(displayList.get(row).getPanel());
+    }
+
     /**
      * Set the period of time to display.
      *

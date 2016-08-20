@@ -257,8 +257,10 @@ public class MemberCollection extends DTableModel {
      * @param row int - The row of the new selected {@link Member}.
      */
     public void setSelectedMember(int row) {
-        selectedMember = getRow(row);
-        KaiceModel.update(KaiceModel.TRANSACTION);
+        if (row > 0) {
+            selectedMember = getRow(row);
+            KaiceModel.update(KaiceModel.TRANSACTION);
+        }
     }
     
     /**

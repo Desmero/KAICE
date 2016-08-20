@@ -26,7 +26,7 @@ public class PanelPurchasedProductDetails extends JPanel implements PeriodGetter
         JPanel details = new JPanel(new BorderLayout());
         
         this.setLayout(new BorderLayout());
-        this.add(new PanelTitle(product.getName()), BorderLayout.NORTH);
+        this.add(new PanelTitle(product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel())), BorderLayout.NORTH);
         this.add(all, BorderLayout.CENTER);
         
         all.add(details, BorderLayout.NORTH);

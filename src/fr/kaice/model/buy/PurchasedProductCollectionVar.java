@@ -3,6 +3,7 @@ package fr.kaice.model.buy;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.generic.*;
+import fr.kaice.view.panel.PanelPurchasedProductDetails;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -43,7 +44,14 @@ public class PurchasedProductCollectionVar extends DTableModel implements IHidde
         colModel[COL_NUM_RAW_QTY] = colRawQty;
         colModel[COL_NUM_RAW_MATERIAL] = colRawMaterial;
     }
-    
+
+    @Override
+    public void actionCell(int row, int column) {
+        if (!colModel[column].isEditable()) {
+            KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(KaiceModel.getPurchasedProdCollection().getVariantList().get(row)));
+        }
+    }
+
     @Override
     public DCellRender getColumnModel(int col) {
         if (col == COL_NUM_NAME) {

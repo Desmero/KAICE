@@ -5,7 +5,9 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.generic.*;
+import fr.kaice.view.panel.PanelSoldProductDetails;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.io.*;
@@ -201,6 +203,13 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             return DColor.RED;
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public void actionCell(int row, int column) {
+        if (!colModel[column].isEditable()) {
+            KaiceModel.getInstance().setDetails(new PanelSoldProductDetails(displayList.get(row)));
         }
     }
 

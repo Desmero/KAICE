@@ -23,7 +23,7 @@ import static fr.kaice.model.sell.SoldProductTableModel.*;
  * - A type; <br/>
  * - And a collection of {@link RawMaterial}.
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.1
  */
 public class SoldProduct extends DTableModel implements GenericProduct, Serializable {

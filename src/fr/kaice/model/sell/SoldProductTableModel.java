@@ -12,7 +12,7 @@ class SoldProductTableModel {
     static final int COL_NUM_STOCK = 2;
     static final int COL_NUM_PRICE = 3;
     static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    static final DTableColumnModel colUsed = new DTableColumnModel("QuantitÃ© utilisÃ©e", Integer.class, true);
+    static final DTableColumnModel colUsed = new DTableColumnModel("Quantité utilisée", Integer.class, true);
     static final DTableColumnModel colStock = new DTableColumnModel("Stock", Integer.class, false);
     static final DTableColumnModel colPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
     

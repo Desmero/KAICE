@@ -18,7 +18,7 @@ import java.awt.*;
  * @see JPanel
  * @see SoldProduct
  */
-class PanelSoldProductDetails extends JPanel {
+public class PanelSoldProductDetails extends JPanel {
     
     /**
      * Create a new {@link PanelSoldProductDetails} who display the details of the given {@link SoldProduct}.

@@ -8,6 +8,9 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.view.panel.PanelPurchasedProduct;
+import fr.kaice.view.panel.PanelPurchasedProductDetails;
+import fr.kaice.view.panel.PanelSoldProductDetails;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -248,7 +251,14 @@ public class PurchasedProductCollection extends DTableModel {
     public PurchasedProduct getProductAtRow(int row) {
         return displayList.get(row);
     }
-    
+
+    @Override
+    public void actionCell(int row, int column) {
+        if (!colModel[column].isEditable()) {
+            KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(displayList.get(row)));
+        }
+    }
+
     @Override
     public int getRowCount() {
         return displayList.size();

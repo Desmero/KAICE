@@ -6,6 +6,7 @@ import fr.kaice.tools.generic.DColor;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.view.panel.PanelTransaction;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -23,11 +24,11 @@ import java.util.List;
  * It extends {@link DTableModel}, a custom {@linkplain javax.swing.table.AbstractTableModel
  * AbstractTableModel}.<br/><br/> In a table, it display the {@link ArchivedProduct} collection with 4 columns : <br/> -
  * "Nom", witch display names (non editable {@link String});<br/> - "Prix unitaire", witch display unitary price (non
- * editable {@link Double});<br/> - "QuantitÃ©", witch display the bought quantity (non editable {@link Integer});<br/> -
+ * editable {@link Double});<br/> - "Quantité", witch display the bought quantity (non editable {@link Integer});<br/> -
  * "Prix", witch display the total price (non editable {@link Double}).<br/> And a summary of all {@link
  * ArchivedProduct} on the last line.
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.2
  */
 public class Transaction extends DTableModel implements Serializable {
@@ -40,7 +41,7 @@ public class Transaction extends DTableModel implements Serializable {
     private static final transient int COL_COUNT = 5;
     private static final transient DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
     private static final transient DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final transient DTableColumnModel colQty = new DTableColumnModel("QuantitÃ©", Integer.class, false);
+    private static final transient DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
     private static final transient DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
     private static final transient DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final long serialVersionUID = -8468280991560540628L;
@@ -50,6 +51,7 @@ public class Transaction extends DTableModel implements Serializable {
     private final int price;
     private final int paid;
     private final Date date;
+    private transient PanelTransaction panel;
     
     /**
      * Create a new {@link Transaction}.
@@ -173,7 +175,14 @@ public class Transaction extends DTableModel implements Serializable {
                 return DColor.GRAY;
         }
     }
-    
+
+    public PanelTransaction getPanel() {
+        if (panel == null) {
+            panel = new PanelTransaction(this);
+        }
+        return panel;
+    }
+
     @Override
     public int getRowCount() {
         return productList.size();
@@ -219,15 +228,16 @@ public class Transaction extends DTableModel implements Serializable {
     public int getPrice() {
         return price;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (ArchivedProduct prod : productList) {
             sb.append(prod.getName());
             if (prod.getQuantity() > 1) {
-                sb.append(" x").append(prod.getQuantity()).append(";");
+                sb.append(" x").append(prod.getQuantity());
             }
+            sb.append("; ");
         }
         return sb.toString();
     }
