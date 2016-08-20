@@ -20,7 +20,7 @@ import java.util.Observable;
  * @version 2.0
  */
 public class KaiceModel extends Observable {
-    
+
     public static final int ALL = 0;
     public static final int RAW_MATERIAL = 1;
     public static final int PURCHASED_PRODUCT = 2;
@@ -42,12 +42,12 @@ public class KaiceModel extends Observable {
     private static final boolean[] change = new boolean[10];
     private boolean showHidden;
     private JPanel details;
-    
+
     private KaiceModel() {
         details = new JPanel();
         showHidden = false;
     }
-    
+
     /**
      * Return the instance of the class {@link KaiceModel}.
      *
@@ -58,7 +58,7 @@ public class KaiceModel extends Observable {
     public static KaiceModel getInstance() {
         return model;
     }
-    
+
     /**
      * Return the main {@link SoldProductCollection} use by the programme.
      *
@@ -67,7 +67,7 @@ public class KaiceModel extends Observable {
     public static SoldProductCollection getSoldProdCollection() {
         return soldProdColl;
     }
-    
+
     /**
      * Return the main {@link CurrentTransaction} use by the programme.
      *
@@ -76,7 +76,7 @@ public class KaiceModel extends Observable {
     public static CurrentTransaction getCurrentTransaction() {
         return curTran;
     }
-    
+
     /**
      * Return the main {@link OrderCollection} use by the programme.
      *
@@ -85,7 +85,7 @@ public class KaiceModel extends Observable {
     public static OrderCollection getOrderCollection() {
         return ordColl;
     }
-    
+
     /**
      * Return the main {@link MemberCollection} use by the programme.
      *
@@ -94,7 +94,7 @@ public class KaiceModel extends Observable {
     public static MemberCollection getMemberCollection() {
         return memColl;
     }
-    
+
     /**
      * Return the main {@link Historic} use by the programme.
      *
@@ -103,7 +103,7 @@ public class KaiceModel extends Observable {
     public static Historic getHistoric() {
         return hist;
     }
-    
+
     /**
      * Built and return a {@link String} witch contains e-Mail address of members who subscribes to the newsletters.
      * Every address are separate by a ';'.
@@ -113,7 +113,7 @@ public class KaiceModel extends Observable {
     public static String getEMailList() {
         return memColl.getEMailList();
     }
-    
+
     /**
      * Return a number corresponding to the current administrative year (September to August of the next year).
      * A new year start the first September, and get the number of the first half year.
@@ -132,17 +132,25 @@ public class KaiceModel extends Observable {
         }
         return year;
     }
-    
+
     /**
-     * Return true if the asked part has been modified.
+     * Return true if the asked sector has been modified.
      *
-     * @param part int - The part of the programe.
+     * @param sectors int... - The sectors of the program.
      * @return True if the asked part has been modified.
      */
-    public static boolean isPartModified(int part) {
-        return change[part] || change[ALL];
+    public static boolean isPartModified(int... sectors) {
+        boolean chan = false;
+        for (int sector :
+                sectors) {
+            if (change[sector]) {
+                chan = true;
+                break;
+            }
+        }
+        return chan || change[ALL];
     }
-    
+
     /**
      * Return true is the hidden items must be shown.
      *
@@ -151,7 +159,7 @@ public class KaiceModel extends Observable {
     public boolean isShowHidden() {
         return showHidden;
     }
-    
+
     /**
      * Change the state of showHidden.
      */
@@ -159,9 +167,10 @@ public class KaiceModel extends Observable {
         this.showHidden = !showHidden;
         KaiceModel.getRawMatCollection().updateDisplayList();
         KaiceModel.getPurchasedProdCollection().updateLists();
+        KaiceModel.getSoldProdCollection().updateDisplayList();
         KaiceModel.update(KaiceModel.RAW_MATERIAL, KaiceModel.PURCHASED_PRODUCT, KaiceModel.SOLD_PRODUCT);
     }
-    
+
     /**
      * Return the main {@link RawMaterialCollection} use by the programme.
      *
@@ -170,7 +179,7 @@ public class KaiceModel extends Observable {
     public static RawMaterialCollection getRawMatCollection() {
         return rawMatColl;
     }
-    
+
     /**
      * Return the main {@link PurchasedProductCollection} use by the programme.
      *
@@ -179,7 +188,7 @@ public class KaiceModel extends Observable {
     public static PurchasedProductCollection getPurchasedProdCollection() {
         return purProdColl;
     }
-    
+
     /**
      * Call {@link Observable#setChanged()} and {@link Observable#notifyObservers()} methods.
      * Warning ! Call this function with caution, nothing prevent a infinite loop of update.
@@ -215,7 +224,7 @@ public class KaiceModel extends Observable {
         }
         System.out.println("<<<<");
     }
-    
+
     /**
      * Print on the terminal the name of the sector updated with a little message. Use only for test.
      *
@@ -259,7 +268,7 @@ public class KaiceModel extends Observable {
                 System.out.println("???");
         }
     }
-    
+
     /**
      * Return the current {@link JPanel} to display in the details section.
      *
@@ -268,7 +277,7 @@ public class KaiceModel extends Observable {
     public JPanel getDetails() {
         return details;
     }
-    
+
     /**
      * Set the current {@link JPanel} to display in the details section.
      * Warning ! This method call {@link this#update(int...)}.

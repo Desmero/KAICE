@@ -37,8 +37,7 @@ public class PanelSoldProduct extends JPanel {
             }
         });
         hide.addActionListener(e -> KaiceModel.getSoldProdCollection().hideRow(table.getSelectedRow()));
-        hide.setEnabled(false);
-        
+
         table.setMultiSelection(false);
         
         this.setLayout(new BorderLayout());

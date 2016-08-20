@@ -52,9 +52,12 @@ public class PanelMember extends JPanel {
         table.getTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                if (e.isControlDown()) {
                     int row = table.getSelectedRow();
                     KaiceModel.getMemberCollection().setSelectedMember(row);
+                } else if (e.getClickCount() == 2) {
+                    int memberId = KaiceModel.getMemberCollection().getMemberIdAtRow(table.getSelectedRow());
+                    KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
                 }
             }
         });

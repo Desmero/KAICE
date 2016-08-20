@@ -131,7 +131,7 @@ class PanelChoseSoldProduct extends JPanel implements Observer {
     
     @Override
     public void update(Observable o, Object arg) {
-        if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT)) {
+        if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT, KaiceModel.RAW_MATERIAL)) {
             for (int i = 0; i < tables.length; i++) {
                 tableModels[i].updateCollection();
                 tables[i].resizeColumnWidth();

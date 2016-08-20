@@ -2,6 +2,7 @@ package fr.kaice.model.sell;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.KFilesParameters;
+import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.generic.*;
 
@@ -65,7 +66,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     /**
      * Update the alphabetical sorted list.
      */
-    private void updateDisplayList() {
+    public void updateDisplayList() {
         ArrayList<SoldProduct> newList = new ArrayList<>(map.values());
         if (!KaiceModel.getInstance().isShowHidden()) {
             for (int i = newList.size() - 1; i > 0; i--) {
@@ -186,7 +187,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @return All available product of the given type in a {@link ArrayList}.
      */
     ArrayList<SoldProduct> getAvailableProduct(prodType type) {
-        return displayList.stream().filter(prod -> prod.getType() == type).collect(Collectors.toCollection(ArrayList::new));
+        return displayList.stream().filter(prod -> prod.getType() == type && !prod.isHidden() && prod.getQuantity() > 0).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -206,7 +207,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
 
     @Override
     public int getRowCount() {
-        return map.size();
+        return displayList.size();
     }
 
     @Override
@@ -247,7 +248,9 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
 
     @Override
     public DCellRender getColumnModel(int col) {
-        if (col == COL_NUM_QTY) {
+        if (col == COL_NUM_NAME) {
+            return new CellRenderHiddenProduct(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
+        } else if (col == COL_NUM_QTY) {
             return new CellRenderSoldProduct(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);

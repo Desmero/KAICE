@@ -29,8 +29,10 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
     private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
     private ArrayList<Transaction> displayList;
     private historicType type;
+    private int price;
+    private int paid;
     private int id;
-    
+
     public PartialHistoric(Member member) {
         this(member.getMemberId(), historicType.MEMBER);
     }
@@ -39,6 +41,7 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
         this.type = type;
         this.id = id;// TODO
         this.displayList = KaiceModel.getHistoric().getPartialHistoric(type, id, new Date(), new Date());
+        setPrices();
         totalLine = true;
         colModel = new DTableColumnModel[5];
         colModel[COL_NUM_DATE] = colDate;
@@ -46,7 +49,6 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
         colModel[COL_NUM_TRAN] = colTran;
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_CASH] = colCash;
-        
     }
     
     public PartialHistoric(SoldProduct product) {
@@ -63,6 +65,17 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
     
     public void update(Date start, Date end) {
         displayList = KaiceModel.getHistoric().getPartialHistoric(type, id, start, end);
+    }
+
+    private void setPrices() {
+        int price = 0, paid = 0;
+        for (Transaction transaction :
+                displayList) {
+            price += transaction.getPrice();
+            paid += transaction.getPaid();
+        }
+        this.price = price;
+        this.paid = paid;
     }
 
     @Override
@@ -84,9 +97,9 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
                 case COL_NUM_TRAN:
                     return "" + rowIndex + " opérations";
                 case COL_NUM_PRICE:
-                    return 0.;
+                    return DMonetarySpinner.intToDouble(price);
                 case COL_NUM_CASH:
-                    return 0.;
+                    return DMonetarySpinner.intToDouble(paid);
                 default:
                     return null;
             }

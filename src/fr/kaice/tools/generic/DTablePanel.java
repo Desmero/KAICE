@@ -21,7 +21,7 @@ import java.util.Observer;
 public class DTablePanel extends JPanel implements Observer {
     
     private DTableModel tableModel;
-    private JTable table;
+    private RXTable table;
     private JScrollPane scrollPane;
     
     /**
@@ -46,18 +46,8 @@ public class DTablePanel extends JPanel implements Observer {
     private void construct(DTableModel tableModel) {
         this.setLayout(new BorderLayout());
         this.tableModel = tableModel;
-        table = new JTable(tableModel);
-        table.addContainerListener(new ContainerListener() {
-            @Override
-            public void componentAdded(ContainerEvent arg0) {
-                JTextField text = (JTextField) arg0.getChild();
-                text.setText(null);
-            }
-            
-            @Override
-            public void componentRemoved(ContainerEvent arg0) {
-            }
-        });
+        table = new RXTable(tableModel);
+        table.setSelectAllForEdit(true);
         table.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
