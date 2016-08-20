@@ -12,38 +12,72 @@ import java.awt.event.ActionListener;
 public class PanelTitle extends JPanel {
     
     private final JLabel lTitle;
-    
+
     /**
      * Create a {@link PanelTitle} with a title string.
      *
      * @param title {@link String} - The title to display.
      */
     public PanelTitle(String title) {
-        this(title, null);
+        this(title, null, null);
     }
-    
+
     /**
      * Creat a {@link PanelTitle} with a title string and a button to the right
      *
-     * @param title        {@link String} - The title to display.
-     * @param buttonAction {@link ActionListener} - The action listener of the button.
+     * @param title           {@link String} - The title to display.
+     * @param redButtonAction {@link ActionListener} - The action listener of the button.
      */
-    public PanelTitle(String title, ActionListener buttonAction) {
+    public PanelTitle(String title, ActionListener redButtonAction) {
+        this(title, redButtonAction, null);
+    }
+
+    public PanelTitle(String title, ActionListener redButtonAction, ActionListener greenButtonAction) {
         this.setLayout(new BorderLayout());
         this.setBackground(DColor.BLUE_TITLE);
+
+        JPanel buttons = new JPanel(new BorderLayout());
         
         lTitle = new JLabel(title);
         lTitle.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(lTitle, BorderLayout.CENTER);
-        
+        this.add(buttons, BorderLayout.EAST);
+
         JSeparator sep = new JSeparator();
         sep.setBackground(DColor.BLUE_TITLE);
+        buttons.setBackground(DColor.BLUE_TITLE);
         this.add(sep, BorderLayout.SOUTH);
-        
-        if (buttonAction != null) {
-            JButton close = new JButton();
-            close.setBackground(DColor.BLUE_SELECTION);
-            close.setIcon(new Icon() {
+
+        if (greenButtonAction != null) {
+            JButton greenButton = new JButton();
+            greenButton.setBackground(DColor.BLUE_SELECTION);
+            greenButton.setIcon(new Icon() {
+                @Override
+                public void paintIcon(Component c, Graphics g, int x, int y) {
+                    int w = getIconWidth(), h = getIconHeight();
+                    g.setColor(DColor.GREEN);
+                    g.fillRect(x, y, w, h);
+                }
+
+                @Override
+                public int getIconWidth() {
+                    return 25;
+                }
+
+                @Override
+                public int getIconHeight() {
+                    return 25;
+                }
+            });
+            greenButton.addActionListener(greenButtonAction);
+            greenButton.setPreferredSize(new Dimension(15, 15));
+            buttons.add(greenButton, BorderLayout.WEST);
+        }
+
+        if (redButtonAction != null) {
+            JButton redButton = new JButton();
+            redButton.setBackground(DColor.BLUE_SELECTION);
+            redButton.setIcon(new Icon() {
                 @Override
                 public void paintIcon(Component c, Graphics g, int x, int y) {
                     int w = getIconWidth(), h = getIconHeight();
@@ -61,10 +95,11 @@ public class PanelTitle extends JPanel {
                     return 25;
                 }
             });
-            close.addActionListener(buttonAction);
-            close.setPreferredSize(new Dimension(15, 15));
-            this.add(close, BorderLayout.EAST);
+            redButton.addActionListener(redButtonAction);
+            redButton.setPreferredSize(new Dimension(15, 15));
+            buttons.add(redButton, BorderLayout.EAST);
         }
+
     }
     
     /**

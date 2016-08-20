@@ -5,16 +5,17 @@ import fr.kaice.model.buy.PurchasedProduct;
 import fr.kaice.model.member.Member;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.model.sell.SoldProduct;
-import fr.kaice.tools.cells.CellRenderTransaction;
+import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.generic.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by merkling on 14/08/16.
  */
-public class PartialHistoric extends DTableModel {
+public class PartialHistoric extends DTableModel implements IColoredTableModel {
     
     private static final int COL_NUM_DATE = 0;
     private static final int COL_NUM_CLIENT = 1;
@@ -63,7 +64,12 @@ public class PartialHistoric extends DTableModel {
     public void update(Date start, Date end) {
         displayList = KaiceModel.getHistoric().getPartialHistoric(type, id, start, end);
     }
-    
+
+    @Override
+    public Color getRowColor(int row) {
+        return displayList.get(row).getColor();
+    }
+
     @Override
     public int getRowCount() {
         return displayList.size() + 1;
@@ -102,10 +108,10 @@ public class PartialHistoric extends DTableModel {
         return null;
     }
     
-    //    @Override
-    public DCellRender getColumnModel2(int col) {
+    @Override
+    public DCellRender getColumnModel(int col) {
         if (col == COL_NUM_TRAN) {
-            return new CellRenderTransaction(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
+            return new CellRenderColoredRow(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }

@@ -1,9 +1,10 @@
 package fr.kaice.model.raw;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.IColoredTableModel;
 import fr.kaice.tools.KFilesParameters;
+import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
-import fr.kaice.tools.cells.CellRenderRawMaterial;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.*;
 
@@ -33,7 +34,7 @@ import java.util.Map;
  * @see AbstractTableModel
  * @see KaiceModel
  */
-public class RawMaterialCollection extends DTableModel implements IHiddenCollection {
+public class RawMaterialCollection extends DTableModel implements IHiddenCollection, IColoredTableModel {
     
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_QTY = 1;
@@ -192,6 +193,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
      * @param row int - The row of the {@link RawMaterial}.
      * @return The color of the {@link RawMaterial} chosen by the row number.
      */
+    @Override
     public Color getRowColor(int row) {
         return displayList.get(row).getColor();
     }
@@ -303,7 +305,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         if (col == COL_NUM_NAME) {
             return new CellRenderHiddenProduct(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
         } else if (col == COL_NUM_QTY) {
-            return new CellRenderRawMaterial(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
+            return new CellRenderColoredRow(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }

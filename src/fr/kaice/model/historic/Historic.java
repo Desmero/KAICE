@@ -3,10 +3,11 @@ package fr.kaice.model.historic;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.PeriodGetter;
-import fr.kaice.tools.cells.CellRenderTransaction;
+import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +30,7 @@ import java.util.List;
  * @see AbstractTableModel
  * @see KaiceModel
  */
-public class Historic extends DTableModel implements PeriodGetter {
+public class Historic extends DTableModel implements PeriodGetter, IColoredTableModel {
     
     private static final int COL_NUM_DATE = 0;
     private static final int COL_NUM_CLIENT = 1;
@@ -202,7 +203,12 @@ public class Historic extends DTableModel implements PeriodGetter {
         }
         return newList;
     }
-    
+
+    @Override
+    public Color getRowColor(int row) {
+        return displayList.get(row).getColor();
+    }
+
     @Override
     public int getRowCount() {
         return displayList.size() + 1;
@@ -297,7 +303,7 @@ public class Historic extends DTableModel implements PeriodGetter {
     @Override
     public DCellRender getColumnModel(int col) {
         if (col == COL_NUM_TRAN) {
-            return new CellRenderTransaction(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
+            return new CellRenderColoredRow(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
