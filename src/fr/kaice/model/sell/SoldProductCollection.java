@@ -5,9 +5,7 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.generic.*;
-import fr.kaice.view.panel.PanelSoldProductDetails;
 
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.io.*;
@@ -61,8 +59,6 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_SELL_PRICE] = colSellPrice;
-        deserialize();
-        updateDisplayList();
     }
 
     /**
@@ -84,7 +80,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize() {
+    public void deserialize() {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProduct);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -92,6 +88,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             in.close();
             fileIn.close();
             System.out.println(KFilesParameters.pathSoldProduct + " read successful.");
+            updateDisplayList();
         } catch (IOException i) {
             System.err.println(KFilesParameters.pathSoldProduct + " read error : file not found.");
             map = new HashMap<>();
@@ -209,7 +206,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     @Override
     public void actionCell(int row, int column) {
         if (!colModel[column].isEditable()) {
-            KaiceModel.getInstance().setDetails(new PanelSoldProductDetails(displayList.get(row)));
+            KaiceModel.getInstance().setDetails(displayList.get(row).getDetails());
         }
     }
 

@@ -7,6 +7,7 @@ import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.*;
+import fr.kaice.view.panel.PanelRawMaterialDetails;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
     private static final DTableColumnModel colQty = new DTableColumnModel("Stock", Integer.class, true);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Integer.class, true);
-    
+
     private Map<Integer, RawMaterial> map;
     private List<RawMaterial> displayList;
     
@@ -57,14 +58,13 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_ALERT] = colAlert;
-        deserialize();
-        updateDisplayList();
+        map = new HashMap<>();
     }
     
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize() {
+    public void deserialize() {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathRawMaterial);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -72,6 +72,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
             in.close();
             fileIn.close();
             System.out.println(KFilesParameters.pathRawMaterial + " read successful.");
+            updateDisplayList();
         } catch (IOException i) {
             System.err.println(KFilesParameters.pathRawMaterial + " read error : file not found.");
             map = new HashMap<>();
@@ -260,7 +261,15 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         serialize();
         KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
-    
+
+    @Override
+    public void actionCell(int row, int column) {
+        if (!colModel[column].isEditable()) {
+            KaiceModel.getInstance().setDetails(displayList.get(row).getDetails());
+        }
+
+    }
+
     @Override
     public int getRowCount() {
         return displayList.size();

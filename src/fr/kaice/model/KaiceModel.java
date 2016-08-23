@@ -31,6 +31,7 @@ public class KaiceModel extends Observable {
     public static final int ORDER = 7;
     public static final int TRANSACTION = 8;
     public static final int RESTOCK = 9;
+    public static final int HISTORIC_PERIOD = 10;
     private static final KaiceModel model = new KaiceModel();
     private static final RawMaterialCollection rawMatColl = new RawMaterialCollection();
     private static final SoldProductCollection soldProdColl = new SoldProductCollection();
@@ -39,7 +40,7 @@ public class KaiceModel extends Observable {
     private static final OrderCollection ordColl = new OrderCollection();
     private static final Historic hist = new Historic();
     private static final MemberCollection memColl = new MemberCollection();
-    private static final boolean[] change = new boolean[10];
+    private static final boolean[] change = new boolean[11];
     private boolean showHidden;
     private JPanel details;
 
@@ -263,6 +264,9 @@ public class KaiceModel extends Observable {
                 break;
             case RESTOCK:
                 System.out.println("RESTOCK");
+                break;
+            case HISTORIC_PERIOD:
+                System.out.println("HISTORIC_PERIOD");
                 break;
             default:
                 System.out.println("???");

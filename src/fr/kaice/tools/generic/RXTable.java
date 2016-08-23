@@ -1,12 +1,16 @@
 package fr.kaice.tools.generic;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
-import java.util.*;
 import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.text.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
+import java.util.Vector;
 
 /**
  * Class found on https://tips4java.wordpress.com/2008/10/20/table-select-all-editor/ <br/>

@@ -32,7 +32,7 @@ import java.util.List;
  * @version 2.2
  */
 public class Transaction extends DTableModel implements Serializable {
-    
+
     private static final transient int COL_NUM_ID = 0;
     private static final transient int COL_NUM_NAME = 1;
     private static final transient int COL_NUM_UNIT_PRICE = 2;
@@ -51,8 +51,8 @@ public class Transaction extends DTableModel implements Serializable {
     private final int price;
     private final int paid;
     private final Date date;
-    private transient PanelTransaction panel;
-    
+    private transient PanelTransaction details;
+
     /**
      * Create a new {@link Transaction}.
      *
@@ -77,7 +77,7 @@ public class Transaction extends DTableModel implements Serializable {
         colModel[COL_NUM_PRICE] = colPrice;
         productList = new ArrayList<>();
     }
-    
+
     /**
      * Add an existing {@link ArchivedProduct} to the collection.
      *
@@ -86,7 +86,7 @@ public class Transaction extends DTableModel implements Serializable {
     public void addArchivedProduct(ArchivedProduct prod) {
         productList.add(prod);
     }
-    
+
     public boolean containsProdId(int id) {
         for (ArchivedProduct prod :
                 productList) {
@@ -94,7 +94,7 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return false;
     }
-    
+
     /**
      * Return the full name of the client.
      *
@@ -109,11 +109,11 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return KaiceModel.getMemberCollection().getMember(clientId).getFullName();
     }
-    
+
     public Integer getClientId() {
         return clientId;
     }
-    
+
     /**
      * Return the cash paid for the {@link Transaction}.
      *
@@ -122,7 +122,7 @@ public class Transaction extends DTableModel implements Serializable {
     public int getPaid() {
         return paid;
     }
-    
+
     /**
      * Return the {@link Date} of the {@link Transaction}.
      *
@@ -131,7 +131,7 @@ public class Transaction extends DTableModel implements Serializable {
     public Date getDate() {
         return date;
     }
-    
+
     /**
      * Return the {@link transactionType} of the {@link Transaction}.
      *
@@ -140,7 +140,7 @@ public class Transaction extends DTableModel implements Serializable {
     public transactionType getType() {
         return type;
     }
-    
+
     /**
      * Return the {@link Color} to display for the {@link Transaction}.
      * This use the method {@link Transaction#getTypeColor(transactionType)}.
@@ -150,7 +150,7 @@ public class Transaction extends DTableModel implements Serializable {
     public Color getColor() {
         return getTypeColor(type);
     }
-    
+
     /**
      * Return the {@link Color} to display for the {@link transactionType}.
      *
@@ -176,18 +176,62 @@ public class Transaction extends DTableModel implements Serializable {
         }
     }
 
-    public PanelTransaction getPanel() {
-        if (panel == null) {
-            panel = new PanelTransaction(this);
+    public String getName() {
+        return getTypeName(type);
+    }
+
+    private static String getTypeName(transactionType type) {
+        switch (type) {
+            case SELL:
+                return "Vente";
+            case CANCEL:
+                return "Annulation de vente";
+            case BUY:
+                return "Courses";
+            case ADD:
+                return "Augmentation des stocks";
+            case SUB:
+                return "Réduction des stocks";
+            case ENR:
+                return "Inscription";
+            default:
+                return "Autre";
         }
-        return panel;
+    }
+
+    public PanelTransaction getDetails() {
+        if (details == null) {
+            details = new PanelTransaction(this);
+        }
+        return details;
+    }
+
+    @Override
+    public void actionCell(int row, int column) {
+        int id = productList.get(row).getId();
+        switch (type) {
+            case SELL:
+            case CANCEL:
+                KaiceModel.getInstance().setDetails(KaiceModel.getSoldProdCollection().getSoldProduct(id).getDetails());
+                break;
+            case BUY:
+                KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection().getProd(id).getDetails());
+                break;
+            case ADD:
+            case SUB:
+                KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMat(id).getDetails());
+                break;
+            case ENR:
+                break;
+            default:
+        }
     }
 
     @Override
     public int getRowCount() {
         return productList.size();
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (rowIndex == productList.size()) {
@@ -201,7 +245,7 @@ public class Transaction extends DTableModel implements Serializable {
             }
         } else {
             ArchivedProduct prod = productList.get(rowIndex);
-            
+
             switch (columnIndex) {
                 case COL_NUM_ID:
                     return prod.getId();
@@ -219,7 +263,7 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return null;
     }
-    
+
     /**
      * Return the price in cents of the {@link Transaction}.
      *
@@ -241,7 +285,7 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return sb.toString();
     }
-    
+
     /**
      * This enum represent the type of transaction. This type is mostly a graphical distinction. <br/> This enum
      * contains : <br/> - {@link transactionType#SELL} : for {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct}
@@ -254,20 +298,20 @@ public class Transaction extends DTableModel implements Serializable {
      */
     public enum transactionType {
         SELL(true), BUY(true), ADD(true), SUB(true), CANCEL(true), ENR(true);
-    
+
         private boolean display;
-    
+
         transactionType(boolean display) {
             this.display = display;
         }
-    
+
         public boolean isDisplay() {
             return display;
         }
-    
+
         public void setDisplay(boolean display) {
             this.display = display;
         }
     }
-    
+
 }

@@ -49,7 +49,7 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         price = new JLabel("0.00 " + DFormat.EURO);
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
-        view.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(KaiceModel.getPurchasedProdCollection().getProductAtRow(table.getSelectedRow()))));
+        view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection().getProductAtRow(table.getSelectedRow()).getDetails()));
         valid.addActionListener(e -> reset(KaiceModel.getPurchasedProdCollection().validBought(paid.getIntValue(), cash.isSelected())));
         cancel.addActionListener(e -> {
             KaiceModel.getPurchasedProdCollection().resetBought();

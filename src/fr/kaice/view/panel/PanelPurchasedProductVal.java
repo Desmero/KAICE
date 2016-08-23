@@ -30,7 +30,7 @@ public class PanelPurchasedProductVal extends JPanel {
         JPanel ctrl = new JPanel();
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
-        view.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(KaiceModel.getPurchasedProdCollection().getProductAtRow(table.getSelectedRow()))));
+        view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection().getProductAtRow(table.getSelectedRow()).getDetails()));
         hide.addActionListener(e -> KaiceModel.getPurchasedProdCollection().hideRow(table.getSelectedRow()));
         
         table.setMultiSelection(false);

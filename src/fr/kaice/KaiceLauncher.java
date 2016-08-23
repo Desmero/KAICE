@@ -6,7 +6,6 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.view.MainWindow;
 
 import java.io.File;
-import java.io.FilePermission;
 
 /**
  * The class KaiceLauncher is the starting point of the program KAICE.
@@ -18,11 +17,27 @@ import java.io.FilePermission;
 public abstract class KaiceLauncher {
     
     public static void main(String[] args) {
-        KFilesParameters.setGlobalPath(args[0]);
+        if (args.length > 0) {
+            KFilesParameters.setGlobalPath(args[0]);
+        }
         File saveRep = new File(KFilesParameters.globalPath);
         if (!saveRep.exists()) {
             saveRep.mkdir();
         }
+        if (args.length > 1 && args[1].equals("-c")) {
+            Converter.readUser();
+            KaiceModel.getRawMatCollection().deserialize();
+            KaiceModel.getSoldProdCollection().deserialize();
+            KaiceModel.getPurchasedProdCollection().deserialize();
+            KaiceModel.getHistoric().deserialize();
+        } else {
+            KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear());
+            KaiceModel.getRawMatCollection().deserialize();
+            KaiceModel.getSoldProdCollection().deserialize();
+            KaiceModel.getPurchasedProdCollection().deserialize();
+            KaiceModel.getHistoric().deserialize();
+        }
+        System.out.println("TEST");
         new MainWindow();
         KaiceModel.update(KaiceModel.ALL);
     }

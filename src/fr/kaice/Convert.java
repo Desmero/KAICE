@@ -1,9 +1,7 @@
 package fr.kaice;
 
-import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
-import fr.kaice.view.MainWindow;
 
 import java.io.File;
 

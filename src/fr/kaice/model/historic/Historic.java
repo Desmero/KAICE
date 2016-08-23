@@ -5,7 +5,6 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.PeriodGetter;
 import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.generic.*;
-import fr.kaice.view.panel.PanelTransaction;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -44,6 +43,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
     private final List<Transaction> displayList;
+    private final List<Transaction> displayPartialList;
     private List<Transaction> fullList;
     private boolean displayTypeNames;
     private Date start;
@@ -62,10 +62,11 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         colModel[COL_NUM_CASH] = colCash;
     
         displayTypeNames = false;
-        
-        deserialize();
+
+        fullList = new ArrayList<>();
         displayList = new ArrayList<>();
-        
+        displayPartialList = new ArrayList<>();
+
         Calendar cal = Calendar.getInstance();
         cal.clear(Calendar.HOUR);
         cal.clear(Calendar.MINUTE);
@@ -80,7 +81,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize() {
+    public void deserialize() {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathHistoric);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -105,11 +106,13 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
      */
     private void silentUpdateDisplayList() {
         displayList.clear();
+        displayPartialList.clear();
         Date dTran;
         for (Transaction tran : fullList) {
             dTran = tran.getDate();
             if (dTran.after(start) && dTran.before(end)) {
                 displayList.add(tran);
+                displayPartialList.add(tran);
             }
         }
     }
@@ -155,11 +158,13 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
      */
     private void updateDisplayList() {
         displayList.clear();
+        displayPartialList.clear();
         Date dTran;
         for (Transaction tran : fullList) {
             dTran = tran.getDate();
             if (dTran.after(start) && dTran.before(end)) {
                 displayList.add(tran);
+                displayPartialList.add(tran);
             }
         }
         KaiceModel.update(KaiceModel.HISTORIC);
@@ -167,7 +172,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
 
     @Override
     public void actionCell(int row, int column) {
-        KaiceModel.getInstance().setDetails(displayList.get(row).getPanel());
+        KaiceModel.getInstance().setDetails(displayList.get(row).getDetails());
     }
 
     /**
@@ -183,28 +188,36 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         updateDisplayList();
     }
     
-    public ArrayList<Transaction> getPartialHistoric(PartialHistoric.historicType type, int id, Date start, Date end) {
+    public ArrayList<Transaction> getPartialHistoric(PartialHistoric.historicType type, int id) {
         ArrayList<Transaction> newList = new ArrayList<>();
         switch (type) {
             case MEMBER:
-                for (Transaction tran :
-                        fullList) {
+                for (Transaction tran : displayPartialList) {
                     if (tran.getClientId() == id) {
                         newList.add(tran);
                     }
                 }
                 break;
             case RAW:
+                for (Transaction tran : displayPartialList) {
+                    if ((tran.getType() == Transaction.transactionType.ADD || tran.getType() == Transaction.transactionType.SUB) && tran.containsProdId(id)) {
+                        newList.add(tran);
+                    }
+                }
                 break;
             case BUY:
-                for (Transaction tran :
-                        fullList) {
-                    if (tran.getType() == Transaction.transactionType.BUY && tran.containsProdId(id) && tran.getDate().after(start) && tran.getDate().before(end)) {
+                for (Transaction tran : displayPartialList) {
+                    if (tran.getType() == Transaction.transactionType.BUY && tran.containsProdId(id)) {
                         newList.add(tran);
                     }
                 }
                 break;
             case SOLD:
+                for (Transaction tran : displayPartialList) {
+                    if ((tran.getType() == Transaction.transactionType.SELL || tran.getType() == Transaction.transactionType.CANCEL) && tran.containsProdId(id)) {
+                        newList.add(tran);
+                    }
+                }
                 break;
         }
         return newList;

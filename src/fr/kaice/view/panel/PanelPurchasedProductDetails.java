@@ -3,46 +3,56 @@ package fr.kaice.view.panel;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.buy.PurchasedProduct;
 import fr.kaice.model.historic.PartialHistoric;
-import fr.kaice.tools.PeriodGetter;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
-import fr.kaice.tools.generic.TimePeriodChooser;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by merkling on 14/08/16.
  */
-public class PanelPurchasedProductDetails extends JPanel implements PeriodGetter {
-    
+public class PanelPurchasedProductDetails extends JPanel implements Observer {
+
+    private PurchasedProduct product;
+    private JLabel prod, qty, price;
+    private PanelTitle title;
+
     private final PartialHistoric historic;
-    private final TimePeriodChooser periodChooser;
-    
+
     public PanelPurchasedProductDetails(PurchasedProduct product) {
-        
+        this.product = product;
+        KaiceModel.getInstance().addObserver(this);
+
         JPanel all = new JPanel(new BorderLayout());
-        JPanel details = new JPanel(new BorderLayout());
-        
+        JPanel details = new JPanel();
+
+        prod = new JLabel("Produit : " + product.getRawMat().getName());
+        qty = new JLabel("Quantité : " + product.getQuantity());
+        price = new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
+        title = new PanelTitle("Achat : " + product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
+
         this.setLayout(new BorderLayout());
-        this.add(new PanelTitle(product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel())), BorderLayout.NORTH);
+        this.add(title, BorderLayout.NORTH);
         this.add(all, BorderLayout.CENTER);
         
         all.add(details, BorderLayout.NORTH);
-        details.add(new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice())), BorderLayout.WEST);
-        details.add(new JLabel("Produit : " + product.getRawMat().getName()), BorderLayout.CENTER);
-        details.add(new JLabel("Quantité : " + product.getQuantity()), BorderLayout.EAST);
-        
+        details.add(new JLabel("Produit : " + product.getRawMat().getName()));
+        details.add(new JLabel("Quantité : " + product.getQuantity()));
+        details.add(new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice())));
+
         historic = new PartialHistoric(product);
-        periodChooser = new TimePeriodChooser(this);
-        
+
         all.add(new DTablePanel(KaiceModel.getInstance(), historic), BorderLayout.CENTER);
-        all.add(periodChooser, BorderLayout.SOUTH);
     }
-    
+
     @Override
-    public void setPeriod(Date start, Date end) {
-        historic.update(start, end);
+    public void update(Observable o, Object arg) {
+        prod.setText("Produit : " + product.getRawMat().getName());
+        qty.setText("Quantité : " + product.getQuantity());
+        price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
+        title.setTitle("Achat : " + product.getName());
     }
 }

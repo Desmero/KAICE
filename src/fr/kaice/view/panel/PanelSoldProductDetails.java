@@ -8,6 +8,10 @@ import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
+
+import static fr.kaice.tools.generic.DFormat.EURO;
 
 /**
  * This panel display all information about a {@link SoldProduct}.
@@ -18,50 +22,37 @@ import java.awt.*;
  * @see JPanel
  * @see SoldProduct
  */
-public class PanelSoldProductDetails extends JPanel {
-    
+public class PanelSoldProductDetails extends JPanel implements Observer {
+
+    private SoldProduct product;
+    private JLabel type, qty, price, cost, profit;
+    private PanelTitle title;
+
     /**
      * Create a new {@link PanelSoldProductDetails} who display the details of the given {@link SoldProduct}.
      *
-     * @param prod {@link SoldProduct} - The product to visualise.
+     * @param product {@link SoldProduct} - The product to visualise.
      */
-    public PanelSoldProductDetails(SoldProduct prod) {
+    public PanelSoldProductDetails(SoldProduct product) {
+        this.product = product;
+        KaiceModel.getInstance().addObserver(this);
+
+        type = new JLabel("Type : " + product.getType());
+        qty = new JLabel("Quantité : " + product.getQuantity());
+        price = new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
+        cost = new JLabel("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
+        profit = new JLabel("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
+
+        DTablePanel table = new DTablePanel(KaiceModel.getInstance(), product, 6);
         
-        JLabel name = new JLabel(prod.getName());
-        name.setHorizontalAlignment(JLabel.CENTER);
-        JLabel type = new JLabel("" + prod.getType());
-        type.setHorizontalAlignment(JLabel.CENTER);
-        JLabel quantity = new JLabel("Quantité : " + prod.getQuantity());
-        quantity.setHorizontalAlignment(JLabel.CENTER);
-        JLabel price = new JLabel(
-                "Prix : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getPrice())) + " ?");
-        price.setHorizontalAlignment(JLabel.CENTER);
-        JLabel cost = new JLabel(
-                "Coût : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getBuyPrice())) + " ?");
-        cost.setHorizontalAlignment(JLabel.CENTER);
-        JLabel profit = new JLabel(
-                "Bénéfice : " + DFormat.MONEY_FORMAT.format(DMonetarySpinner.intToDouble(prod.getProfit())) + " ?");
-        profit.setHorizontalAlignment(JLabel.CENTER);
-        
-        DTablePanel table = new DTablePanel(KaiceModel.getInstance(), prod, 6);
-        
-        JTable tableMat = new JTable(prod);
+        JTable tableMat = new JTable(product);
         JScrollPane scrollPaneMat = new JScrollPane(tableMat);
         Dimension d = tableMat.getPreferredSize();
         scrollPaneMat.setPreferredSize(new Dimension(d.width, tableMat.getRowHeight() * 6));
-        // TableModelSellProductHistoric sellProd = new
-        // TableModelSellProductHistoric(prod.getName());
-        // JTable tableSell = new JTable(sellProd);
-        // JScrollPane scrollPaneSell = new JScrollPane(tableSell);
-        // d = tableSell.getPreferredSize();
-        // scrollPaneSell.setPreferredSize(new Dimension(d.width,
-        // tableSell.getRowHeight() * 16));
-    
+
         JPanel all = new JPanel(new BorderLayout());
-        PanelTitle title = new PanelTitle("Détails d'un article en vente", e -> KaiceModel.getInstance().setDetails(new JPanel()));
-        JPanel detail = new JPanel(new BorderLayout());
-        JPanel detailUp = new JPanel(new GridLayout(1, 3));
-        JPanel detailDown = new JPanel(new GridLayout(1, 3));
+        title = new PanelTitle("Vente : " + product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        JPanel detail = new JPanel();
         JPanel center = new JPanel(new BorderLayout());
     
         this.setLayout(new BorderLayout());
@@ -71,17 +62,31 @@ public class PanelSoldProductDetails extends JPanel {
         all.add(center, BorderLayout.CENTER);
         
         center.add(table, BorderLayout.NORTH);
-        // center.add(scrollPaneSell, BorderLayout.CENTER);
-        // center.add(new HistoricSelector(sellProd), BorderLayout.SOUTH);
-        
-        detail.add(detailUp, BorderLayout.NORTH);
-        detail.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.CENTER);
-        detail.add(detailDown, BorderLayout.SOUTH);
-        detailUp.add(name);
-        detailUp.add(type);
-        detailUp.add(quantity);
-        detailDown.add(price);
-        detailDown.add(cost);
-        detailDown.add(profit);
+
+        detail.add(type);
+        detail.add(qty);
+        detail.add(price);
+        detail.add(cost);
+        detail.add(profit);
+    }
+
+    public void setBackPanel(JPanel back) {
+        if (back == null) {
+            title.setGreenAction(null);
+        } else {
+            title.setGreenAction(e -> KaiceModel.getInstance().setDetails(back));
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT)) {
+            type.setText("Type : " + product.getType());
+            qty.setText("Quantité : " + product.getQuantity());
+            price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
+            cost.setText("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
+            profit.setText("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
+            title.setTitle("Vente : " + product.getName());
+        }
     }
 }

@@ -1,6 +1,5 @@
 package fr.kaice.tools;
 
-import fr.kaice.KaiceLauncher;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.member.Member;
 import fr.kaice.tools.generic.DFormat;

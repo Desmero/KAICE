@@ -8,9 +8,7 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
-import fr.kaice.view.panel.PanelPurchasedProduct;
 import fr.kaice.view.panel.PanelPurchasedProductDetails;
-import fr.kaice.view.panel.PanelSoldProductDetails;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -60,14 +58,13 @@ public class PurchasedProductCollection extends DTableModel {
         colModel[COL_NUM_UNIT_PRICE] = colUnitPrice;
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_TOTAL_PRICE] = colTotalPrice;
-        deserialize();
-        updateLists();
+        map = new HashMap<>();
     }
     
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize() {
+    public void deserialize() {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathPurchasedProduct);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -75,6 +72,7 @@ public class PurchasedProductCollection extends DTableModel {
             in.close();
             fileIn.close();
             System.out.println(KFilesParameters.pathPurchasedProduct + " read successful.");
+            updateLists();
         } catch (IOException i) {
             System.err.println(KFilesParameters.pathPurchasedProduct + " read error : file not found.");
             map = new HashMap<>();
@@ -255,7 +253,7 @@ public class PurchasedProductCollection extends DTableModel {
     @Override
     public void actionCell(int row, int column) {
         if (!colModel[column].isEditable()) {
-            KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(displayList.get(row)));
+            KaiceModel.getInstance().setDetails(displayList.get(row).getDetails());
         }
     }
 

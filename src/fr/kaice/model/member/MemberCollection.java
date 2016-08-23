@@ -6,7 +6,6 @@ import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
-import javax.lang.model.type.ArrayType;
 import javax.swing.table.AbstractTableModel;
 import java.io.*;
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ public class MemberCollection extends DTableModel {
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_FIRST_NAME] = colFirstName;
         map = new HashMap<>();
-        deserialize(KaiceModel.getActualYear());
         selectedMember = null;
         sortCol = 0;
         searchName = "";
@@ -69,7 +67,7 @@ public class MemberCollection extends DTableModel {
     /**
      * Load a serialized members collection and deserialize-it. Erase completely the current collection.
      */
-    private void deserialize(int yearCode) {
+    public void deserialize(int yearCode) {
         try {
             FileInputStream fileIn = new FileInputStream(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -80,6 +78,7 @@ public class MemberCollection extends DTableModel {
             for (Member member : list) {
                 map.put(member.getMemberId(), member);
             }
+            silentUpdateDisplayList();
         } catch (IOException i) {
             System.err.println(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read error : file not found.");
         } catch (ClassNotFoundException c) {
@@ -257,7 +256,7 @@ public class MemberCollection extends DTableModel {
      * @param row int - The row of the new selected {@link Member}.
      */
     public void setSelectedMember(int row) {
-        if (row > 0) {
+        if (row >= 0) {
             selectedMember = getRow(row);
             KaiceModel.update(KaiceModel.TRANSACTION);
         }

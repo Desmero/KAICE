@@ -6,7 +6,9 @@ import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.historic.Transaction.transactionType;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.generic.DColor;
+import fr.kaice.view.panel.PanelRawMaterialDetails;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -32,6 +34,7 @@ public class RawMaterial implements GenericProduct, Serializable {
     private boolean hidden;
     private transient int restockNum; // Used for average unit price calculation
     private transient int restockCost; // Used for average unit price calculation
+    private transient PanelRawMaterialDetails details;
     
     /**
      * Simple constructor. Take only the name, auto-generate the id, and
@@ -136,7 +139,19 @@ public class RawMaterial implements GenericProduct, Serializable {
     public void consumption(int number) {
         stock -= number;
     }
-    
+
+    public PanelRawMaterialDetails getDetails() {
+        return this.getDetails(null);
+    }
+
+    public PanelRawMaterialDetails getDetails(JPanel back) {
+        if (details == null) {
+            details = new PanelRawMaterialDetails(this);
+        }
+        details.setBackPanel(back);
+        return details;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() == this.getClass()) {

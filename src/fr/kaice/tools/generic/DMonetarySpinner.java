@@ -43,7 +43,7 @@ public class DMonetarySpinner extends JSpinner {
     }
     
     public static String intToString(int value) {
-        return "" + intToDouble(value) + " " + DFormat.EURO;
+        return "" + DFormat.MONEY_FORMAT.format(intToDouble(value)) + " " + DFormat.EURO;
     }
     
     /**

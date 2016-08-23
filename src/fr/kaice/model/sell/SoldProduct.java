@@ -8,7 +8,9 @@ import fr.kaice.tools.GenericProduct;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.view.panel.PanelSoldProductDetails;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,7 +29,7 @@ import static fr.kaice.model.sell.SoldProductTableModel.*;
  * @version 2.1
  */
 public class SoldProduct extends DTableModel implements GenericProduct, Serializable {
-    
+
     private static final long serialVersionUID = 1464945659775641259L;
     private int id;
     private SoldProductCollection.prodType type;
@@ -35,7 +37,8 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     private String name;
     private int salePrice;
     private boolean hidden;
-    
+    private transient PanelSoldProductDetails details;
+
     /**
      * SoldProduct constructor.
      *
@@ -69,7 +72,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
             coll.sale(mat, entry.getQty() * number);
         }
     }
-    
+
     /**
      * Create an {@link ArchivedProduct} for the historic.
      *
@@ -79,7 +82,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     ArchivedProduct archivedProduct(int number) {
         return new ArchivedProduct(name, number, salePrice * number, id);
     }
-    
+
     /**
      * Set the quantity of {@link RawMaterial} that need this product.
      * The quantity must be positive. If the quantity is equals to 0, the
@@ -119,7 +122,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     void setSalePrice(int salePrice) {
         this.salePrice = salePrice;
     }
-    
+
     /**
      * Return the id of the {@link SoldProduct}.
      *
@@ -129,7 +132,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public int getId() {
         return id;
     }
-    
+
     /**
      * Return the name of the {@link SoldProduct}.
      *
@@ -139,7 +142,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public String getName() {
         return name;
     }
-    
+
     /**
      * Set the name of the {@link SoldProduct}.
      *
@@ -148,7 +151,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * Return the sale price in cents of the {@link SoldProduct}.
      *
@@ -158,7 +161,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public int getPrice() {
         return salePrice;
     }
-    
+
     /**
      * Return the {@link SoldProductCollection.prodType} of the {@link SoldProduct}.
      *
@@ -167,7 +170,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public SoldProductCollection.prodType getType() {
         return type;
     }
-    
+
     /**
      * Return the profit in cents of the {@link SoldProduct}. Calculate by subtracting the sell and buy prices.
      *
@@ -191,15 +194,15 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         }
         return price;
     }
-    
+
     public boolean isHidden() {
         return hidden;
     }
-    
+
     public void changeHiddenState() {
         hidden = !hidden;
     }
-    
+
     /**
      * Calculate the available quantity of the {@link SoldProduct} with the stock of each composing {@link RawMaterial}.
      *
@@ -225,16 +228,43 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         return true;
     }
 
+    public PanelSoldProductDetails getDetails() {
+        return this.getDetails(null);
+    }
+
+    public PanelSoldProductDetails getDetailsWithoutChange() {
+        if (details == null) {
+            details = new PanelSoldProductDetails(this);
+        }
+        return details;
+    }
+
+    public PanelSoldProductDetails getDetails(JPanel back) {
+        if (details == null) {
+            details = new PanelSoldProductDetails(this);
+        }
+        details.setBackPanel(back);
+        return details;
+    }
+
+    @Override
+    public void actionCell(int row, int column) {
+        if (!colModel[column].isEditable()) {
+            int id = listRawMat.getAll().get(row).getId();
+            KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMat(id).getDetails(getDetailsWithoutChange()));
+        }
+    }
+
     @Override
     public String toString() {
         return name;
     }
-    
+
     @Override
     public int getRowCount() {
         return listRawMat.size();
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ArrayList<compositionAdapter.Element> list = listRawMat.getAll();

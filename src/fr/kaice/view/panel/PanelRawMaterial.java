@@ -36,7 +36,7 @@ public class PanelRawMaterial extends JPanel {
                 KaiceModel.getRawMatCollection().addNewRawMaterial(s);
             }
         });
-        view.setEnabled(false);
+        view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMaterialAtRow(table.getSelectedRow()).getDetails()));
         hide.addActionListener(e -> KaiceModel.getRawMatCollection().hideRow(table.getSelectedRow()));
         
         table.setMultiSelection(false);

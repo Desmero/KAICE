@@ -10,7 +10,6 @@ import fr.kaice.tools.generic.*;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by merkling on 14/08/16.
@@ -40,7 +39,7 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
     private PartialHistoric(int id, historicType type) {
         this.type = type;
         this.id = id;// TODO
-        this.displayList = KaiceModel.getHistoric().getPartialHistoric(type, id, new Date(), new Date());
+        this.displayList = KaiceModel.getHistoric().getPartialHistoric(type, id);
         setPrices();
         totalLine = true;
         colModel = new DTableColumnModel[5];
@@ -63,8 +62,8 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
         this(material.getId(), historicType.RAW);
     }
     
-    public void update(Date start, Date end) {
-        displayList = KaiceModel.getHistoric().getPartialHistoric(type, id, start, end);
+    public void update() {
+        displayList = KaiceModel.getHistoric().getPartialHistoric(type, id);
     }
 
     private void setPrices() {
@@ -76,6 +75,11 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
         }
         this.price = price;
         this.paid = paid;
+    }
+
+    @Override
+    public void actionCell(int row, int column) {
+        KaiceModel.getInstance().setDetails(displayList.get(row).getDetails());
     }
 
     @Override

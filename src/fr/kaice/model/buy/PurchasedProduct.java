@@ -3,7 +3,9 @@ package fr.kaice.model.buy;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.GenericProduct;
+import fr.kaice.view.panel.PanelPurchasedProductDetails;
 
+import javax.swing.*;
 import java.io.Serializable;
 
 /**
@@ -28,6 +30,7 @@ public class PurchasedProduct implements GenericProduct, Serializable {
     private int quantity;
     private transient int numberBought;
     private boolean hidden;
+    private transient PanelPurchasedProductDetails details;
     
     /**
      * Simple constructor. This use a auto-generate id.
@@ -146,7 +149,14 @@ public class PurchasedProduct implements GenericProduct, Serializable {
     public RawMaterial getRawMat() {
         return KaiceModel.getRawMatCollection().getMat(materialId);
     }
-    
+
+    public PanelPurchasedProductDetails getDetails() {
+        if (details == null) {
+            details = new PanelPurchasedProductDetails(this);
+        }
+        return details;
+    }
+
     @Override
     public String toString() {
         return name + "(" + id + ")";

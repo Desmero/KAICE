@@ -1,10 +1,8 @@
 package fr.kaice.tools.cells;
 
-import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.IColoredTableModel;
 import fr.kaice.tools.generic.DCellRender;
 import fr.kaice.tools.generic.DColor;
-import fr.kaice.tools.generic.DFunction;
 
 import javax.swing.*;
 import java.awt.*;

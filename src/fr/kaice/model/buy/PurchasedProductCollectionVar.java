@@ -48,7 +48,7 @@ public class PurchasedProductCollectionVar extends DTableModel implements IHidde
     @Override
     public void actionCell(int row, int column) {
         if (!colModel[column].isEditable()) {
-            KaiceModel.getInstance().setDetails(new PanelPurchasedProductDetails(KaiceModel.getPurchasedProdCollection().getVariantList().get(row)));
+            KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection().getVariantList().get(row).getDetails());
         }
     }
 

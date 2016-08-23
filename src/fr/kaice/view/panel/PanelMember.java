@@ -4,7 +4,6 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -52,12 +51,12 @@ public class PanelMember extends JPanel {
         table.getTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.isControlDown()) {
-                    int row = table.getSelectedRow();
-                    KaiceModel.getMemberCollection().setSelectedMember(row);
-                } else if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 2) {
                     int memberId = KaiceModel.getMemberCollection().getMemberIdAtRow(table.getSelectedRow());
                     KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
+                } else if (e.isControlDown()) {
+                    int row = table.getSelectedRow();
+                    KaiceModel.getMemberCollection().setSelectedMember(row);
                 }
             }
         });
