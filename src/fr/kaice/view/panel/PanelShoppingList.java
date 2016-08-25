@@ -48,7 +48,7 @@ class PanelShoppingList extends JPanel implements Observer {
         GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
         
         ArrayList<GroupLayout.ParallelGroup> hPGroupList = new ArrayList<>();
-    
+        
         int line = 1;
         boolean addLine;
         
@@ -87,7 +87,7 @@ class PanelShoppingList extends JPanel implements Observer {
         this.setLayout(new BorderLayout());
         this.add(new PanelTitle("Liste des courses", e -> KaiceModel.getInstance().setDetails(new JPanel())), BorderLayout.NORTH);
         this.add(scroll, BorderLayout.CENTER);
-    
+        
         this.setMinimumSize(new Dimension(this.getWidth(), Integer.min(200, line * 28)));
         
         this.repaint();

@@ -29,15 +29,14 @@ public abstract class KaiceLauncher {
             KaiceModel.getRawMatCollection().deserialize();
             KaiceModel.getSoldProdCollection().deserialize();
             KaiceModel.getPurchasedProdCollection().deserialize();
-            KaiceModel.getHistoric().deserialize();
+            KaiceModel.getHistoric().deserialize(KaiceModel.getActualYear());
         } else {
             KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear());
             KaiceModel.getRawMatCollection().deserialize();
             KaiceModel.getSoldProdCollection().deserialize();
             KaiceModel.getPurchasedProdCollection().deserialize();
-            KaiceModel.getHistoric().deserialize();
+            KaiceModel.getHistoric().deserialize(KaiceModel.getActualYear());
         }
-        System.out.println("TEST");
         new MainWindow();
         KaiceModel.update(KaiceModel.ALL);
     }

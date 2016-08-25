@@ -1,9 +1,9 @@
 package fr.kaice.model.buy;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.generic.*;
-import fr.kaice.view.panel.PanelPurchasedProductDetails;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -14,10 +14,10 @@ import javax.swing.table.AbstractTableModel;
  * <p>
  * In a table, it display 2 columns : <br/> - "Nom", witch display names (editable {@link String});<br/> - "Prix
  * unitaire", witch display unitary price (editable {@link Double});<br/> - "Produit brute", witch display corresponding
- * {@link fr.kaice.model.raw.RawMaterial} (not editable {@link String}); <br/> - "Quantité", witch display raw
+ * {@link fr.kaice.model.raw.RawMaterial} (not editable {@link String}); <br/> - "Quantitï¿½", witch display raw
  * material's quantity(editable {@link Integer}). <br/> The table entries are sorted by names.
  *
- * @author Raphaël Merkling
+ * @author Raphaï¿½l Merkling
  * @version 1.0
  * @see AbstractTableModel;
  * @see DTableModel
@@ -32,7 +32,7 @@ public class PurchasedProductCollectionVar extends DTableModel implements IHidde
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
     private static final DTableColumnModel colRawMaterial = new DTableColumnModel("Produit brute", String.class, false);
-    private static final DTableColumnModel colRawQty = new DTableColumnModel("Quantité", Integer.class, true);
+    private static final DTableColumnModel colRawQty = new DTableColumnModel("Quantitï¿½", Integer.class, true);
     
     /**
      * Construct a {@link PurchasedProductCollectionVar}.
@@ -74,7 +74,12 @@ public class PurchasedProductCollectionVar extends DTableModel implements IHidde
             case COL_NUM_UNIT_PRICE:
                 return DMonetarySpinner.intToDouble(prod.getPrice());
             case COL_NUM_RAW_MATERIAL:
-                return prod.getRawMat().getName();
+                RawMaterial material = prod.getRawMat();
+                if (material == null) {
+                    return null;
+                } else {
+                    return material.getName();
+                }
             case COL_NUM_RAW_QTY:
                 return prod.getQuantity();
             default:

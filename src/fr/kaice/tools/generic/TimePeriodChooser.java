@@ -26,6 +26,7 @@ public class TimePeriodChooser extends JPanel {
     private static final int ALL = 4;
     private final JDateChooser start;
     private final JDateChooser end;
+    private final JComboBox<String> selec;
     
     /**
      * Create a new {@link TimePeriodChooser}.
@@ -33,20 +34,21 @@ public class TimePeriodChooser extends JPanel {
     public TimePeriodChooser(PeriodGetter getter) {
         start = new JDateChooser(new Date(), "dd/MM/yyyy");
         end = new JDateChooser(new Date(), "dd/MM/yyyy");
-    
+        
+        final int h = start.getPreferredSize().height, w = 100;
+        
         PropertyChangeListener listener = evt -> getter.setPeriod(getStart(), getEnd());
         start.addPropertyChangeListener(listener);
-        start.setPreferredSize(new Dimension(150, 25));
+        start.setPreferredSize(new Dimension(w, h));
         end.addPropertyChangeListener(listener);
-        end.setPreferredSize(new Dimension(150, 25));
+        end.setPreferredSize(new Dimension(w, h));
         
-        JComboBox<String> selec = new JComboBox<>();
+        selec = new JComboBox<>();
         selec.addItem("Aujourd'hui");
         selec.addItem("Cette semaine");
         selec.addItem("Ce mois");
         selec.addItem("Cette année");
         selec.addItem("Tout");
-        selec.addItem("Personalisé");
         selec.addActionListener(e -> updateDate(selec.getSelectedIndex()));
         
         JPanel top = new JPanel();
@@ -87,15 +89,15 @@ public class TimePeriodChooser extends JPanel {
     /**
      * Set a new period of time and update the {@link JDateChooser} with a pre-selection period.
      *
-     * @param selec int - The code of the new pre-selection period.
+     * @param selection int - The code of the new pre-selection period.
      */
-    private void updateDate(int selec) {
+    private void updateDate(int selection) {
         Calendar calStart = Calendar.getInstance();
         calStart.set(Calendar.HOUR_OF_DAY, 0);
         calStart.clear(Calendar.MINUTE);
         calStart.clear(Calendar.SECOND);
         Calendar calEnd = (Calendar) calStart.clone();
-        switch (selec) {
+        switch (selection) {
             case DAY:
                 calEnd.add(Calendar.DAY_OF_MONTH, 1);
                 break;
@@ -127,6 +129,7 @@ public class TimePeriodChooser extends JPanel {
             default:
                 return;
         }
+        selec.setSelectedIndex(selection);
         calEnd.add(Calendar.SECOND, -1);
         start.setDate(calStart.getTime());
         end.setDate(calEnd.getTime());

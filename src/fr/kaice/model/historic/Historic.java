@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class store all past {@link Transaction}. This should be construct only by {@link KaiceModel}, and one time. It
@@ -81,20 +82,20 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     /**
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
-    public void deserialize() {
+    public void deserialize(int year) {
+        String path = KFilesParameters.pathHistoric + year + KFilesParameters.ext;
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathHistoric);
+            FileInputStream fileIn = new FileInputStream(path);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            fullList = (List<Transaction>) in.readObject();
+            List<Transaction> list = (List<Transaction>) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(KFilesParameters.pathHistoric + " read successful.");
+            fullList.addAll(list);
+            System.out.println(path + " read successful.");
         } catch (FileNotFoundException f) {
-            System.err.println(KFilesParameters.pathHistoric + " read error : file not found.");
-            fullList = new ArrayList<>();
+            System.err.println(path + " read error : file not found.");
         } catch (IOException i) {
             i.printStackTrace();
-            fullList = new ArrayList<>();
         } catch (ClassNotFoundException c) {
             System.err.println("List<Transaction> class not found");
             c.printStackTrace();
@@ -115,6 +116,26 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
                 displayPartialList.add(tran);
             }
         }
+    }
+    
+    private ArrayList<Transaction> getYeatList() {
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(Calendar.DAY_OF_MONTH, 1);
+        calStart.set(Calendar.HOUR_OF_DAY, 0);
+        calStart.clear(Calendar.MINUTE);
+        calStart.clear(Calendar.SECOND);
+        if (calStart.get(Calendar.MONTH) < 8) {
+            calStart.add(Calendar.YEAR, -1);
+        }
+        calStart.set(Calendar.MONTH, 8);
+        Calendar calEnd = (Calendar) calStart.clone();
+        calEnd.add(Calendar.YEAR, 1);
+        
+        Date start = calStart.getTime(), end = calEnd.getTime();
+        
+        ArrayList<Transaction> list = fullList.stream().filter(transaction -> transaction.getDate().after(start) &&
+                transaction.getDate().before(end)).collect(Collectors.toCollection(ArrayList::new));
+        return list;
     }
     
     /**
@@ -142,10 +163,11 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
      * Serialize the historic, and save-it in a file.
      */
     private void serialize() {
+        String path = KFilesParameters.pathHistoric + KaiceModel.getActualYear() + KFilesParameters.ext;
         try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathHistoric);
+            FileOutputStream fileOut = new FileOutputStream(path);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(fullList);
+            out.writeObject(getYeatList());
             out.close();
             fileOut.close();
         } catch (IOException i) {

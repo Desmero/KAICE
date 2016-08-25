@@ -46,9 +46,15 @@ class PanelNewPurchasedProduct extends JPanel {
         
         accept.addActionListener(e -> {
             int select = list.getSelectedIndex();
-            int id = KaiceModel.getRawMatCollection().getIdAtRow(select);
+            RawMaterial material = KaiceModel.getRawMatCollection().getMaterialAtRow(select);
+            int idMat;
+            if (material == null) {
+                idMat = -1;
+            } else {
+                idMat = material.getId();
+            }
             KaiceModel.getPurchasedProdCollection().addNewPurchasedProduct(name.getText(), price.getIntValue(),
-                    id, (int) quantity.getValue());
+                    idMat, (int) quantity.getValue());
             reset();
         });
         

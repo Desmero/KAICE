@@ -5,6 +5,7 @@ import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,8 +50,10 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         price = new JLabel("0.00 " + DFormat.EURO);
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
-        view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection().getProductAtRow(table.getSelectedRow()).getDetails()));
-        valid.addActionListener(e -> reset(KaiceModel.getPurchasedProdCollection().validBought(paid.getIntValue(), cash.isSelected())));
+        view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection()
+                .getProductAtRow(table.getSelectedRow()).getDetails()));
+        valid.addActionListener(e -> WindowAskAdmin.generate(e2 -> reset(KaiceModel.getPurchasedProdCollection()
+                .validBought(paid.getIntValue(), cash.isSelected()))));
         cancel.addActionListener(e -> {
             KaiceModel.getPurchasedProdCollection().resetBought();
             reset(true);

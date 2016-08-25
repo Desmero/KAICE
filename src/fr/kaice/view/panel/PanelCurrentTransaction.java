@@ -8,6 +8,7 @@ import fr.kaice.tools.IdSpinner;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -78,10 +79,10 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         });
         JButton valide = new JButton("Valider");
         valide.setIcon(new ImageIcon("icon/valid.png"));
-        valide.addActionListener(e -> {
+        valide.addActionListener(e -> WindowAskAdmin.generate(e2 -> {
             valid();
             reset();
-        });
+        }));
         JButton cancel = new JButton("Annuler");
         cancel.setIcon(new ImageIcon("icon/cancel.png"));
         cancel.addActionListener(e -> reset());
@@ -214,7 +215,6 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
                 memberName.setText(mem.getName());
                 memberFirstName.setText(mem.getFirstName());
                 memberId.setValue(mem.getMemberId());
-    
             }
         }
     }

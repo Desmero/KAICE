@@ -14,6 +14,8 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static fr.kaice.model.KaiceModel.RAW_MATERIAL;
+import static fr.kaice.model.KaiceModel.getRawMatCollection;
 import static fr.kaice.model.sell.SoldProductTableModel.*;
 
 /**
@@ -66,9 +68,9 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * @param number int - The number of the {@link SoldProduct} sold.
      */
     void sale(int number) {
-        RawMaterialCollection coll = KaiceModel.getRawMatCollection();
+        RawMaterialCollection coll = getRawMatCollection();
         for (compositionAdapter.Element entry : listRawMat.getAll()) {
-            RawMaterial mat = KaiceModel.getRawMatCollection().getMat(entry.getId());
+            RawMaterial mat = getRawMatCollection().getMat(entry.getId());
             coll.sale(mat, entry.getQty() * number);
         }
     }
@@ -122,7 +124,18 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     void setSalePrice(int salePrice) {
         this.salePrice = salePrice;
     }
-
+    
+    public void restock() {
+        RawMaterialCollection coll =  KaiceModel.getRawMatCollection();
+        for (compositionAdapter.Element element :
+                listRawMat) {
+            int matId = element.getId();
+            RawMaterial material = coll.getMat(matId);
+            material.addRestockNum(element.getQty());
+        }
+        KaiceModel.update(RAW_MATERIAL);
+    }
+    
     /**
      * Return the id of the {@link SoldProduct}.
      *
@@ -189,7 +202,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public int getBuyPrice() {
         int price = 0;
         for (compositionAdapter.Element s : listRawMat.getAll()) {
-            RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
+            RawMaterial mat = getRawMatCollection().getMat(s.getId());
             price += s.getQty() * mat.getPrice();
         }
         return price;
@@ -211,7 +224,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public Integer getQuantity() {
         int qty = Integer.MAX_VALUE;
         for (compositionAdapter.Element s : listRawMat.getAll()) {
-            RawMaterial mat = KaiceModel.getRawMatCollection().getMat(s.getId());
+            RawMaterial mat = getRawMatCollection().getMat(s.getId());
             qty = Integer.min(qty, (mat.getStock() / s.getQty()));
         }
         if (qty == Integer.MAX_VALUE) {
@@ -251,7 +264,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     public void actionCell(int row, int column) {
         if (!colModel[column].isEditable()) {
             int id = listRawMat.getAll().get(row).getId();
-            KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMat(id).getDetails(getDetailsWithoutChange()));
+            KaiceModel.getInstance().setDetails(getRawMatCollection().getMat(id).getDetails(getDetailsWithoutChange()));
         }
     }
 
@@ -268,7 +281,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ArrayList<compositionAdapter.Element> list = listRawMat.getAll();
-        RawMaterial mat = KaiceModel.getRawMatCollection().getMat(list.get(rowIndex).getId());
+        RawMaterial mat = getRawMatCollection().getMat(list.get(rowIndex).getId());
         switch (columnIndex) {
             case COL_NUM_ID:
                 return mat.getId();

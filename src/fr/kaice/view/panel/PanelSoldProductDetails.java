@@ -2,7 +2,6 @@ package fr.kaice.view.panel;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.sell.SoldProduct;
-import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
 
@@ -11,13 +10,11 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
-import static fr.kaice.tools.generic.DFormat.EURO;
-
 /**
  * This panel display all information about a {@link SoldProduct}.
  * The interface allow to edit a member the composition of the product.
  *
- * @author Raphaël Merkling
+ * @author Raphaï¿½l Merkling
  * @version 2.0
  * @see JPanel
  * @see SoldProduct
@@ -38,10 +35,10 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
         KaiceModel.getInstance().addObserver(this);
 
         type = new JLabel("Type : " + product.getType());
-        qty = new JLabel("Quantité : " + product.getQuantity());
+        qty = new JLabel("Quantitï¿½ : " + product.getQuantity());
         price = new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-        cost = new JLabel("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
-        profit = new JLabel("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
+        cost = new JLabel("Coï¿½t : " + DMonetarySpinner.intToString(product.getBuyPrice()));
+        profit = new JLabel("Bï¿½nï¿½fice : " + DMonetarySpinner.intToString(product.getProfit()));
 
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), product, 6);
         
@@ -82,10 +79,10 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
         if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT)) {
             type.setText("Type : " + product.getType());
-            qty.setText("Quantité : " + product.getQuantity());
+            qty.setText("Quantitï¿½ : " + product.getQuantity());
             price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-            cost.setText("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
-            profit.setText("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
+            cost.setText("Coï¿½t : " + DMonetarySpinner.intToString(product.getBuyPrice()));
+            profit.setText("Bï¿½nï¿½fice : " + DMonetarySpinner.intToString(product.getProfit()));
             title.setTitle("Vente : " + product.getName());
         }
     }

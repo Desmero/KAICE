@@ -3,6 +3,7 @@ package fr.kaice.view.panel;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +40,10 @@ public class PanelOrder extends JPanel {
         rem.addActionListener(e -> {
             if (table.getSelectedRow() != -1) {
                 int row = table.getSelectedRow();
-                KaiceModel.getOrderCollection().cancelOrder(row, cashBack.getIntValue());
+                WindowAskAdmin.generate(e2 -> {
+                    KaiceModel.getOrderCollection().cancelOrder(row, cashBack.getIntValue());
+                    cashBack.setValue(0);
+                });
             }
         });
         

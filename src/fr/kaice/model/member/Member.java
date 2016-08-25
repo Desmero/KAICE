@@ -38,6 +38,7 @@ public class Member implements Serializable {
     private String mailTown;
     private String eMail;
     private boolean newsLetter;
+    private boolean admin;
     
     /**
      * Create an empty member with a given id. All field are filled with generic string.
@@ -45,18 +46,8 @@ public class Member implements Serializable {
      * @param memberId int - membership number.
      */
     public Member(int memberId) {
-        this.memberId = memberId;
-        this.name = "[Nom]";
-        this.firstName = "[Prénom]";
-        this.gender = true;
-        this.birthDate = new Date();
-        this.phoneNumber = "XX XX XX XX XX";
-        this.studies = "[Études]";
-        this.mailStreet = "[Rue]";
-        this.mailPostalCode = "[Code postal]";
-        this.mailTown = "[Commune]";
-        this.eMail = "[Adresse e-mail]";
-        this.newsLetter = false;
+        this(memberId, "[Nom]", "[Prénom]", true, new Date(), "XX XX XX XX XX", "[Études]", "[Rue]", "[Code postal]",
+                "[Commune]", "[Adresse e-mail]", false);
     }
     
     /**
@@ -115,6 +106,7 @@ public class Member implements Serializable {
             this.eMail = "[Adresse e-mail]";
         }
         this.newsLetter = newsLetter;
+        this.admin = false;
     }
     
     /**
@@ -331,6 +323,14 @@ public class Member implements Serializable {
      */
     public void setNewsLetter(boolean newsLetter) {
         this.newsLetter = newsLetter;
+    }
+    
+    public boolean isAdmin() {
+        return admin;
+    }
+    
+    public void changeAdminState() {
+        this.admin = !admin;
     }
     
     /**

@@ -5,7 +5,6 @@ import fr.kaice.model.raw.RawMaterial;
 import fr.kaice.tools.GenericProduct;
 import fr.kaice.view.panel.PanelPurchasedProductDetails;
 
-import javax.swing.*;
 import java.io.Serializable;
 
 /**
@@ -44,7 +43,11 @@ public class PurchasedProduct implements GenericProduct, Serializable {
         this.id = id;
         this.name = name;
         this.purchasedPrice = purchasedPrice;
-        this.materialId = mat.getId();
+        if (mat != null) {
+            this.materialId = mat.getId();
+        } else {
+            this.materialId = -1;
+        }
         this.quantity = quantity;
         this.numberBought = 0;
     }

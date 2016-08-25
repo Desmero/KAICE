@@ -11,6 +11,7 @@ import fr.kaice.model.member.MemberCollection;
 import fr.kaice.tools.IdSpinner;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DTablePanel;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,11 +109,11 @@ class PanelMemberDetails extends JPanel {
             update();
         });
         editValid = new JButton("Valider");
-        editValid.addActionListener(e -> {
+        editValid.addActionListener(e -> WindowAskAdmin.generate(e2 -> {
             editProfile();
             this.edition = false;
             update();
-        });
+        }));
     
         title = new PanelTitle("Détail membre", e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel allDetails = new JPanel(new BorderLayout());

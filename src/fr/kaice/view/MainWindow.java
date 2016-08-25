@@ -3,6 +3,7 @@ package fr.kaice.view;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.generic.CloseListener;
 import fr.kaice.view.panel.*;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,22 +32,22 @@ public class MainWindow extends JFrame implements Observer {
         super("KAICE v2.0");
         
         KaiceModel.getInstance().addObserver(this);
-    
+        
         JPanel center = new JPanel(new BorderLayout());
         JPanel members = new JPanel(new BorderLayout());
         JPanel west = new JPanel(new BorderLayout());
-    
+        
         JSplitPane splitEastOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, center, members);
         splitEastOut.setResizeWeight(1);
         JSplitPane splitWestOut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, west, splitEastOut);
         splitWestOut.setResizeWeight(0);
         this.add(splitWestOut);
-    
+        
         JPanel transaction = new JPanel(new BorderLayout());
         details = new JPanel(new BorderLayout());
         JPanel order = new JPanel(new BorderLayout());
         JPanel lists = new JPanel(new BorderLayout());
-    
+        
         splitCenterIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, transaction, details);
         splitCenterIn.setResizeWeight(1);
         JSplitPane splitWestIn = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, order, lists);
@@ -54,7 +55,7 @@ public class MainWindow extends JFrame implements Observer {
         
         center.add(splitCenterIn, BorderLayout.CENTER);
         west.add(splitWestIn, BorderLayout.CENTER);
-    
+        
         JTabbedPane tabbedPaneTransaction = new JTabbedPane();
         tabbedPaneTransaction.add("Ventes", new PanelCurrentTransaction());
         tabbedPaneTransaction.add("Achats", new PanelPurchasedProduct());
@@ -63,7 +64,7 @@ public class MainWindow extends JFrame implements Observer {
         tabbedPaneLists.add("Articles en vente", new PanelSoldProduct());
         tabbedPaneLists.add("Articles achetés", new PanelPurchasedProductVal());
         tabbedPaneLists.add("Historique", new PanelHistoric());
-    
+        
         transaction.add(new PanelTitle("Transactions"), BorderLayout.NORTH);
         transaction.add(tabbedPaneTransaction, BorderLayout.CENTER);
         details.add(KaiceModel.getInstance().getDetails(), BorderLayout.CENTER);
@@ -73,33 +74,35 @@ public class MainWindow extends JFrame implements Observer {
         lists.add(tabbedPaneLists, BorderLayout.CENTER);
         members.add(new PanelTitle("Membres"), BorderLayout.NORTH);
         members.add(new PanelMember(), BorderLayout.CENTER);
-    
+        
         JMenuBar menuBar = new JMenuBar();
+        
         JMenu menuFile = new JMenu("Fichier");
-        JMenu menuEdit = new JMenu("Édition");
-        JMenu menuView = new JMenu("Affichage");
-        JMenu menuHelp = new JMenu("Aide");
-    
-        JMenuItem mIExit = new JMenuItem("Quitter");
-        mIExit.addActionListener(new CloseListener(this));
+        menuBar.add(menuFile);
         JMenuItem mIExport = new JMenuItem("Exporter");
-        JMenuItem mIHidden = new JCheckBoxMenuItem("Produits masqués");
-        mIHidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
-    
         menuFile.add(mIExport);
         menuFile.add(new JPopupMenu.Separator());
+        JMenuItem mIExit = new JMenuItem("Quitter");
+        mIExit.addActionListener(new CloseListener(this));
         menuFile.add(mIExit);
-        menuBar.add(menuFile);
-    
+        
+        JMenu menuEdit = new JMenu("Édition");
         menuBar.add(menuEdit);
-    
-        menuView.add(mIHidden);
+        JMenuItem mIAddAdmin = new JMenuItem("Ajouter un caissier");
+        mIAddAdmin.addActionListener(e -> WindowAskAdmin.generate(e2 -> KaiceModel.getInstance().setDetails(new PanelAddAdmin())));
+        menuEdit.add(mIAddAdmin);
+        
+        JMenu menuView = new JMenu("Affichage");
         menuBar.add(menuView);
-    
+        JMenuItem mIHidden = new JCheckBoxMenuItem("Produits masqués");
+        mIHidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
+        menuView.add(mIHidden);
+        
+        JMenu menuHelp = new JMenu("Aide");
         menuBar.add(menuHelp);
-    
+        
         this.setJMenuBar(menuBar);
-    
+        
         Dimension windowDim;
         windowDim = new Dimension(1280, 1024);
         setPreferredSize(windowDim);
@@ -113,10 +116,10 @@ public class MainWindow extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
         setPreferredSize(getSize());
         JPanel newDetails = KaiceModel.getInstance().getDetails();
-    
+        
         details.removeAll();
         details.add(newDetails, BorderLayout.CENTER);
-    
+        
         splitCenterIn.setDividerLocation(-1);
         pack();
     }

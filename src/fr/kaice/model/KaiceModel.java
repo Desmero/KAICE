@@ -32,6 +32,7 @@ public class KaiceModel extends Observable {
     public static final int TRANSACTION = 8;
     public static final int RESTOCK = 9;
     public static final int HISTORIC_PERIOD = 10;
+    public static final int ADMIN = 11;
     private static final KaiceModel model = new KaiceModel();
     private static final RawMaterialCollection rawMatColl = new RawMaterialCollection();
     private static final SoldProductCollection soldProdColl = new SoldProductCollection();
@@ -40,7 +41,7 @@ public class KaiceModel extends Observable {
     private static final OrderCollection ordColl = new OrderCollection();
     private static final Historic hist = new Historic();
     private static final MemberCollection memColl = new MemberCollection();
-    private static final boolean[] change = new boolean[11];
+    private static final boolean[] change = new boolean[12];
     private boolean showHidden;
     private JPanel details;
 
@@ -199,31 +200,31 @@ public class KaiceModel extends Observable {
      * @see Observable
      */
     public static void update(int... part) {
-        System.out.println(">>>>");
+        System.out.println((char)27 + "[34m>>>>" + (char)27 + "[0m");
         boolean update = false;
         for (int i :
                 part) {
             if (!change[i]) {
                 update = true;
                 change[i] = true;
-                printUpdateCode(i, "   IN   ");
+                printUpdateCode(i,(char)27 + "[33m   IN   " + (char)27 + "[0m");
             } else {
-                printUpdateCode(i, "   OUT  ");
+                printUpdateCode(i, (char)27 + "[31m   OUT  " + (char)27 + "[0m");
             }
         }
         if (update) {
             model.setChanged();
             model.notifyObservers();
         } else {
-            System.out.println("   NO   update ");
-            System.out.println("<<<<");
+            System.out.println((char)27 + "[31m   NO   update " + (char)27 + "[0m");
+            System.out.println((char)27 + "[32m<<<<" + (char)27 + "[0m");
             return;
         }
         for (int i :
                 part) {
             change[i] = false;
         }
-        System.out.println("<<<<");
+        System.out.println((char)27 + "[32m<<<<" + (char)27 + "[0m");
     }
 
     /**
@@ -267,6 +268,9 @@ public class KaiceModel extends Observable {
                 break;
             case HISTORIC_PERIOD:
                 System.out.println("HISTORIC_PERIOD");
+                break;
+            case ADMIN:
+                System.out.println("ADMIN");
                 break;
             default:
                 System.out.println("???");

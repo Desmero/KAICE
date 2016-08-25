@@ -7,7 +7,7 @@ import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
 import fr.kaice.tools.generic.*;
-import fr.kaice.view.panel.PanelRawMaterialDetails;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -59,6 +59,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_ALERT] = colAlert;
         map = new HashMap<>();
+        displayList = new ArrayList<>();
     }
     
     /**
@@ -209,11 +210,6 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         return map.get(id);
     }
     
-    // TODO remove this method
-    public int getIdAtRow(int row) {
-        return displayList.get(row).getId();
-    }
-    
     /**
      * Return the {@link RawMaterial} at the given row.
      *
@@ -221,6 +217,9 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
      * @return The {@link RawMaterial} at the given row.
      */
     public RawMaterial getMaterialAtRow(int row) {
+        if (row < 0) {
+            return null;
+        }
         return displayList.get(row);
     }
     
@@ -299,7 +298,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
                 mat.setName((String) aValue);
                 break;
             case COL_NUM_QTY:
-                mat.setStock((int) aValue);
+                WindowAskAdmin.generate(e -> mat.setStock((int) aValue));
                 break;
             case COL_NUM_ALERT:
                 mat.setAlert((int) aValue);

@@ -42,6 +42,7 @@ public class MemberCollection extends DTableModel {
     private Map<Integer, Member> map;
     private List<Member> displayList;
     private Member selectedMember;
+    private Member selectedAdmin;
     private int sortCol;
     private String searchName;
     private String searchFirstName;
@@ -94,7 +95,7 @@ public class MemberCollection extends DTableModel {
     public void silentUpdateDisplayList() {
         displayList = getDisplayList(searchName, searchFirstName, sortCol, displayYear);
     }
-
+    
     public void setDisplayYear(int year) {
         this.displayYear = year;
         updateDisplayList();
@@ -103,7 +104,7 @@ public class MemberCollection extends DTableModel {
             updateDisplayList();
         }
     }
-
+    
     /**
      * Generate a new display list, with a name filter, a first name filter and a sort method (by membership number,
      * name or first name)
@@ -148,7 +149,7 @@ public class MemberCollection extends DTableModel {
         serialize();
         updateDisplayList();
     }
-
+    
     private ArrayList<Member> getYearList(int yearCode) {
         ArrayList<Member> list = new ArrayList<>();
         for (Member member : map.values()) {
@@ -158,7 +159,7 @@ public class MemberCollection extends DTableModel {
         }
         return list;
     }
-
+    
     /**
      * Serialize the members collection, and save-it in a file.
      */
@@ -262,6 +263,12 @@ public class MemberCollection extends DTableModel {
         }
     }
     
+    public Member getSelectedAdmin() {
+        Member admin = selectedAdmin;
+        selectedAdmin = null;
+        return admin;
+    }
+    
     /**
      * Return the {@link Member} at the given row.
      *
@@ -303,6 +310,46 @@ public class MemberCollection extends DTableModel {
         } else {
             selectedMember = null;
         }
+    }
+    
+    public void setSelectedAdminById(int id) {
+        Member member = map.get(id);
+        if (member != null && member.isAdmin()){
+            selectedAdmin = map.get(id);
+            KaiceModel.update(KaiceModel.ADMIN);
+        }
+    }
+    
+    public void setSelectedAdminByName(String name, String firstName) {
+        ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID, displayYear);
+        if (list.size() == 1 && list.get(0).isAdmin()) {
+            selectedAdmin = list.get(0);
+            KaiceModel.update(KaiceModel.ADMIN);
+        } else {
+            selectedAdmin = null;
+        }
+    }
+    
+    public boolean isAdminSet() {
+        for (Member member : map.values()) {
+            if (member.isAdmin()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Member getMemberByName(String name, String firstName) {
+        ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID, displayYear);
+        Member member = null;
+        if (list.size() == 1) {
+            member = list.get(0);
+        }
+        return member;
+    }
+    
+    public void resetSelectedAdmin() {
+        selectedAdmin = null;
     }
     
     @Override

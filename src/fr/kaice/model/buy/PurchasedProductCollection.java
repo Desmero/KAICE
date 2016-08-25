@@ -8,7 +8,6 @@ import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
-import fr.kaice.view.panel.PanelPurchasedProductDetails;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -22,11 +21,11 @@ import java.util.*;
  * In a table, it display 4 columns : <br/>
  * - "Nom", witch display names (editable {@link String});<br/>
  * - "Prix unitaire", witch display unitary prices (editable {@link Double});<br/>
- * - "Quantité", witch display the bought quantities (editable {@link Integer});<br/>
+ * - "Quantitï¿½", witch display the bought quantities (editable {@link Integer});<br/>
  * - "Prix total", witch display total bought prices (non editable {@link Double}).<br/>
  * The table entries are sorted by names.
  *
- * @author Raphaël Merkling
+ * @author Raphaï¿½l Merkling
  * @version 2.1
  * @see PurchasedProduct
  * @see DTableModel
@@ -43,7 +42,7 @@ public class PurchasedProductCollection extends DTableModel {
     private static final int COL_NUM_RAW_QTY = 5;
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
     private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel("Quantitï¿½", Integer.class, true);
     private static final DTableColumnModel colTotalPrice = new DTableColumnModel("Prix total", Double.class, false);
     private Map<Integer, PurchasedProduct> map;
     private List<PurchasedProduct> displayList;
@@ -59,6 +58,8 @@ public class PurchasedProductCollection extends DTableModel {
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_TOTAL_PRICE] = colTotalPrice;
         map = new HashMap<>();
+        displayList = new ArrayList<>();
+        variantList = new ArrayList<>();
     }
     
     /**
@@ -120,10 +121,12 @@ public class PurchasedProductCollection extends DTableModel {
                     map.values()) {
                 if (prod.getNumberBought() > 0) {
                     RawMaterial mat = prod.getRawMat();
-                    mat.addRestockNum(prod.getNumberBought() * prod.getQuantity());
-                    mat.addRestockCost(prod.getTotalPrice());
+                    if (mat != null) {
+                        mat.addRestockNum(prod.getNumberBought() * prod.getQuantity());
+                        mat.addRestockCost(prod.getTotalPrice());
+                    }
                     ArchivedProduct arProd = new ArchivedProduct(prod.getName(), prod.getNumberBought(),
-                            prod.getTotalPrice(), prod.getId());
+                                prod.getTotalPrice(), prod.getId());
                     tran.addArchivedProduct(arProd);
                 }
             }
@@ -133,7 +136,7 @@ public class PurchasedProductCollection extends DTableModel {
             resetBought();
             return true;
         } else {
-            JOptionPane.showMessageDialog(null, "La somme payé ne correspond pas au prix calculé",
+            JOptionPane.showMessageDialog(null, "La somme payï¿½ ne correspond pas au prix calculï¿½",
                     "Prix", JOptionPane.WARNING_MESSAGE);
             return false;
         }
@@ -239,7 +242,7 @@ public class PurchasedProductCollection extends DTableModel {
     public ArrayList<PurchasedProduct> getContainers(RawMaterial material) {
         ArrayList<PurchasedProduct> list = new ArrayList<>();
         for (PurchasedProduct product : map.values()) {
-            if (product.getRawMat().equals(material) && !product.isHidden()) {
+            if (product.getRawMat() != null && product.getRawMat().equals(material) && !product.isHidden()) {
                 list.add(product);
             }
         }

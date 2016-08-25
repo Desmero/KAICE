@@ -35,7 +35,8 @@ public class PanelMember extends JPanel {
         JPanel search = new JPanel(new GridLayout(3, 2));
         JTextField name = new JTextField(15);
         JTextField firstName = new JTextField(15);
-        JSpinner year = new JSpinner(new SpinnerNumberModel(KaiceModel.getActualYear()+2000, 2014, KaiceModel.getActualYear()+2000, 1));
+        JSpinner year = new JSpinner(new SpinnerNumberModel(KaiceModel.getActualYear()+2000, 2015, KaiceModel
+                .getActualYear()+2000, 1));
 
         add.addActionListener(e -> {
             int memberId = KaiceModel.getMemberCollection().getNewId();

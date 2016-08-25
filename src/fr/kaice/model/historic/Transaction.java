@@ -51,6 +51,7 @@ public class Transaction extends DTableModel implements Serializable {
     private final int price;
     private final int paid;
     private final Date date;
+    private final int adminId;
     private transient PanelTransaction details;
 
     /**
@@ -69,6 +70,12 @@ public class Transaction extends DTableModel implements Serializable {
         this.price = price;
         this.paid = paid;
         this.date = date;
+        Member member = KaiceModel.getMemberCollection().getSelectedAdmin();
+        if (member != null) {
+            this.adminId = member.getMemberId();
+        } else {
+            this.adminId = 0;
+        }
         colModel = new DTableColumnModel[COL_COUNT];
         colModel[COL_NUM_ID] = colId;
         colModel[COL_NUM_NAME] = colName;
