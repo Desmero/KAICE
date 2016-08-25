@@ -59,6 +59,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_ALERT] = colAlert;
         map = new HashMap<>();
+        displayList = new ArrayList<>();
     }
     
     /**

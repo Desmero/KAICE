@@ -59,6 +59,8 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_SELL_PRICE] = colSellPrice;
+        map = new HashMap<>();
+        displayList = new ArrayList<>();
     }
 
     /**

@@ -59,6 +59,8 @@ public class PurchasedProductCollection extends DTableModel {
         colModel[COL_NUM_QTY] = colQty;
         colModel[COL_NUM_TOTAL_PRICE] = colTotalPrice;
         map = new HashMap<>();
+        displayList = new ArrayList<>();
+        variantList = new ArrayList<>();
     }
     
     /**
