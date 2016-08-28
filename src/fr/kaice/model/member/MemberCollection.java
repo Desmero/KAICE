@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static fr.kaice.tools.generic.DTerminal.*;
+
 /**
  * This class store all {@link Member} of the current year.
  * This should be construct only by {@link KaiceModel}, and one time.
@@ -75,15 +77,17 @@ public class MemberCollection extends DTableModel {
             ArrayList<Member> list = (ArrayList<Member>) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read successful.");
+            System.out.println(GREEN + KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read " +
+                    "successful." + RESET);
             for (Member member : list) {
                 map.put(member.getMemberId(), member);
             }
             silentUpdateDisplayList();
         } catch (IOException i) {
-            System.err.println(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read error : file not found.");
+            System.out.println(RED + KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read error : " +
+                    "file not found." + RESET);
         } catch (ClassNotFoundException c) {
-            System.out.println("HashMap<Integer, Member> class not found");
+            System.out.println(RED + "ArrayList<Member> class not found" + RESET);
             c.printStackTrace();
         }
     }
@@ -316,8 +320,10 @@ public class MemberCollection extends DTableModel {
         Member member = map.get(id);
         if (member != null && member.isAdmin()){
             selectedAdmin = map.get(id);
-            KaiceModel.update(KaiceModel.ADMIN);
+        } else {
+            selectedAdmin = null;
         }
+        KaiceModel.update(KaiceModel.ADMIN);
     }
     
     public void setSelectedAdminByName(String name, String firstName) {

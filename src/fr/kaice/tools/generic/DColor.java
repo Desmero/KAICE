@@ -30,5 +30,4 @@ public abstract class DColor {
      * Color of the titles's background.
      */
     public static final Color BLUE_TITLE = new Color(190, 210, 255);
-    
 }

@@ -1,6 +1,7 @@
 package fr.kaice.model.historic;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.member.Member;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.PeriodGetter;
 import fr.kaice.tools.cells.CellRenderColoredRow;
@@ -14,6 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static fr.kaice.tools.generic.DTerminal.GREEN;
+import static fr.kaice.tools.generic.DTerminal.RED;
+import static fr.kaice.tools.generic.DTerminal.RESET;
 
 /**
  * This class store all past {@link Transaction}. This should be construct only by {@link KaiceModel}, and one time. It
@@ -38,11 +43,13 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     private static final int COL_NUM_TRAN = 2;
     private static final int COL_NUM_PRICE = 3;
     private static final int COL_NUM_CASH = 4;
+    private static final int COL_NUM_ADMIN = 5;
     private static final DTableColumnModel colDate = new DTableColumnModel("Date", String.class, false);
     private static final DTableColumnModel colClient = new DTableColumnModel("Client", String.class, false);
     private static final DTableColumnModel colTran = new DTableColumnModel("Transaction", String.class, false);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
     private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
+    private static final DTableColumnModel colAdmin = new DTableColumnModel("Caissier", String.class, false);
     private final List<Transaction> displayList;
     private final List<Transaction> displayPartialList;
     private List<Transaction> fullList;
@@ -55,14 +62,15 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
      */
     public Historic() {
         totalLine = true;
-        colModel = new DTableColumnModel[5];
+        colModel = new DTableColumnModel[6];
         colModel[COL_NUM_DATE] = colDate;
         colModel[COL_NUM_CLIENT] = colClient;
         colModel[COL_NUM_TRAN] = colTran;
         colModel[COL_NUM_PRICE] = colPrice;
         colModel[COL_NUM_CASH] = colCash;
+        colModel[COL_NUM_ADMIN] = colAdmin;
     
-        displayTypeNames = false;
+        displayTypeNames = true;
 
         fullList = new ArrayList<>();
         displayList = new ArrayList<>();
@@ -91,13 +99,13 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
             in.close();
             fileIn.close();
             fullList.addAll(list);
-            System.out.println(path + " read successful.");
+            System.out.println(GREEN + path + " read successful." + RESET);
         } catch (FileNotFoundException f) {
-            System.err.println(path + " read error : file not found.");
+            System.out.println(RED + path + " read error : file not found." + RESET);
         } catch (IOException i) {
             i.printStackTrace();
         } catch (ClassNotFoundException c) {
-            System.err.println("List<Transaction> class not found");
+            System.out.println(RED + "List<Transaction> class not found" + RESET);
             c.printStackTrace();
         }
     }
@@ -208,6 +216,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         this.start = start;
         this.end = end;
         updateDisplayList();
+        KaiceModel.update(KaiceModel.HISTORIC_PERIOD);
     }
     
     public ArrayList<Transaction> getPartialHistoric(PartialHistoric.historicType type, int id) {
@@ -281,17 +290,21 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
                 if (isDisplayTypeNames()) {
                     switch (transaction.getType()) {
                         case ADD:
-                            return "Ajout stock " + displayList.get(rowIndex).toString();
+                            return "Ajout stock : " + displayList.get(rowIndex).toString();
                         case SUB:
-                            return "Retrait stock " + displayList.get(rowIndex).toString();
+                            return "Retrait stock : " + displayList.get(rowIndex).toString();
                         case CANCEL:
-                            return "Vente annulée " + displayList.get(rowIndex).toString();
+                            return "Vente annulée : " + displayList.get(rowIndex).toString();
                         case SELL:
-                            return displayList.get(rowIndex).toString();
+                            return "Vente : " + displayList.get(rowIndex).toString();
                         case BUY:
-                            return "Courses " + displayList.get(rowIndex).toString();
+                            return "Courses : " + displayList.get(rowIndex).toString();
                         case ENR:
-                            return "Inscription " + displayList.get(rowIndex).toString();
+                            return "Inscription : " + displayList.get(rowIndex).toString();
+                        case MISC:
+                            return "Entrée manuelle : " + displayList.get(rowIndex).toString();
+                        default:
+                            return displayList.get(rowIndex).toString();
                     }
                 } else {
                     return displayList.get(rowIndex).toString();
@@ -300,6 +313,11 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
                 return DMonetarySpinner.intToDouble(transaction.getPrice());
             case COL_NUM_CASH:
                 return DMonetarySpinner.intToDouble(transaction.getPaid());
+            case COL_NUM_ADMIN:
+                Member admin = KaiceModel.getMemberCollection().getMember(transaction.getAdminId());
+                if (admin != null) {
+                    return admin.getFullName();
+                }
             default:
                 return null;
         }

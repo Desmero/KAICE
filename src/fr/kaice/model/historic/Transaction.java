@@ -2,7 +2,6 @@ package fr.kaice.model.historic;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.member.Member;
-import fr.kaice.tools.generic.DColor;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
@@ -13,6 +12,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static fr.kaice.tools.generic.DColor.*;
 
 /**
  * This class represent one trade (buy, sell, stock change, ...).<br/><br/>
@@ -33,12 +34,12 @@ import java.util.List;
  */
 public class Transaction extends DTableModel implements Serializable {
 
-    private static final transient int COL_NUM_ID = 0;
-    private static final transient int COL_NUM_NAME = 1;
-    private static final transient int COL_NUM_UNIT_PRICE = 2;
-    private static final transient int COL_NUM_QTY = 3;
-    private static final transient int COL_NUM_PRICE = 4;
-    private static final transient int COL_COUNT = 5;
+    private static final transient int COL_NUM_ID = -1;
+    private static final transient int COL_NUM_NAME = 0;
+    private static final transient int COL_NUM_UNIT_PRICE = 1;
+    private static final transient int COL_NUM_QTY = 2;
+    private static final transient int COL_NUM_PRICE = 3;
+    private static final transient int COL_COUNT = 4;
     private static final transient DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
     private static final transient DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
     private static final transient DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
@@ -77,7 +78,6 @@ public class Transaction extends DTableModel implements Serializable {
             this.adminId = 0;
         }
         colModel = new DTableColumnModel[COL_COUNT];
-        colModel[COL_NUM_ID] = colId;
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_UNIT_PRICE] = colUnitPrice;
         colModel[COL_NUM_QTY] = colQty;
@@ -108,13 +108,14 @@ public class Transaction extends DTableModel implements Serializable {
      * @return The full name of the client
      */
     public String getClient() {
-        if (clientId <= 0) {
-            if (clientId == -1) {
-                return "CENS";
-            }
+        if (clientId == -1) {
+            return "CENS";
+        }
+        Member member = KaiceModel.getMemberCollection().getMember(clientId);
+        if (member == null) {
             return "...";
         }
-        return KaiceModel.getMemberCollection().getMember(clientId).getFullName();
+        return member.getFullName();
     }
 
     public Integer getClientId() {
@@ -150,60 +151,19 @@ public class Transaction extends DTableModel implements Serializable {
 
     /**
      * Return the {@link Color} to display for the {@link Transaction}.
-     * This use the method {@link Transaction#getTypeColor(transactionType)}.
      *
      * @return The {@link Color} to display for the {@link Transaction}.
      */
     public Color getColor() {
-        return getTypeColor(type);
+        return type.getColor();
     }
 
-    /**
-     * Return the {@link Color} to display for the {@link transactionType}.
-     *
-     * @param type {@link transactionType} - The type of transaction.
-     * @return The color for this kind ot transaction.
-     */
-    private static Color getTypeColor(transactionType type) {
-        switch (type) {
-            case SELL:
-                return DColor.GREEN;
-            case CANCEL:
-                return DColor.ORANGE;
-            case BUY:
-                return DColor.BLUE;
-            case ADD:
-                return DColor.CYAN;
-            case SUB:
-                return DColor.RED;
-            case ENR:
-                return DColor.YELLOW;
-            default:
-                return DColor.GRAY;
-        }
+    public int getAdminId() {
+        return adminId;
     }
 
     public String getName() {
-        return getTypeName(type);
-    }
-
-    private static String getTypeName(transactionType type) {
-        switch (type) {
-            case SELL:
-                return "Vente";
-            case CANCEL:
-                return "Annulation de vente";
-            case BUY:
-                return "Courses";
-            case ADD:
-                return "Augmentation des stocks";
-            case SUB:
-                return "Réduction des stocks";
-            case ENR:
-                return "Inscription";
-            default:
-                return "Autre";
-        }
+        return type.getTitle();
     }
 
     public PanelTransaction getDetails() {
@@ -304,14 +264,27 @@ public class Transaction extends DTableModel implements Serializable {
      * transactionType#ENR} : for {@linkplain Member Member}s's enrolment.
      */
     public enum transactionType {
-        SELL(true), BUY(true), ADD(true), SUB(true), CANCEL(true), ENR(true);
+        SELL("Vente", GREEN), BUY("Courses", BLUE), ADD("Augmentation des stocks", CYAN), SUB("Réduction des stocks",
+                RED), CANCEL("Annulation de vente", ORANGE), ENR("Inscription", YELLOW), MISC("Opération divers", GRAY);
 
         private boolean display;
+        private final Color color;
+        private final String title;
 
-        transactionType(boolean display) {
-            this.display = display;
+        transactionType(String title, Color color) {
+            this.title = title;
+            this.color = color;
+            this.display = true;
         }
-
+    
+        public Color getColor() {
+            return color;
+        }
+    
+        public String getTitle() {
+            return title;
+        }
+    
         public boolean isDisplay() {
             return display;
         }

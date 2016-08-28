@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.util.Calendar;
 import java.util.Observable;
 
+import static fr.kaice.tools.generic.DTerminal.*;
+
 /**
  * This class is the center of all data of the program. This class is a
  * singleton, use the function getInstance().
@@ -200,31 +202,31 @@ public class KaiceModel extends Observable {
      * @see Observable
      */
     public static void update(int... part) {
-        System.out.println((char)27 + "[34m>>>>" + (char)27 + "[0m");
+        System.out.println(BLUE + ">>>>" + RESET);
         boolean update = false;
         for (int i :
                 part) {
             if (!change[i]) {
                 update = true;
                 change[i] = true;
-                printUpdateCode(i,(char)27 + "[33m   IN   " + (char)27 + "[0m");
+                printUpdateCode(i, YELLOW + "   IN   " + RESET);
             } else {
-                printUpdateCode(i, (char)27 + "[31m   OUT  " + (char)27 + "[0m");
+                printUpdateCode(i, RED + "   OUT  " + RESET);
             }
         }
         if (update) {
             model.setChanged();
             model.notifyObservers();
         } else {
-            System.out.println((char)27 + "[31m   NO   update " + (char)27 + "[0m");
-            System.out.println((char)27 + "[32m<<<<" + (char)27 + "[0m");
+            System.out.println(RED + "   NO   update " + RESET);
+            System.out.println(GREEN + "<<<<" + RESET);
             return;
         }
         for (int i :
                 part) {
             change[i] = false;
         }
-        System.out.println((char)27 + "[32m<<<<" + (char)27 + "[0m");
+        System.out.println(GREEN + "<<<<" + RESET);
     }
 
     /**

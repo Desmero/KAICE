@@ -161,8 +161,6 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         int res = JOptionPane.YES_OPTION;
         int price = tran.getPrice();
         int add = cash.getIntValue() - price;
-        // TODO non registered member
-        //noinspection ConstantConditions
         if (res == JOptionPane.YES_OPTION && add < 0) {
             res = JOptionPane.showConfirmDialog(null,
                     "Le payment en espece est inssufisant, voulez-vous débiter le compte ?", "Espece insuffisant",

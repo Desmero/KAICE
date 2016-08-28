@@ -29,7 +29,7 @@ public class PanelHistoric extends JPanel {
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), options = new JButton("Options");
         JPanel ctrl = new JPanel();
         
-        add.setEnabled(false);
+        add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewHistoricLine()));
         view.addActionListener(e -> {
             if (table.getSelectedRow() != -1) {
                 Transaction tran = KaiceModel.getHistoric().getTransaction(table.getSelectedRow());

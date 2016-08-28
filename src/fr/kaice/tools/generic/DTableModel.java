@@ -37,9 +37,7 @@ public abstract class DTableModel extends AbstractTableModel implements Serializ
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
 
-    public void actionCell(int row, int column) {
-        System.out.println("Click " + row + " " + column);
-    }
+    public void actionCell(int row, int column) {}
 
     @Override
     public int getColumnCount() {

@@ -28,7 +28,7 @@ import java.util.Date;
  * @see Member
  */
 class PanelMemberDetails extends JPanel {
-    
+
     private final PanelTitle title;
     private final JTabbedPane jTabbedPane;
     private final JPanel historic;
@@ -52,7 +52,7 @@ class PanelMemberDetails extends JPanel {
     private final JButton editValid;
     private boolean gender;
     private boolean edition;
-    
+
     /**
      * Create a new {@link PanelMemberDetails} in visualisation mode.
      *
@@ -61,7 +61,7 @@ class PanelMemberDetails extends JPanel {
     public PanelMemberDetails(int memberId) {
         this(memberId, false);
     }
-    
+
     /**
      * Create a new {@link PanelMemberDetails}.
      *
@@ -71,19 +71,19 @@ class PanelMemberDetails extends JPanel {
     public PanelMemberDetails(int memberId, boolean edition) {
         this.edition = edition;
         int col = 30;
-        
+
         id = new IdSpinner();
         id.setValue(memberId);
         id.addChangeListener(e -> updateId());
-        
+
         name = new JTextField(col);
         firstName = new JTextField(col);
-        
+
         pBirth = new JPanel(new GridLayout(1, 1));
         lBirthDate = new JLabel();
         birthDate = new JDateChooser(new Date(), "dd/MM/yyyy");
         pBirth.add(lBirthDate);
-        
+
         gender = true;
         pGender = new JPanel(new GridLayout(1, 1));
         lGender = new JLabel();
@@ -95,14 +95,13 @@ class PanelMemberDetails extends JPanel {
             updateGender();
         });
         studies = new JTextField(col);
-        col = 30;
         mailStreet = new JTextField(col);
         mailPostalCode = new JTextField(col);
         mailTown = new JTextField(col);
         eMail = new JTextField(col);
         newsLetter = new JCheckBox("newsLetter");
         phone = new JTextField();
-        
+
         edit = new JButton("Éditer");
         edit.addActionListener(e -> {
             this.edition = !this.edition;
@@ -114,19 +113,19 @@ class PanelMemberDetails extends JPanel {
             this.edition = false;
             update();
         }));
-    
+
         title = new PanelTitle("Détail membre", e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel allDetails = new JPanel(new BorderLayout());
         historic = new JPanel(new BorderLayout());
-    
+
         jTabbedPane = new JTabbedPane();
         jTabbedPane.add("Membre", allDetails);
         jTabbedPane.add("Historique", historic);
-    
+
         this.setLayout(new BorderLayout());
         this.add(title, BorderLayout.NORTH);
         this.add(jTabbedPane, BorderLayout.CENTER);
-        
+
         JPanel details = new JPanel(new BorderLayout());
         JPanel center = new JPanel();
         JPanel detailsEdit = new JPanel();
@@ -137,7 +136,6 @@ class PanelMemberDetails extends JPanel {
         details.add(detailsEdit, BorderLayout.SOUTH);
 
         GroupLayout groupLayout = new GroupLayout(center);
-        groupLayout.setAutoCreateGaps(true);
         groupLayout.setAutoCreateContainerGaps(true);
 
         GroupLayout.SequentialGroup vGroup = groupLayout.createSequentialGroup();
@@ -183,32 +181,34 @@ class PanelMemberDetails extends JPanel {
 
         detailsEdit.add(editValid);
         detailsEdit.add(edit);
-        
+
         update();
     }
-    
+
     /**
      * Change the {@link Member} visualised by the member corresponding to the new selected membership number.
      */
     private void updateId() {
         edition = false;
         int newId = id.getValue();
-        // TODO display member's historic
-        // tableModel.setId(newId);
         gender = !KaiceModel.getMemberCollection().isIdUsed(newId) || KaiceModel.getMemberCollection().getMember(newId).isMale();
         update();
     }
-    
+
     /**
      * Save the change of the {@link Member}'s details.
      */
     private void editProfile() {
         MemberCollection col = KaiceModel.getMemberCollection();
-        Member u = col.getMember(id.getValue());
+        int idValue = id.getValue();
+        Member u = col.getMember(idValue);
         boolean newMember = false;
         if (u == null) {
+            if (idValue % 10000 != KaiceModel.getActualYear()) {
+                return;
+            }
             newMember = true;
-            u = new Member(id.getValue());
+            u = new Member(idValue);
         }
         u.setName(name.getText());
         u.setFirstName(firstName.getText());
@@ -241,7 +241,7 @@ class PanelMemberDetails extends JPanel {
             col.serialize();
         }
     }
-    
+
     /**
      * Update the display label of the gender.
      */
@@ -253,17 +253,16 @@ class PanelMemberDetails extends JPanel {
             lGender.setText("Femme");
             bGender.setText("Femme");
         }
-        
+
     }
-    
+
     /**
      * Refresh all the panel. Use this method when the membership number or the edition mode change.
      */
     private void update() {
         int memId = id.getValue();
         Member m = KaiceModel.getMemberCollection().getMember(memId);
-        // TODO table model ...
-        
+
         pBirth.removeAll();
         pGender.removeAll();
         if (edition) {
@@ -280,7 +279,7 @@ class PanelMemberDetails extends JPanel {
             }
         }
         editValid.setVisible(edition);
-        
+
         name.setEditable(edition);
         firstName.setEditable(edition);
         bGender.setEnabled(edition);
@@ -291,7 +290,7 @@ class PanelMemberDetails extends JPanel {
         eMail.setEditable(edition);
         newsLetter.setEnabled(edition);
         phone.setEditable(edition);
-        
+
         if (m != null) {
             if (edition) {
                 title.setTitle(m.getFullName() + " (édition)");

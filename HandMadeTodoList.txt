@@ -7,8 +7,6 @@ KAICE Todo list :
   - Member : Set the current member in the current transaction (not in the members collection)
            : Only create new member of the current year
 
-  - __Product : add hidden boolean
-
   - update : reduce the historic update calls
 
   - javadoc : alert all update

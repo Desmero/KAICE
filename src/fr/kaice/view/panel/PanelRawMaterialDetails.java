@@ -19,6 +19,7 @@ public class PanelRawMaterialDetails extends JPanel implements Observer{
     private RawMaterial material;
     private PanelTitle title;
     private JLabel price, qty, alert;
+    private final PartialHistoric historic;
 
     public PanelRawMaterialDetails(RawMaterial material) {
         this.material = material;
@@ -40,7 +41,7 @@ public class PanelRawMaterialDetails extends JPanel implements Observer{
         details.add(qty);
         details.add(alert);
 
-        PartialHistoric historic = new PartialHistoric(material);
+        historic = new PartialHistoric(material);
 
         all.add(new DTablePanel(KaiceModel.getInstance(), historic, 8), BorderLayout.CENTER);
     }
@@ -55,6 +56,9 @@ public class PanelRawMaterialDetails extends JPanel implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
+        if (KaiceModel.isPartModified(KaiceModel.HISTORIC_PERIOD)) {
+            historic.update();
+        }
         if (KaiceModel.isPartModified(KaiceModel.RAW_MATERIAL)) {
             title.setTitle("Stock : " + material.getName());
             price.setText("Prix : " + DMonetarySpinner.intToString(material.getPrice()));

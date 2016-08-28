@@ -1,6 +1,7 @@
 package fr.kaice.view.panel;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.PartialHistoric;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTablePanel;
@@ -14,7 +15,7 @@ import java.util.Observer;
  * This panel display all information about a {@link SoldProduct}.
  * The interface allow to edit a member the composition of the product.
  *
- * @author Raphaï¿½l Merkling
+ * @author Raphaël Merkling
  * @version 2.0
  * @see JPanel
  * @see SoldProduct
@@ -23,7 +24,9 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
 
     private SoldProduct product;
     private JLabel type, qty, price, cost, profit;
+    private DTablePanel table;
     private PanelTitle title;
+    private final PartialHistoric historic;
 
     /**
      * Create a new {@link PanelSoldProductDetails} who display the details of the given {@link SoldProduct}.
@@ -35,13 +38,16 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
         KaiceModel.getInstance().addObserver(this);
 
         type = new JLabel("Type : " + product.getType());
-        qty = new JLabel("Quantitï¿½ : " + product.getQuantity());
+        qty = new JLabel("Quantité : " + product.getQuantity());
         price = new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-        cost = new JLabel("Coï¿½t : " + DMonetarySpinner.intToString(product.getBuyPrice()));
-        profit = new JLabel("Bï¿½nï¿½fice : " + DMonetarySpinner.intToString(product.getProfit()));
+        cost = new JLabel("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
+        profit = new JLabel("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
 
-        DTablePanel table = new DTablePanel(KaiceModel.getInstance(), product, 6);
-        
+        table = new DTablePanel(KaiceModel.getInstance(), product, 6);
+    
+        historic = new PartialHistoric(product);
+        DTablePanel panelHistoric = new DTablePanel(KaiceModel.getInstance(), historic);
+    
         JTable tableMat = new JTable(product);
         JScrollPane scrollPaneMat = new JScrollPane(tableMat);
         Dimension d = tableMat.getPreferredSize();
@@ -52,9 +58,14 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
         JPanel detail = new JPanel();
         JPanel center = new JPanel(new BorderLayout());
     
+        JTabbedPane jTabbedPane = new JTabbedPane();
+        jTabbedPane.add("Membre", all);
+        jTabbedPane.add("Historique", panelHistoric);
+    
         this.setLayout(new BorderLayout());
         this.add(title, BorderLayout.NORTH);
-        this.add(all, BorderLayout.CENTER);
+        this.add(jTabbedPane, BorderLayout.CENTER);
+        
         all.add(detail, BorderLayout.NORTH);
         all.add(center, BorderLayout.CENTER);
         
@@ -77,13 +88,17 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        if (KaiceModel.isPartModified(KaiceModel.HISTORIC_PERIOD)) {
+            historic.update();
+        }
         if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT)) {
             type.setText("Type : " + product.getType());
-            qty.setText("Quantitï¿½ : " + product.getQuantity());
+            qty.setText("Quantité : " + product.getQuantity());
             price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-            cost.setText("Coï¿½t : " + DMonetarySpinner.intToString(product.getBuyPrice()));
-            profit.setText("Bï¿½nï¿½fice : " + DMonetarySpinner.intToString(product.getProfit()));
+            cost.setText("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
+            profit.setText("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
             title.setTitle("Vente : " + product.getName());
+            table.setNumberRow(product.getRowCount());
         }
     }
 }

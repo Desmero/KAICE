@@ -38,7 +38,7 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
     
     private PartialHistoric(int id, historicType type) {
         this.type = type;
-        this.id = id;// TODO
+        this.id = id;
         this.displayList = KaiceModel.getHistoric().getPartialHistoric(type, id);
         setPrices();
         totalLine = true;

@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static fr.kaice.tools.generic.DTerminal.GREEN;
+import static fr.kaice.tools.generic.DTerminal.RED;
+import static fr.kaice.tools.generic.DTerminal.RESET;
+
 /**
  * This class store all {@link SoldProduct} the programme need to know.
  * This should be construct only by {@link KaiceModel}, and one time.
@@ -89,13 +93,13 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             map = (HashMap) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(KFilesParameters.pathSoldProduct + " read successful.");
+            System.out.println(GREEN + KFilesParameters.pathSoldProduct + " read successful." + RESET);
             updateDisplayList();
         } catch (IOException i) {
-            System.err.println(KFilesParameters.pathSoldProduct + " read error : file not found.");
+            System.out.println(RED + KFilesParameters.pathSoldProduct + " read error : file not found." + RESET);
             map = new HashMap<>();
         } catch (ClassNotFoundException c) {
-            System.out.println("HashMap<Integer, PurchasedProduct> class not found");
+            System.out.println(RED + "HashMap<Integer, SoldProduct> class not found" + RESET);
             c.printStackTrace();
         }
     }

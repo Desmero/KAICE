@@ -31,6 +31,7 @@ public abstract class KaiceLauncher {
             KaiceModel.getPurchasedProdCollection().deserialize();
             KaiceModel.getHistoric().deserialize(KaiceModel.getActualYear());
         } else {
+            KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear() - 1);
             KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear());
             KaiceModel.getRawMatCollection().deserialize();
             KaiceModel.getSoldProdCollection().deserialize();

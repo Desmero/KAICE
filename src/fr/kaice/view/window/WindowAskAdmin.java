@@ -102,11 +102,11 @@ public class WindowAskAdmin extends JDialog implements Observer {
     private void removeObserver() {
         KaiceModel.getInstance().deleteObserver(this);
     }
-    
+
     public void selectAdmin() {
         KaiceModel.getMemberCollection().setSelectedAdminByName(memberName.getText(), memberFirstName.getText());
     }
-    
+
     @Override
     public void update(Observable o, Object arg) {
         if (KaiceModel.isPartModified(KaiceModel.ADMIN)) {

@@ -56,7 +56,7 @@ public class PanelMember extends JPanel {
                     int memberId = KaiceModel.getMemberCollection().getMemberIdAtRow(table.getSelectedRow());
                     KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
                 } else if (e.isControlDown()) {
-                    int row = table.getSelectedRow();
+                    int row = table.getTable().rowAtPoint(e.getPoint());
                     KaiceModel.getMemberCollection().setSelectedMember(row);
                 }
             }

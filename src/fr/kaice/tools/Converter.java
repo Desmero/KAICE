@@ -15,7 +15,7 @@ public class Converter {
     }
 
     public static void readUser() {
-        String fileName = "C:\\Users\\Raphael\\Documents\\KAICE\\Users15.cens";
+        String fileName = KFilesParameters.pathMembers + 15 + ".cens";
         try {
             InputStream f = new FileInputStream(fileName);
             InputStreamReader isr = new InputStreamReader(f);

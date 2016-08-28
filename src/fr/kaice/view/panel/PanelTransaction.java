@@ -37,10 +37,10 @@ public class PanelTransaction extends JPanel {
         all.add(details, BorderLayout.NORTH);
         all.add(table, BorderLayout.CENTER);
 
-        // TODO reorganize panel
         details.add(new JLabel("Client : " + tran.getClient()));
         details.add(new JLabel("Date : " + DFormat.format(tran.getDate())));
         details.add(new JLabel("Prix : " + DMonetarySpinner.intToString(tran.getPrice())));
         details.add(new JLabel("Espece : " + DMonetarySpinner.intToString(tran.getPaid())));
+        details.add(new JLabel("Caissier : " + KaiceModel.getMemberCollection().getMember(tran.getAdminId())));
     }
 }

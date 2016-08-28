@@ -54,13 +54,18 @@ public class PanelPurchasedProductDetails extends JPanel implements Observer {
     
     @Override
     public void update(Observable o, Object arg) {
-        if (product.getRawMat() != null) {
-            prod = new JLabel("Produit : " + product.getRawMat().getName());
-        } else {
-            prod = new JLabel("Produit : Aucun");
+        if (KaiceModel.isPartModified(KaiceModel.HISTORIC_PERIOD)) {
+            historic.update();
         }
-        qty.setText("Quantité : " + product.getQuantity());
-        price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-        title.setTitle("Achat : " + product.getName());
+        if (KaiceModel.isPartModified(KaiceModel.PURCHASED_PRODUCT)) {
+            if (product.getRawMat() != null) {
+                prod = new JLabel("Produit : " + product.getRawMat().getName());
+            } else {
+                prod = new JLabel("Produit : Aucun");
+            }
+            qty.setText("Quantité : " + product.getQuantity());
+            price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
+            title.setTitle("Achat : " + product.getName());
+        }
     }
 }

@@ -10,12 +10,10 @@ public class KFilesParameters {
      */
     public static String globalPath = "/home/cens/.KAICE";
     public static String ext = ".ser";
-    public static String extSec = ".cens";
     public static String pathMembers = globalPath + "/Members";
     public static String pathHistoric = globalPath + "/Historic";
     public static String pathRawMaterial = globalPath + "/RawMaterials" + ext;
     public static String pathSoldProduct = globalPath + "/SoldProducts" + ext;
-    public static String pathSoldProductCmp = globalPath + "/SoldProducts" + extSec;
     public static String pathPurchasedProduct = globalPath + "/PurchasedProducts" + ext;
     
     public static void setGlobalPath(String globalPath) {
@@ -24,7 +22,6 @@ public class KFilesParameters {
         pathHistoric = globalPath + "/Historic";
         pathRawMaterial = globalPath + "/RawMaterials" + ext;
         pathSoldProduct = globalPath + "/SoldProducts" + ext;
-        pathSoldProductCmp = globalPath + "/SoldProducts" + extSec;
         pathPurchasedProduct = globalPath + "/PurchasedProducts" + ext;
     }
 }
