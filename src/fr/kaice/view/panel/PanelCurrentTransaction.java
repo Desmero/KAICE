@@ -216,6 +216,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
                 memberFirstName.setText(mem.getFirstName());
                 memberId.setValue(mem.getMemberId());
             }
+            currentTran.setNumberRow(tran.getRowCount()+1);
         }
     }
 }

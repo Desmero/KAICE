@@ -47,7 +47,7 @@ class PanelMemberDetails extends JPanel {
     private final JTextField mailTown;
     private final JTextField eMail;
     private final JCheckBox newsLetter;
-    private final JTextField tel;
+    private final JTextField phone;
     private final JButton edit;
     private final JButton editValid;
     private boolean gender;
@@ -70,7 +70,7 @@ class PanelMemberDetails extends JPanel {
      */
     public PanelMemberDetails(int memberId, boolean edition) {
         this.edition = edition;
-        int col = 10;
+        int col = 30;
         
         id = new IdSpinner();
         id.setValue(memberId);
@@ -101,7 +101,7 @@ class PanelMemberDetails extends JPanel {
         mailTown = new JTextField(col);
         eMail = new JTextField(col);
         newsLetter = new JCheckBox("newsLetter");
-        tel = new JTextField();
+        phone = new JTextField();
         
         edit = new JButton("Éditer");
         edit.addActionListener(e -> {
@@ -127,42 +127,60 @@ class PanelMemberDetails extends JPanel {
         this.add(title, BorderLayout.NORTH);
         this.add(jTabbedPane, BorderLayout.CENTER);
         
-        JPanel center = new JPanel(new BorderLayout());
         JPanel details = new JPanel(new BorderLayout());
-        JPanel detailsCenter = new JPanel(new GridLayout(6, 4));
+        JPanel center = new JPanel();
         JPanel detailsEdit = new JPanel();
-    
-        allDetails.add(center, BorderLayout.CENTER);
+
         allDetails.add(details, BorderLayout.NORTH);
-        
-        details.add(detailsCenter, BorderLayout.CENTER);
+
+        details.add(center, BorderLayout.CENTER);
         details.add(detailsEdit, BorderLayout.SOUTH);
-        
-        detailsCenter.add(new JLabel("Id : "));
-        detailsCenter.add(id);
-        detailsCenter.add(new JLabel("Adresse : "));
-        detailsCenter.add(mailStreet);
-        detailsCenter.add(new JLabel("Nom : "));
-        detailsCenter.add(name);
-        detailsCenter.add(new JLabel("    (Code postal)"));
-        detailsCenter.add(mailPostalCode);
-        detailsCenter.add(new JLabel("Prenom : "));
-        detailsCenter.add(firstName);
-        detailsCenter.add(new JLabel("    (Commune)"));
-        detailsCenter.add(mailTown);
-        detailsCenter.add(new JLabel("Date de naissance : "));
-        detailsCenter.add(pBirth);
-        detailsCenter.add(new JLabel("Adresse e-Mail : "));
-        detailsCenter.add(eMail);
-        detailsCenter.add(new JLabel("Sexe : "));
-        detailsCenter.add(pGender);
-        detailsCenter.add(new JLabel());
-        detailsCenter.add(newsLetter);
-        detailsCenter.add(new JLabel("Filière : "));
-        detailsCenter.add(studies);
-        detailsCenter.add(new JLabel("Numero de Tel : "));
-        detailsCenter.add(tel);
-        
+
+        GroupLayout groupLayout = new GroupLayout(center);
+        groupLayout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
+
+        GroupLayout.SequentialGroup vGroup = groupLayout.createSequentialGroup();
+        GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
+
+        JLabel lId = new JLabel("Id : ");
+        JLabel lMailStret = new JLabel("Adresse : ");
+        JLabel lName = new JLabel("Nom : ");
+        JLabel lMailPostalCode = new JLabel("    (Code postal)");
+        JLabel lFirstName = new JLabel("Prenom : ");
+        JLabel lMailTown = new JLabel("    (Commune)");
+        JLabel lBirthDate = new JLabel("Date de naissance : ");
+        JLabel lEMail = new JLabel("Adresse e-Mail : ");
+        JLabel lGender = new JLabel("Sexe : ");
+        JLabel lStudies = new JLabel("Filière : ");
+        JLabel lPhone = new JLabel("Numero de Tel : ");
+
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lId).addComponent(id).addComponent(lMailStret)
+                .addComponent(mailStreet));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lName).addComponent(name).addComponent
+                (lMailPostalCode).addComponent(mailPostalCode));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lFirstName).addComponent(firstName).addComponent
+                (lMailTown).addComponent(mailTown));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lBirthDate).addComponent(pBirth).addComponent
+                (lEMail).addComponent(eMail));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lGender).addComponent(pGender).addComponent
+                (newsLetter));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lStudies).addComponent(studies).addComponent
+                (lPhone).addComponent(phone));
+
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(lId).addComponent(lName).addComponent
+                (lFirstName).addComponent(lBirthDate).addComponent(lGender).addComponent(lStudies));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(id).addComponent(name).addComponent(firstName)
+                .addComponent(pBirth).addComponent(pGender).addComponent(studies));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(lMailStret).addComponent(lMailPostalCode)
+                .addComponent(lMailTown).addComponent(lEMail).addComponent(lPhone));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(mailStreet).addComponent(mailPostalCode)
+                .addComponent(mailTown).addComponent(eMail).addComponent(newsLetter).addComponent(phone));
+
+        groupLayout.setVerticalGroup(vGroup);
+        groupLayout.setHorizontalGroup(hGroup);
+        center.setLayout(groupLayout);
+
         detailsEdit.add(editValid);
         detailsEdit.add(edit);
         
@@ -202,7 +220,7 @@ class PanelMemberDetails extends JPanel {
         u.setMailTown(mailTown.getText());
         u.setEMail(eMail.getText());
         u.setNewsLetter(newsLetter.isSelected());
-        u.setPhoneNumber(tel.getText());
+        u.setPhoneNumber(phone.getText());
         if (newMember) {
             col.addMember(u);
             int res = JOptionPane.showConfirmDialog(null,
@@ -272,7 +290,7 @@ class PanelMemberDetails extends JPanel {
         mailTown.setEditable(edition);
         eMail.setEditable(edition);
         newsLetter.setEnabled(edition);
-        tel.setEditable(edition);
+        phone.setEditable(edition);
         
         if (m != null) {
             if (edition) {
@@ -307,7 +325,7 @@ class PanelMemberDetails extends JPanel {
                 lBirthDate.setForeground(Color.RED);
             }
             newsLetter.setSelected(m.isNewsLetter());
-            tel.setText(m.getPhoneNumber());
+            phone.setText(m.getPhoneNumber());
         } else {
             if (edition) {
                 title.setTitle("Nouveau membre");
@@ -329,7 +347,7 @@ class PanelMemberDetails extends JPanel {
             mailTown.setText("...");
             eMail.setText("...");
             newsLetter.setSelected(false);
-            tel.setText(".. .. .. .. ..");
+            phone.setText(".. .. .. .. ..");
         }
         repaint();
     }

@@ -71,9 +71,12 @@ public class DTablePanel extends JPanel implements Observer {
      *
      * @param row int - The number of rows to display.
      */
-    private void setNumberRow(int row) {
+    public void setNumberRow(int row) {
+        if (row > 10) {
+            row = 10;
+        }
         Dimension d = table.getPreferredSize();
-        scrollPane.setPreferredSize(new Dimension(d.width, table.getRowHeight() * row));
+        scrollPane.setPreferredSize(new Dimension(d.width, ((int) (table.getRowHeight() * (row + 0.5)))));
     }
 
     /**
