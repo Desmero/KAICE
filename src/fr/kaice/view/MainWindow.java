@@ -79,24 +79,28 @@ public class MainWindow extends JFrame implements Observer {
         
         JMenu menuFile = new JMenu("Fichier");
         menuBar.add(menuFile);
-        JMenuItem mIExport = new JMenuItem("Exporter");
-        menuFile.add(mIExport);
-        menuFile.add(new JPopupMenu.Separator());
-        JMenuItem mIExit = new JMenuItem("Quitter");
-        mIExit.addActionListener(new CloseListener(this));
-        menuFile.add(mIExit);
+        JMenuItem miExport = new JMenuItem("Exporter");
+//        menuFile.add(miExport);
+//        menuFile.add(new JPopupMenu.Separator());
+        JMenuItem miExit = new JMenuItem("Quitter");
+        miExit.addActionListener(new CloseListener(this));
+        menuFile.add(miExit);
         
         JMenu menuEdit = new JMenu("Édition");
         menuBar.add(menuEdit);
-        JMenuItem mIAddAdmin = new JMenuItem("Ajouter un caissier");
-        mIAddAdmin.addActionListener(e -> WindowAskAdmin.generate(e2 -> KaiceModel.getInstance().setDetails(new PanelAddAdmin())));
-        menuEdit.add(mIAddAdmin);
+        JMenuItem miAddAdmin = new JMenuItem("Ajouter un caissier");
+        miAddAdmin.addActionListener(e -> WindowAskAdmin.generate(e2 -> KaiceModel.getInstance().setDetails(new PanelAddAdmin())));
+        menuEdit.add(miAddAdmin);
+        menuEdit.add(new JPopupMenu.Separator());
+        JMenuItem miOption = new JMenuItem("Préférences");
+        miOption.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelHistoricOption()));
+        menuEdit.add(miOption);
         
         JMenu menuView = new JMenu("Affichage");
         menuBar.add(menuView);
-        JMenuItem mIHidden = new JCheckBoxMenuItem("Produits masqués");
-        mIHidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
-        menuView.add(mIHidden);
+        JMenuItem miHidden = new JCheckBoxMenuItem("Produits masqués");
+        miHidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
+        menuView.add(miHidden);
         
         JMenu menuHelp = new JMenu("Aide");
         menuBar.add(menuHelp);

@@ -383,9 +383,10 @@ public class MemberCollection extends DTableModel {
      *
      * @return A {@link String} containing e-mail address.
      */
-    public String getEMailList() {
+    public String getEMailList(boolean newsLetterOnly) {
         StringBuilder sb = new StringBuilder();
-        map.values().stream().filter(u -> u.isNewsLetter() && u.isValidEmailAddress()).forEachOrdered(u -> {
+        map.values().stream().filter(u -> (!newsLetterOnly || u.isNewsLetter()) && u.isValidEmailAddress())
+        .forEachOrdered(u -> {
             String eMail = u.getEMail();
             sb.append(eMail).append("\n");
         });

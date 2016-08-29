@@ -265,7 +265,7 @@ public class Transaction extends DTableModel implements Serializable {
      */
     public enum transactionType {
         SELL("Vente", GREEN), BUY("Courses", BLUE), ADD("Augmentation des stocks", CYAN), SUB("Réduction des stocks",
-                RED), CANCEL("Annulation de vente", ORANGE), ENR("Inscription", YELLOW), MISC("Opération divers", GRAY);
+                RED), CANCEL("Annulation de vente", ORANGE), ENR("Inscription", YELLOW), MISC("Opération diver", GRAY);
 
         private boolean display;
         private final Color color;
@@ -289,8 +289,8 @@ public class Transaction extends DTableModel implements Serializable {
             return display;
         }
 
-        public void setDisplay(boolean display) {
-            this.display = display;
+        public void changeDisplay() {
+            display = !display;
         }
     }
 

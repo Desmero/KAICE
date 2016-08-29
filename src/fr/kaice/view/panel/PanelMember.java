@@ -24,12 +24,14 @@ import java.awt.event.MouseEvent;
  */
 public class PanelMember extends JPanel {
     
+    private PanelEMailList eMailList;
+    
     /**
      * Create a new {@link PanelMember}.
      */
     public PanelMember() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getMemberCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
+        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), eMail = new JButton("E-mails");
         JPanel ctrl = new JPanel();
         JPanel select = new JPanel(new BorderLayout());
         JPanel search = new JPanel(new GridLayout(3, 2));
@@ -48,6 +50,7 @@ public class PanelMember extends JPanel {
                 KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
             }
         });
+        eMail.addActionListener(e -> KaiceModel.getInstance().setDetails(geteMailList()));
         
         table.getTable().addMouseListener(new MouseAdapter() {
             @Override
@@ -106,5 +109,13 @@ public class PanelMember extends JPanel {
 
         ctrl.add(add);
         ctrl.add(view);
+        ctrl.add(eMail);
+    }
+    
+    private PanelEMailList geteMailList() {
+        if (eMailList == null) {
+            eMailList = new PanelEMailList();
+        }
+        return eMailList;
     }
 }

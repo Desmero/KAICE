@@ -109,16 +109,6 @@ public class KaiceModel extends Observable {
     }
 
     /**
-     * Built and return a {@link String} witch contains e-Mail address of members who subscribes to the newsletters.
-     * Every address are separate by a ';'.
-     *
-     * @return A list of e-Mail address.
-     */
-    public static String getEMailList() {
-        return memColl.getEMailList();
-    }
-
-    /**
      * Return a number corresponding to the current administrative year (September to August of the next year).
      * A new year start the first September, and get the number of the first half year.
      * For example :

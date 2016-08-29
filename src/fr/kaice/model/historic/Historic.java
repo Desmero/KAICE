@@ -54,6 +54,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     private final List<Transaction> displayPartialList;
     private List<Transaction> fullList;
     private boolean displayTypeNames;
+    private boolean displayAdmin;
     private Date start;
     private Date end;
     
@@ -70,7 +71,8 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         colModel[COL_NUM_CASH] = colCash;
         colModel[COL_NUM_ADMIN] = colAdmin;
     
-        displayTypeNames = true;
+        displayTypeNames = false;
+        displayAdmin = true;
 
         fullList = new ArrayList<>();
         displayList = new ArrayList<>();
@@ -186,20 +188,39 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     /**
      * Update the display list by checking the date of every {@link Transaction}.
      */
-    private void updateDisplayList() {
+    public void updateDisplayList() {
         displayList.clear();
         displayPartialList.clear();
         Date dTran;
         for (Transaction tran : fullList) {
             dTran = tran.getDate();
             if (dTran.after(start) && dTran.before(end)) {
-                displayList.add(tran);
+                if (tran.getType().isDisplay()) {
+                    displayList.add(tran);
+                }
                 displayPartialList.add(tran);
             }
         }
         KaiceModel.update(KaiceModel.HISTORIC);
     }
 
+    public void changeDisplayAdmin() {
+        displayAdmin = !displayAdmin;
+    }
+    
+    private boolean isDisplayAdmin() {
+        return displayAdmin;
+    }
+    
+    @Override
+    public int getColumnCount() {
+        int column = super.getColumnCount();
+        if (!isDisplayAdmin()) {
+            column--;
+        }
+        return column;
+    }
+    
     @Override
     public void actionCell(int row, int column) {
         KaiceModel.getInstance().setDetails(displayList.get(row).getDetails());
@@ -355,8 +376,8 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         return displayTypeNames;
     }
     
-    public void setDisplayTypeNames(boolean displayTypeNames) {
-        this.displayTypeNames = displayTypeNames;
+    public void changeDisplayTypeNames() {
+        displayTypeNames = !displayTypeNames;
     }
     
     @Override
