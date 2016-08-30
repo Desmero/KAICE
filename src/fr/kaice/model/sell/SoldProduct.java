@@ -133,6 +133,10 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
             RawMaterial material = coll.getMat(matId);
             material.rebackStock(element.getQty());
         }
+        RawMaterialCollection rawColl = KaiceModel.getRawMatCollection();
+        // TODO veify this is not useless
+        rawColl.updateDisplayList();
+        rawColl.serialize();
         KaiceModel.update(RAW_MATERIAL);
     }
     
