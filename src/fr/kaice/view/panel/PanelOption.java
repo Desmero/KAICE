@@ -12,7 +12,7 @@ import static java.awt.BorderLayout.NORTH;
 /**
  * Created by merkling on 28/08/16.
  */
-public class PanelHistoricOption extends JPanel {
+public class PanelOption extends JPanel {
     
     private final JCheckBox fullName;
     private final JCheckBox admin;
@@ -22,9 +22,10 @@ public class PanelHistoricOption extends JPanel {
     private final JCheckBox sub;
     private final JCheckBox cancel;
     private final JCheckBox enr;
+    private final JCheckBox sellChange;
     private final JCheckBox misc;
     
-    public PanelHistoricOption() {
+    public PanelOption() {
         fullName = new JCheckBox("Ajouter les types", KaiceModel.getHistoric().isDisplayTypeNames());
         fullName.addActionListener(e -> {
             KaiceModel.getHistoric().changeDisplayTypeNames();
@@ -77,6 +78,13 @@ public class PanelHistoricOption extends JPanel {
             KaiceModel.getInstance().getHistoric().updateDisplayList();
             updateHistoric();
         });
+        sellChange = new JCheckBox(SELL_CHANGE.getTitle(), SELL_CHANGE.isDisplay());
+        sellChange.setBackground(SELL_CHANGE.getColor());
+        sellChange.addActionListener(e -> {
+            SELL_CHANGE.changeDisplay();
+            KaiceModel.getInstance().getHistoric().updateDisplayList();
+            updateHistoric();
+        });
         misc = new JCheckBox(MISC.getTitle(), MISC.isDisplay());
         misc.setBackground(MISC.getColor());
         misc.addActionListener(e -> {
@@ -85,7 +93,7 @@ public class PanelHistoricOption extends JPanel {
             updateHistoric();
         });
     
-        JPanel options = new JPanel(new GridLayout(7, 2));
+        JPanel options = new JPanel(new GridLayout(8, 2));
         
         this.setLayout(new BorderLayout());
         this.add(new PanelTitle("Options", e -> KaiceModel.getInstance().setDetails(new JPanel())), NORTH);
@@ -95,6 +103,8 @@ public class PanelHistoricOption extends JPanel {
         options.add(sell);
         options.add(admin);
         options.add(cancel);
+        options.add(new JLabel());
+        options.add(sellChange);
         options.add(new JLabel());
         options.add(add);
         options.add(new JLabel());

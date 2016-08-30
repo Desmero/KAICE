@@ -289,7 +289,7 @@ public class PurchasedProductCollection extends DTableModel {
                         mat.addRestockCost(prod.getTotalPrice());
                     }
                     ArchivedProduct arProd = new ArchivedProduct(prod.getName(), prod.getNumberBought(),
-                            prod.getTotalPrice(), prod.getId());
+                            prod.getPrice(), prod.getId());
                     tran.addArchivedProduct(arProd);
                 }
             }

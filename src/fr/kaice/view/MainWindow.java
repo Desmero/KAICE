@@ -93,7 +93,7 @@ public class MainWindow extends JFrame implements Observer {
         menuEdit.add(miAddAdmin);
         menuEdit.add(new JPopupMenu.Separator());
         JMenuItem miOption = new JMenuItem("Préférences");
-        miOption.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelHistoricOption()));
+        miOption.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelOption()));
         menuEdit.add(miOption);
         
         JMenu menuView = new JMenu("Affichage");

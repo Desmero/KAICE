@@ -82,7 +82,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
      * @return A new {@link ArchivedProduct}.
      */
     ArchivedProduct archivedProduct(int number) {
-        return new ArchivedProduct(name, number, salePrice * number, id);
+        return new ArchivedProduct(name, number, salePrice, id);
     }
 
     /**
@@ -125,13 +125,13 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
         this.salePrice = salePrice;
     }
     
-    public void restock() {
+    public void backStock() {
         RawMaterialCollection coll =  KaiceModel.getRawMatCollection();
         for (compositionAdapter.Element element :
                 listRawMat) {
             int matId = element.getId();
             RawMaterial material = coll.getMat(matId);
-            material.addRestockNum(element.getQty());
+            material.rebackStock(element.getQty());
         }
         KaiceModel.update(RAW_MATERIAL);
     }
@@ -218,6 +218,7 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
 
     /**
      * Calculate the available quantity of the {@link SoldProduct} with the stock of each composing {@link RawMaterial}.
+     * Return null if the quantity is infinite. (equals to {@link Integer#MAX_VALUE})
      *
      * @return The available quantity of the {@link SoldProduct}.
      */

@@ -70,7 +70,7 @@ class PanelMemberDetails extends JPanel {
      */
     public PanelMemberDetails(int memberId, boolean edition) {
         this.edition = edition;
-        int col = 30;
+        int col = 25;
 
         id = new IdSpinner();
         id.setValue(memberId);
@@ -95,6 +95,7 @@ class PanelMemberDetails extends JPanel {
             updateGender();
         });
         studies = new JTextField(col);
+        col = 35;
         mailStreet = new JTextField(col);
         mailPostalCode = new JTextField(col);
         mailTown = new JTextField(col);

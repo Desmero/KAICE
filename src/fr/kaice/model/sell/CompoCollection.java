@@ -16,11 +16,11 @@ import java.util.HashMap;
  * In a table, it display 3 columns : <br/>
  * - "Nom", witch display {@link RawMaterial}'s names (non editable {@link String});<br/>
  * - "Prix", witch display unitary price (non editable {@link Double});<br/>
- * - "QuantitÃ©", witch display the use quantity (editable {@link Integer});<br/>
+ * - "Quantité", witch display the use quantity (editable {@link Integer});<br/>
  * And a summary of all {@link RawMaterial} on the last line.
  * The table entries are sorted by names.
  *
- * @author RaphaÃ«l Merkling
+ * @author Raphaël Merkling
  * @version 2.1
  * @see RawMaterial
  * @see SoldProduct
@@ -36,7 +36,7 @@ public class CompoCollection extends DTableModel {
     private static final int COL_NUM_QTY = 2;
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
     private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("QuantitÃ©", Integer.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
     private final HashMap<RawMaterial, Integer> composition;
     
     /**

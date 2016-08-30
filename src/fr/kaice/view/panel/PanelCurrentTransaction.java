@@ -40,6 +40,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     private final JTextField memberName;
     private final JTextField memberFirstName;
     private final IdSpinner memberId;
+    private final JButton valide;
     
     /**
      * Create a new {@link PanelCurrentTransaction}.
@@ -69,22 +70,22 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         memberId.addChangeListener(e -> KaiceModel.getMemberCollection().setSelectedMemberById(memberId.getValue()));
         
         JButton add = new JButton("Ajouter");
-        add.setIcon(new ImageIcon("icon/downArrow.png"));
+        add.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/downArrow.png")));
         add.addActionListener(e -> product.addSelection());
         JButton rem = new JButton("Retirer");
-        rem.setIcon(new ImageIcon("icon/upArrow.png"));
+        rem.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/upArrow.png")));
         rem.addActionListener(e -> {
             removeProduct();
             KaiceModel.update(KaiceModel.TRANSACTION);
         });
-        JButton valide = new JButton("Valider");
-        valide.setIcon(new ImageIcon("icon/valid.png"));
+        valide = new JButton("Valider");
+        valide.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/valid.png")));
         valide.addActionListener(e -> WindowAskAdmin.generate(e2 -> {
             valid();
             reset();
         }));
         JButton cancel = new JButton("Annuler");
-        cancel.setIcon(new ImageIcon("icon/cancel.png"));
+        cancel.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/cancel.png")));
         cancel.addActionListener(e -> reset());
         
         JPanel tran = new JPanel(new BorderLayout());
@@ -209,10 +210,12 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
                 memberName.setText("");
                 memberFirstName.setText("");
                 memberId.setValue(0);
+                valide.setEnabled(false);
             } else {
                 memberName.setText(mem.getName());
                 memberFirstName.setText(mem.getFirstName());
                 memberId.setValue(mem.getMemberId());
+                valide.setEnabled(true);
             }
             currentTran.setNumberRow(tran.getRowCount()+1);
         }

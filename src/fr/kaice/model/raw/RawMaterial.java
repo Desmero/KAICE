@@ -81,6 +81,10 @@ public class RawMaterial implements GenericProduct, Serializable {
         this.stock = stock;
     }
     
+    public void rebackStock(int value) {
+        this.stock += value;
+    }
+    
     /**
      * Return the alert value of the {@link RawMaterial}.
      *

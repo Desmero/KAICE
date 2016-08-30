@@ -244,32 +244,25 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         ArrayList<Transaction> newList = new ArrayList<>();
         switch (type) {
             case MEMBER:
-                for (Transaction tran : displayPartialList) {
-                    if (tran.getClientId() == id) {
-                        newList.add(tran);
-                    }
-                }
+                newList.addAll(displayPartialList.stream().filter(tran -> tran.getClientId() == id)
+                        .collect(Collectors.toList()));
                 break;
             case RAW:
-                for (Transaction tran : displayPartialList) {
-                    if ((tran.getType() == Transaction.transactionType.ADD || tran.getType() == Transaction.transactionType.SUB) && tran.containsProdId(id)) {
-                        newList.add(tran);
-                    }
-                }
+                newList.addAll(displayPartialList.stream().filter(tran ->
+                        (tran.getType() == Transaction.transactionType.ADD ||
+                                tran.getType() == Transaction.transactionType.SUB) && tran.containsProdId(id))
+                        .collect(Collectors.toList()));
                 break;
             case BUY:
-                for (Transaction tran : displayPartialList) {
-                    if (tran.getType() == Transaction.transactionType.BUY && tran.containsProdId(id)) {
-                        newList.add(tran);
-                    }
-                }
+                newList.addAll(displayPartialList.stream()
+                        .filter(tran -> tran.getType() == Transaction.transactionType.BUY && tran.containsProdId(id))
+                        .collect(Collectors.toList()));
                 break;
             case SOLD:
-                for (Transaction tran : displayPartialList) {
-                    if ((tran.getType() == Transaction.transactionType.SELL || tran.getType() == Transaction.transactionType.CANCEL) && tran.containsProdId(id)) {
-                        newList.add(tran);
-                    }
-                }
+                newList.addAll(displayPartialList.stream().filter(tran ->
+                        (tran.getType() == Transaction.transactionType.SELL ||
+                                tran.getType() == Transaction.transactionType.CANCEL) && tran.containsProdId(id))
+                        .collect(Collectors.toList()));
                 break;
         }
         return newList;

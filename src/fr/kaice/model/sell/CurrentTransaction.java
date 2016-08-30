@@ -74,6 +74,11 @@ public class CurrentTransaction extends DTableModel {
         if (listArticles.containsKey(prod)) {
             add += listArticles.get(prod);
         }
+        if (prod.getQuantity() != null) {
+            if (add > prod.getQuantity()) {
+                add = prod.getQuantity();
+            }
+        }
         listArticles.put(prod, add);
         KaiceModel.update(KaiceModel.TRANSACTION);
     }
@@ -200,6 +205,11 @@ public class CurrentTransaction extends DTableModel {
         if (rowIndex != listArticles.size() && columnIndex == 2) {
             ArrayList<SoldProduct> list = new ArrayList<>(listArticles.keySet());
             SoldProduct prod = list.get(rowIndex);
+            if (prod.getQuantity() != null) {
+                if ((int) aValue > prod.getQuantity()) {
+                    aValue = prod.getQuantity();
+                }
+            }
             listArticles.put(prod, (Integer) aValue);
             KaiceModel.update(KaiceModel.TRANSACTION);
         }

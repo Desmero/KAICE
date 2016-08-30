@@ -58,9 +58,9 @@ class PanelNewSoldProduct extends JPanel {
             }
         });
 
-        add.setIcon(new ImageIcon("icon/rightArrow.png"));
+        add.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/rightArrow.png")));
         add.addActionListener(e -> addSelection());
-        rem.setIcon(new ImageIcon("icon/leftArrow.png"));
+        rem.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/leftArrow.png")));
         rem.addActionListener(e -> {
             tmCompo.removeSelectedRows(compos.getSelectedRow());
             update();

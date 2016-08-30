@@ -76,7 +76,7 @@ public class OrderCollection extends DTableModel {
         Order order = list.get(row);
         list.remove(row);
         SoldProduct prod = order.getProduct();
-        prod.restock();
+        prod.backStock();
         Transaction tran = new Transaction(order.getMember().getMemberId(), transactionType.CANCEL, -prod.getPrice(),
                 -cashBack, new Date());
         ArchivedProduct archProd = new ArchivedProduct(prod.getName(), 1, -prod.getPrice(), prod.getId());

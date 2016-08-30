@@ -1,23 +1,22 @@
 package fr.kaice.model.sell;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Transaction;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
 import fr.kaice.tools.generic.*;
+import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fr.kaice.tools.generic.DTerminal.GREEN;
-import static fr.kaice.tools.generic.DTerminal.RED;
-import static fr.kaice.tools.generic.DTerminal.RESET;
+import static fr.kaice.tools.generic.DTerminal.*;
 
 /**
  * This class store all {@link SoldProduct} the programme need to know.
@@ -248,7 +247,16 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
                 prod.setName((String) aValue);
                 break;
             case COL_NUM_SELL_PRICE:
-                prod.setSalePrice(DMonetarySpinner.doubleToInt((double) aValue));
+                WindowAskAdmin.generate(e -> {
+                    prod.setSalePrice(DMonetarySpinner.doubleToInt((double) aValue));
+                    Transaction tran = new Transaction(-1, Transaction.transactionType.SELL_CHANGE,
+                            0,
+                            0, new Date());
+                    tran.addArchivedProduct(new ArchivedProduct("MAJ prix : " + prod.getName() + " " + aValue + " " +
+                    DFormat.EURO, 0, 0, prod.getId()));
+                    KaiceModel.getHistoric().addTransaction(tran);
+                    KaiceModel.update(KaiceModel.HISTORIC);
+                });
                 break;
             default:
                 break;
