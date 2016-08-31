@@ -264,11 +264,14 @@ public class Transaction extends DTableModel implements Serializable {
      * transactionType#ENR} : for {@linkplain Member Member}s's enrolment.
      */
     public enum transactionType {
-        SELL("Vente", GREEN), BUY("Courses", BLUE), ADD("Augmentation des stocks", CYAN), SUB("Réduction des stocks",
-                RED), CANCEL("Annulation de vente", ORANGE), ENR("Inscription", YELLOW), SELL_CHANGE("Changement de " +
-                "prix", PURPLE), MISC
-                ("Opération diver",
-                GRAY);
+        SELL("Vente", GREEN),
+        CANCEL("Annulation de vente", ORANGE),
+        ADD("Augmentation des stocks", CYAN),
+        SUB("Réduction des stocks", RED),
+        BUY("Courses", BLUE),
+        SELL_CHANGE("Changement de prix", PURPLE),
+        ENR("Inscription", YELLOW),
+        MISC ("Opération diver", GRAY);
 
         private boolean display;
         private final Color color;
