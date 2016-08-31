@@ -1,11 +1,12 @@
 package fr.kaice.view.panel;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.Transaction;
+import fr.kaice.tools.generic.DMonetarySpinner;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static fr.kaice.model.historic.Transaction.transactionType.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -14,107 +15,71 @@ import static java.awt.BorderLayout.NORTH;
  */
 public class PanelOption extends JPanel {
     
-    private final JCheckBox fullName;
-    private final JCheckBox admin;
-    private final JCheckBox sell;
-    private final JCheckBox buy;
-    private final JCheckBox add;
-    private final JCheckBox sub;
-    private final JCheckBox cancel;
-    private final JCheckBox enr;
-    private final JCheckBox sellChange;
-    private final JCheckBox misc;
-    
     public PanelOption() {
-        fullName = new JCheckBox("Ajouter les types", KaiceModel.getHistoric().isDisplayTypeNames());
+    
+        JPanel divers = new JPanel();
+    
+        JCheckBox fullName = new JCheckBox("Ajouter les types", KaiceModel.getHistoric().isDisplayTypeNames());
         fullName.addActionListener(e -> {
             KaiceModel.getHistoric().changeDisplayTypeNames();
             updateHistoric();
         });
-        admin = new JCheckBox("Afficher les caissiers", true);
+        JCheckBox admin = new JCheckBox("Afficher les caissiers", true);
         admin.addActionListener(e -> {
             KaiceModel.getHistoric().changeDisplayAdmin();
             updateHistoric();
         });
-        sell = new JCheckBox(SELL.getTitle(), SELL.isDisplay());
-        sell.setBackground(SELL.getColor());
-        sell.addActionListener(e -> {
-            SELL.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        buy = new JCheckBox(BUY.getTitle(), BUY.isDisplay());
-        buy.setBackground(BUY.getColor());
-        buy.addActionListener(e -> {
-            BUY.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        add = new JCheckBox(ADD.getTitle(), ADD.isDisplay());
-        add.setBackground(ADD.getColor());
-        add.addActionListener(e -> {
-            ADD.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        sub = new JCheckBox(SUB.getTitle(), SUB.isDisplay());
-        sub.setBackground(SUB.getColor());
-        sub.addActionListener(e -> {
-            SUB.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        cancel = new JCheckBox(CANCEL.getTitle(), CANCEL.isDisplay());
-        cancel.setBackground(CANCEL.getColor());
-        cancel.addActionListener(e -> {
-            CANCEL.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        enr = new JCheckBox(ENR.getTitle(), ENR.isDisplay());
-        enr.setBackground(ENR.getColor());
-        enr.addActionListener(e -> {
-            ENR.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        sellChange = new JCheckBox(SELL_CHANGE.getTitle(), SELL_CHANGE.isDisplay());
-        sellChange.setBackground(SELL_CHANGE.getColor());
-        sellChange.addActionListener(e -> {
-            SELL_CHANGE.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-        misc = new JCheckBox(MISC.getTitle(), MISC.isDisplay());
-        misc.setBackground(MISC.getColor());
-        misc.addActionListener(e -> {
-            MISC.changeDisplay();
-            KaiceModel.getInstance().getHistoric().updateDisplayList();
-            updateHistoric();
-        });
-    
-        JPanel options = new JPanel(new GridLayout(8, 2));
+        JCheckBox hidden = new JCheckBox("Afficher les produits cachés", KaiceModel.getInstance().isShowHidden());
+        hidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
+        DMonetarySpinner enrPrice = new DMonetarySpinner(0.5);
+        enrPrice.setEnabled(false);
         
+        GroupLayout groupLayout = new GroupLayout(divers);
+    
+        GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
+        GroupLayout.SequentialGroup vGroup = groupLayout.createSequentialGroup();
+    
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(fullName).addComponent(admin).addComponent
+                (hidden).addComponent(enrPrice));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(fullName));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(admin));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(hidden));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(enrPrice));
+    
+        groupLayout.setHorizontalGroup(hGroup);
+        groupLayout.setVerticalGroup(vGroup);
+    
+        divers.setLayout(groupLayout);
+        
+        
+        
+        final JPanel hist = new JPanel();
+        Transaction.transactionType[] list = Transaction.transactionType.values();
+        int col = 2;
+        int line = (list.length + col -1) / col;
+        hist.setLayout(new GridLayout(line, col));
+
+        for (Transaction.transactionType type : list) {
+            JCheckBox checkBox = new JCheckBox(type.getTitle(), type.isDisplay());
+            checkBox.setBackground(type.getColor());
+            checkBox.addActionListener(e -> {
+                type.changeDisplay();
+                KaiceModel.getInstance().getHistoric().updateDisplayList();
+                updateHistoric();
+            });
+            hist.add(checkBox);
+        }
+    
+    
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.add("Divers", divers);
+        tabbedPane.add("Historique", hist);
+    
         this.setLayout(new BorderLayout());
         this.add(new PanelTitle("Options", e -> KaiceModel.getInstance().setDetails(new JPanel())), NORTH);
-        this.add(options, CENTER);
+        this.add(tabbedPane, CENTER);
         
-        options.add(fullName);
-        options.add(sell);
-        options.add(admin);
-        options.add(cancel);
-        options.add(new JLabel());
-        options.add(sellChange);
-        options.add(new JLabel());
-        options.add(add);
-        options.add(new JLabel());
-        options.add(sub);
-        options.add(new JLabel());
-        options.add(buy);
-        options.add(new JLabel());
-        options.add(enr);
-        options.add(new JLabel());
-        options.add(misc);
+        
     }
     
     private void updateHistoric() {
