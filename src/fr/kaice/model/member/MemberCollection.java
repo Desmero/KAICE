@@ -63,7 +63,7 @@ public class MemberCollection extends DTableModel {
         sortCol = 0;
         searchName = "";
         searchFirstName = "";
-        displayYear = 15;
+        displayYear = KaiceModel.getActualYear();
         silentUpdateDisplayList();
     }
     
@@ -203,7 +203,7 @@ public class MemberCollection extends DTableModel {
         add *= 10000;
         id += add;
         
-        for (Member u : displayList) {
+        for (Member u : getYearList(KaiceModel.getActualYear())) {
             id = Integer.max(id, u.getMemberId());
         }
         return id + 1;

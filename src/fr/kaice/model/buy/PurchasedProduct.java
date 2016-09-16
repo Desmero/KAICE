@@ -172,4 +172,5 @@ public class PurchasedProduct implements GenericProduct, Serializable {
     public void changeHiddenState() {
         hidden = !hidden;
     }
+    
 }

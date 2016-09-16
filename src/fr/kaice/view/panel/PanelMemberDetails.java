@@ -205,7 +205,8 @@ class PanelMemberDetails extends JPanel {
         Member u = col.getMember(idValue);
         boolean newMember = false;
         if (u == null) {
-            if (idValue % 10000 != KaiceModel.getActualYear()) {
+            if (idValue / 10000 != KaiceModel.getActualYear()) {
+                System.out.println(idValue % 10000);
                 return;
             }
             newMember = true;

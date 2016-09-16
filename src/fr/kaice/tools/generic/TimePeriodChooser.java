@@ -112,14 +112,14 @@ public class TimePeriodChooser extends JPanel {
                 calEnd.add(Calendar.MONTH, 1);
                 break;
             case YEAR:
-                if (calStart.get(Calendar.MONTH) < 8) {
+                if (calStart.get(Calendar.MONTH) < 7) {
                     calStart.add(Calendar.YEAR, -1);
                     calEnd.add(Calendar.YEAR, -1);
                 }
                 calStart.set(Calendar.DAY_OF_MONTH, 1);
                 calEnd.set(Calendar.DAY_OF_MONTH, 1);
-                calStart.set(Calendar.MONTH, 8);
-                calEnd.set(Calendar.MONTH, 8);
+                calStart.set(Calendar.MONTH, 7);
+                calEnd.set(Calendar.MONTH, 7);
                 calEnd.add(Calendar.YEAR, 1);
                 break;
             case ALL:

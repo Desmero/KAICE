@@ -36,7 +36,12 @@ public class PanelSoldProduct extends JPanel {
                 KaiceModel.getInstance().setDetails(new PanelSoldProductDetails(prod));
             }
         });
-        hide.addActionListener(e -> KaiceModel.getSoldProdCollection().hideRow(table.getSelectedRow()));
+        if (KaiceModel.editor) {
+            hide.setText("Supprimer");
+            hide.addActionListener(e -> KaiceModel.getSoldProdCollection().removeRow(table.getSelectedRow()));
+        } else {
+            hide.addActionListener(e -> KaiceModel.getSoldProdCollection().hideRow(table.getSelectedRow()));
+        }
 
         table.setMultiSelection(false);
         

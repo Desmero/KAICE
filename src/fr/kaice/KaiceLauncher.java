@@ -38,8 +38,9 @@ public abstract class KaiceLauncher {
             KaiceModel.getPurchasedProdCollection().deserialize();
             KaiceModel.getHistoric().deserialize(KaiceModel.getActualYear());
         }
-        new MainWindow();
-        KaiceModel.update(KaiceModel.ALL);
+//        KaiceModel.getHistoric().serializeAll();
+         new MainWindow();
+         KaiceModel.update(KaiceModel.ALL);
     }
     
 }

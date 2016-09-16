@@ -171,6 +171,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
      */
     public void sale(RawMaterial mat, int number) {
         mat.consumption(number);
+        serialize();
         KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
     

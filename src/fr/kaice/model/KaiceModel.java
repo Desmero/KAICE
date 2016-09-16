@@ -22,7 +22,8 @@ import static fr.kaice.tools.generic.DTerminal.*;
  * @version 2.0
  */
 public class KaiceModel extends Observable {
-
+    
+    public static final boolean editor = true;
     public static final int ALL = 0;
     public static final int RAW_MATERIAL = 1;
     public static final int PURCHASED_PRODUCT = 2;
@@ -121,7 +122,7 @@ public class KaiceModel extends Observable {
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR) - 2000;
-        if (month < 8) {
+        if (month < 7) {
             year--;
         }
         return year;
@@ -288,4 +289,5 @@ public class KaiceModel extends Observable {
         this.details = details;
         update(DETAILS);
     }
+    
 }

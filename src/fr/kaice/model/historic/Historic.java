@@ -16,9 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static fr.kaice.tools.generic.DTerminal.GREEN;
-import static fr.kaice.tools.generic.DTerminal.RED;
-import static fr.kaice.tools.generic.DTerminal.RESET;
+import static fr.kaice.tools.generic.DTerminal.*;
 
 /**
  * This class store all past {@link Transaction}. This should be construct only by {@link KaiceModel}, and one time. It
@@ -134,10 +132,10 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         calStart.set(Calendar.HOUR_OF_DAY, 0);
         calStart.clear(Calendar.MINUTE);
         calStart.clear(Calendar.SECOND);
-        if (calStart.get(Calendar.MONTH) < 8) {
+        if (calStart.get(Calendar.MONTH) < 7) {
             calStart.add(Calendar.YEAR, -1);
         }
-        calStart.set(Calendar.MONTH, 8);
+        calStart.set(Calendar.MONTH, 7);
         Calendar calEnd = (Calendar) calStart.clone();
         calEnd.add(Calendar.YEAR, 1);
         
@@ -185,6 +183,59 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         }
     }
     
+    public void serializeAll() {
+    
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, 7);
+        cal.set(Calendar.DAY_OF_MONTH, 30);
+    
+        System.out.println(DFormat.FULL_DATE_FORMAT.format(cal.getTime()));
+    
+        Calendar toDay = Calendar.getInstance();
+        System.out.println(DFormat.FULL_DATE_FORMAT.format(toDay.getTime()));
+    
+        System.out.println(toDay.after(cal));
+        System.out.println(toDay.before(cal));
+        
+        while (toDay.after(cal)) {
+            String rep = KFilesParameters.pathHistoric + "/" + cal.get(Calendar.YEAR) + "/" + (cal.get(Calendar
+                    .MONTH) + 1);
+            String fileName = cal.get(Calendar.DAY_OF_MONTH) + KFilesParameters.ext;
+            System.out.println(rep);
+            File saveRep = new File(rep);
+            if (!saveRep.exists()) {
+                saveRep.mkdir();
+            }
+            try {
+                File saveFile = new File(rep + "/" + fileName);
+                if (!saveFile.exists()) {
+                    saveFile.createNewFile();
+                }
+                FileOutputStream fileOut = new FileOutputStream(rep + "/" + fileName);
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(getDayHistroric(cal.getTime()));
+                out.close();
+                fileOut.close();
+            } catch (IOException i) {
+                i.printStackTrace();
+            }
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
+    }
+    
+    private ArrayList<Transaction> getDayHistroric(Date date) {
+        Calendar calStart = Calendar.getInstance(), calEnd = Calendar.getInstance();
+        calStart.setTime(date);
+        calStart.set(Calendar.HOUR, 0);
+        calStart.set(Calendar.MINUTE, 0);
+        calStart.set(Calendar.SECOND, 0);
+        calEnd.setTime(calStart.getTime());
+        calEnd.add(Calendar.DAY_OF_YEAR, 1);
+        calEnd.add(Calendar.SECOND, -1);
+        return new ArrayList<>(fullList.stream().filter(tran -> tran.getDate().after(calStart.getTime()) && tran
+                .getDate().before(calEnd.getTime())).collect(Collectors.toList()));
+    }
+    
     /**
      * Update the display list by checking the date of every {@link Transaction}.
      */
@@ -204,6 +255,12 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         KaiceModel.update(KaiceModel.HISTORIC);
     }
 
+    public void removeRow(int row) {
+        Transaction transaction = displayList.get(row);
+        fullList.remove(transaction);
+        serialize();
+    }
+    
     public void changeDisplayAdmin() {
         displayAdmin = !displayAdmin;
     }
@@ -380,4 +437,5 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         }
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
+    
 }

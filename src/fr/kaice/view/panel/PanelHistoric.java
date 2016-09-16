@@ -28,14 +28,19 @@ public class PanelHistoric extends JPanel {
         TimePeriodChooser dateChooser = new TimePeriodChooser(KaiceModel.getHistoric());
         JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
         JPanel ctrl = new JPanel();
-        
-        add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewHistoricLine()));
+    
+        if (KaiceModel.editor) {
+            add.addActionListener(e -> KaiceModel.getHistoric().removeRow(table.getSelectedRow()));
+        } else {
+            add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewHistoricLine()));
+        }
         view.addActionListener(e -> {
             if (table.getSelectedRow() != -1) {
                 Transaction tran = KaiceModel.getHistoric().getTransaction(table.getSelectedRow());
                 KaiceModel.getInstance().setDetails(new PanelTransaction(tran));
             }
         });
+        
         
         table.setMultiSelection(false);
         

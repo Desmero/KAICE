@@ -167,8 +167,8 @@ public class PanelNewHistoricLine extends JPanel {
         } else {
             clientId = 0;
         }
-        Transaction transaction = new Transaction(clientId, Transaction.transactionType.MISC, msPrice.getIntValue(), msCash.getIntValue(), new
-                Date());
+        Transaction transaction = new Transaction(clientId, Transaction.transactionType.MISC, msPrice.getIntValue(),
+                msCash.getIntValue(), new Date());
         transaction.addArchivedProduct(new ArchivedProduct(tfText.getText(), 1, msPrice.getIntValue(), 0));
         KaiceModel.getHistoric().addTransaction(transaction);
     }

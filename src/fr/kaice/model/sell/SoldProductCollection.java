@@ -115,6 +115,12 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         KaiceModel.update(KaiceModel.SOLD_PRODUCT);
     }
 
+    public void removeRow(int row) {
+        SoldProduct product = displayList.get(row);
+        map.remove(product.getId());
+        serialize();
+    }
+    
     /**
      * Create and store a new {@link SoldProduct}, id auto-generate.
      * This send an alert to the model about some data modifications.
