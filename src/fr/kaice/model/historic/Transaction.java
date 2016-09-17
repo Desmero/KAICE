@@ -157,7 +157,11 @@ public class Transaction extends DTableModel implements Serializable {
     public Color getColor() {
         return type.getColor();
     }
-
+    
+    public List<ArchivedProduct> getProductList() {
+        return productList;
+    }
+    
     public int getAdminId() {
         return adminId;
     }

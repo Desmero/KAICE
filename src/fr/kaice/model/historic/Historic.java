@@ -2,6 +2,7 @@ package fr.kaice.model.historic;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.member.Member;
+import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.PeriodGetter;
 import fr.kaice.tools.cells.CellRenderColoredRow;
@@ -438,4 +439,24 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         return new DCellRender(colModel[col].getColClass(), colModel[col].isEditable(), totalLine);
     }
     
+    public void saveText() {
+        StringBuilder stringBuilder = new StringBuilder();
+    
+        for (Transaction transaction : fullList) {
+            stringBuilder.append(transaction.getClientId()).append(';');
+            stringBuilder.append(transaction.getType()).append(';');
+            stringBuilder.append(transaction.getPrice()).append(';');
+            stringBuilder.append(transaction.getPaid()).append(';');
+            stringBuilder.append(transaction.getDate());
+            for (ArchivedProduct product : transaction.getProductList()) {
+                stringBuilder.append(';').append(product.getName());
+                stringBuilder.append(';').append(product.getQuantity());
+                stringBuilder.append(';').append(product.getPrice());
+                stringBuilder.append(';').append(product.getId());
+            }
+            stringBuilder.append('\n');
+        }
+        
+        Converter.save(KFilesParameters.pathHistoric + ".ser.txt", stringBuilder.toString());
+    }
 }

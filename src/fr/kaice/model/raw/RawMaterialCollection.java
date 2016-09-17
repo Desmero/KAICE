@@ -2,6 +2,7 @@ package fr.kaice.model.raw;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.IColoredTableModel;
+import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
@@ -17,9 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static fr.kaice.tools.generic.DTerminal.GREEN;
-import static fr.kaice.tools.generic.DTerminal.RED;
-import static fr.kaice.tools.generic.DTerminal.RESET;
+import static fr.kaice.tools.generic.DTerminal.*;
 
 /**
  * This class store all {@link RawMaterial} the programme need to know.
@@ -71,15 +70,15 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
      */
     public void deserialize() {
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathRawMaterial);
+            FileInputStream fileIn = new FileInputStream(KFilesParameters.getRawMaterialFile());
             ObjectInputStream in = new ObjectInputStream(fileIn);
             map = (HashMap) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(GREEN + KFilesParameters.pathRawMaterial + " read successful." + RESET);
+            System.out.println(GREEN + KFilesParameters.getRawMaterialFile() + " read successful." + RESET);
             updateDisplayList();
         } catch (IOException i) {
-            System.out.println(RED + KFilesParameters.pathRawMaterial + " read error : file not found." + RESET);
+            System.out.println(RED + KFilesParameters.getRawMaterialFile() + " read error : file not found." + RESET);
             map = new HashMap<>();
         } catch (ClassNotFoundException c) {
             System.out.println(RED + "HashMap<Integer, RawMaterial> class not found" + RESET);
@@ -114,6 +113,14 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         int id = getNewId();
         RawMaterial newMaterial = new RawMaterial(id, product);
         addRawMaterial(newMaterial);
+    }
+    
+    public void readRawMaterial(int id, String product, int stock, int price, int alert, boolean hidden) {
+        RawMaterial material = RawMaterial.readMaterial(id, product, stock, price, alert, hidden);
+        if (map.containsKey(id)) {
+            throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
+        }
+        map.put(id, material);
     }
     
     /**
@@ -151,7 +158,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
      */
     public void serialize() {
         try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathRawMaterial);
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.getRawMaterialFile());
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();
@@ -327,4 +334,19 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
     public boolean isHiddenRow(int row) {
         return displayList.get(row).isHidden();
     }
+    
+    public void saveText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        for (RawMaterial material : map.values()) {
+            stringBuilder.append(material.getId()).append(';');
+            stringBuilder.append(material.getName()).append(';');
+            stringBuilder.append(material.getStock()).append(';');
+            stringBuilder.append(material.getPrice()).append(';');
+            stringBuilder.append(material.getAlert()).append(';');
+            stringBuilder.append(material.isHidden()).append('\n');
+        }
+        Converter.save(KFilesParameters.getRawMaterialFile() + ".txt", stringBuilder.toString());
+    }
+
 }

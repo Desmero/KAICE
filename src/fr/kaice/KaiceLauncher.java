@@ -24,12 +24,11 @@ public abstract class KaiceLauncher {
         if (!saveRep.exists()) {
             saveRep.mkdir();
         }
-        if (args.length > 1 && args[1].equals("-c")) {
-            Converter.readUser();
-            KaiceModel.getRawMatCollection().deserialize();
-            KaiceModel.getSoldProdCollection().deserialize();
-            KaiceModel.getPurchasedProdCollection().deserialize();
-            KaiceModel.getHistoric().deserialize(KaiceModel.getActualYear());
+        if (args.length > 1 && args[1].equals("-r")) {
+            for (int year = 15; year <= KaiceModel.getActualYear(); year++) {
+                Converter.readUser(year);
+            }
+            Converter.readRawMaterial();
         } else {
             KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear() - 1);
             KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear());
@@ -38,9 +37,20 @@ public abstract class KaiceLauncher {
             KaiceModel.getPurchasedProdCollection().deserialize();
             KaiceModel.getHistoric().deserialize(KaiceModel.getActualYear());
         }
-//        KaiceModel.getHistoric().serializeAll();
-         new MainWindow();
-         KaiceModel.update(KaiceModel.ALL);
+        if (args.length > 1 && args[1].equals("-s")) {
+            for (int year = 15; year <= KaiceModel.getActualYear(); year++) {
+                KaiceModel.getMemberCollection().saveText(year);
+            }
+            KaiceModel.getRawMatCollection().saveText();
+            KaiceModel.getPurchasedProdCollection().saveText();
+            KaiceModel.getSoldProdCollection().saveText();
+            KaiceModel.getHistoric().saveText();
+        } else {
+//            KaiceModel.getHistoric().serializeAll();
+            new MainWindow();
+            KaiceModel.update(KaiceModel.ALL);
+        }
+        
     }
     
 }

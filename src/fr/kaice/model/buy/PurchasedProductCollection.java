@@ -4,6 +4,7 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.raw.RawMaterial;
+import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.generic.DMonetarySpinner;
 import fr.kaice.tools.generic.DTableColumnModel;
@@ -327,5 +328,19 @@ public class PurchasedProductCollection extends DTableModel {
             prod.setNumberBought(0);
         }
         KaiceModel.update(KaiceModel.PURCHASED_PRODUCT);
+    }
+
+    public void saveText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        for (PurchasedProduct product : map.values()) {
+            stringBuilder.append(product.getId()).append(';');
+            stringBuilder.append(product.getName()).append(';');
+            stringBuilder.append(product.getPrice()).append(';');
+            stringBuilder.append(product.getRawMat().getId()).append(';');
+            stringBuilder.append(product.getQuantity()).append(';');
+            stringBuilder.append(product.isHidden()).append('\n');
+        }
+        Converter.save(KFilesParameters.pathPurchasedProduct + ".txt", stringBuilder.toString());
     }
 }

@@ -1,8 +1,10 @@
 package fr.kaice.model.member;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
+import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
@@ -71,20 +73,21 @@ public class MemberCollection extends DTableModel {
      * Load a serialized members collection and deserialize-it. Erase completely the current collection.
      */
     public void deserialize(int yearCode) {
+        String filePath = KFilesParameters.getMemberFile(yearCode);
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathMembers + yearCode + KFilesParameters.ext);
+            FileInputStream fileIn = new FileInputStream(filePath);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             ArrayList<Member> list = (ArrayList<Member>) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(GREEN + KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read " +
+            System.out.println(GREEN + filePath + " read " +
                     "successful." + RESET);
             for (Member member : list) {
                 map.put(member.getMemberId(), member);
             }
             silentUpdateDisplayList();
         } catch (IOException i) {
-            System.out.println(RED + KFilesParameters.pathMembers + yearCode + KFilesParameters.ext + " read error : " +
+            System.out.println(RED + filePath + " read error : " +
                     "file not found." + RESET);
         } catch (ClassNotFoundException c) {
             System.out.println(RED + "ArrayList<Member> class not found" + RESET);
@@ -154,6 +157,14 @@ public class MemberCollection extends DTableModel {
         updateDisplayList();
     }
     
+    public void addReadMember(Member member) {
+        int id = member.getMemberId();
+        if (map.containsKey(id)) {
+            throw new AlreadyUsedIdException("RawMaterial Id " + id + " is already used.");
+        }
+        map.put(id, member);
+    }
+    
     private ArrayList<Member> getYearList(int yearCode) {
         ArrayList<Member> list = new ArrayList<>();
         for (Member member : map.values()) {
@@ -168,10 +179,16 @@ public class MemberCollection extends DTableModel {
      * Serialize the members collection, and save-it in a file.
      */
     public void serialize() {
+        serialize(KaiceModel.getActualYear());
+    }
+        /**
+         * Serialize the members collection, and save-it in a file.
+         */
+        public void serialize(int yearCode) {
         try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathMembers + KaiceModel.getActualYear() + KFilesParameters.ext);
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.getMemberFile(yearCode));
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(getYearList(KaiceModel.getActualYear()));
+            out.writeObject(getYearList(yearCode));
             out.close();
             fileOut.close();
         } catch (IOException i) {
@@ -422,4 +439,26 @@ public class MemberCollection extends DTableModel {
     public int getMemberIdAtRow(int selectedRow) {
         return displayList.get(selectedRow).getMemberId();
     }
+    
+    public void saveText(int yearCode) {
+        StringBuilder stringBuilder = new StringBuilder();
+    
+        for (Member member : getYearList(yearCode)) {
+            stringBuilder.append(member.getMemberId()).append(';');
+            stringBuilder.append(member.getName()).append(';');
+            stringBuilder.append(member.getFirstName()).append(';');
+            stringBuilder.append(member.isMale()).append(';');
+            stringBuilder.append(DFormat.DATE_ONLY.format(member.getBirthDate())).append(';');
+            stringBuilder.append(member.getPhoneNumber()).append(';');
+            stringBuilder.append(member.getStudies()).append(';');
+            stringBuilder.append(member.getMailStreet()).append(';');
+            stringBuilder.append(member.getMailPostalCode()).append(';');
+            stringBuilder.append(member.getMailTown()).append(';');
+            stringBuilder.append(member.getEMail()).append(';');
+            stringBuilder.append(member.isNewsLetter()).append(';');
+            stringBuilder.append(member.isAdmin()).append('\n');
+        }
+        Converter.save(KFilesParameters.getMemberFile(yearCode) + ".txt", stringBuilder.toString());
+    }
+    
 }

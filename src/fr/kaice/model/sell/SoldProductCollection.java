@@ -3,6 +3,7 @@ package fr.kaice.model.sell;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.ArchivedProduct;
 import fr.kaice.model.historic.Transaction;
+import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
 import fr.kaice.tools.cells.CellRenderHiddenProduct;
 import fr.kaice.tools.cells.CellRenderSoldProduct;
@@ -311,4 +312,25 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             return name;
         }
     }
+
+    public void saveText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        for (SoldProduct product : map.values()) {
+            stringBuilder.append(product.getId()).append(';');
+            stringBuilder.append(product.getName()).append(';');
+            stringBuilder.append(product.getPrice()).append(';');
+            stringBuilder.append(product.getType()).append(';');
+            stringBuilder.append(product.isHidden());
+            compositionAdapter compo = product.getListRawMat();
+            for (compositionAdapter.Element element : compo) {
+                stringBuilder.append(';').append(element.getId());
+                stringBuilder.append(';').append(element.getQty());
+                
+            }
+            stringBuilder.append('\n');
+        }
+        Converter.save(KFilesParameters.pathSoldProduct + ".txt", stringBuilder.toString());
+    }
+    
 }

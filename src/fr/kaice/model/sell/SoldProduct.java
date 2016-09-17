@@ -74,7 +74,11 @@ public class SoldProduct extends DTableModel implements GenericProduct, Serializ
             coll.sale(mat, entry.getQty() * number);
         }
     }
-
+    
+    public compositionAdapter getListRawMat() {
+        return listRawMat;
+    }
+    
     /**
      * Create an {@link ArchivedProduct} for the historic.
      *

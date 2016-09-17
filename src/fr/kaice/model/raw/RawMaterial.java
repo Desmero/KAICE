@@ -52,6 +52,15 @@ public class RawMaterial implements GenericProduct, Serializable {
         this.restockCost = 0;
     }
     
+    static RawMaterial readMaterial(int id, String name, int stock, int unitPrice, int alert, boolean hidden) {
+        RawMaterial material = new RawMaterial(id, name);
+        material.stock = stock;
+        material.unitPrice = unitPrice;
+        material.alert = alert;
+        material.hidden = hidden;
+        return material;
+    }
+    
     /**
      * Return the current stock value of the {@link RawMaterial}.
      *
@@ -222,6 +231,14 @@ public class RawMaterial implements GenericProduct, Serializable {
             restockNum = 0;
             restockCost = 0;
         }
+    }
+    
+    void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+    
+    private void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
     
     public boolean isHidden() {
