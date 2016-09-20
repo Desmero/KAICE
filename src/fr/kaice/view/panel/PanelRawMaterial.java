@@ -37,8 +37,13 @@ public class PanelRawMaterial extends JPanel {
             }
         });
         view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMaterialAtRow(table.getSelectedRow()).getDetails()));
-        hide.addActionListener(e -> KaiceModel.getRawMatCollection().hideRow(table.getSelectedRow()));
-        
+        if (KaiceModel.editor) {
+            hide.setText("Supprimer");
+            hide.addActionListener(e -> KaiceModel.getRawMatCollection().removeRow(table.getSelectedRow()));
+        } else {
+            hide.addActionListener(e -> KaiceModel.getRawMatCollection().hideRow(table.getSelectedRow()));
+        }
+    
         table.setMultiSelection(false);
         
         this.setLayout(new BorderLayout());

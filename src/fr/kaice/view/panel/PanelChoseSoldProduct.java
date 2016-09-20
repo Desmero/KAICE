@@ -4,7 +4,7 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.sell.CurrentTransaction;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.model.sell.SoldProductCollection;
-import fr.kaice.model.sell.SoldProductDisplayCollection;
+import fr.kaice.model.sell.SoldProductTypedCollection;
 import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ import java.util.Observer;
 class PanelChoseSoldProduct extends JPanel implements Observer {
     
     private final DTablePanel[] tables;
-    private final SoldProductDisplayCollection[] tableModels;
+    private final SoldProductTypedCollection[] tableModels;
     
     /**
      * Create a new {@link PanelChoseSoldProduct}.
@@ -36,7 +36,7 @@ class PanelChoseSoldProduct extends JPanel implements Observer {
         KaiceModel.getInstance().addObserver(this);
         SoldProductCollection.prodType[] types = SoldProductCollection.prodType.class.getEnumConstants();
         tables = new DTablePanel[types.length];
-        tableModels = new SoldProductDisplayCollection[types.length];
+        tableModels = new SoldProductTypedCollection[types.length];
         
         class MouseListener extends MouseAdapter {
             private DTablePanel table;
@@ -60,12 +60,10 @@ class PanelChoseSoldProduct extends JPanel implements Observer {
             }
         }
         
-        JPanel tablesNamesPanel = new JPanel(new GridLayout(1, types.length));
-        JPanel tablesPanel = new JPanel(new GridLayout(1, types.length));
+        JPanel tablesPanel = new JPanel(new GridLayout(2, types.length/2));
         JPanel ctrl = new JPanel();
         
         this.setLayout(new BorderLayout());
-        this.add(tablesNamesPanel, BorderLayout.NORTH);
         this.add(tablesPanel, BorderLayout.CENTER);
         this.add(ctrl, BorderLayout.SOUTH);
         
@@ -75,13 +73,15 @@ class PanelChoseSoldProduct extends JPanel implements Observer {
             JPanel name = new JPanel(new BorderLayout());
             name.add(lName, BorderLayout.CENTER);
             name.add(new JSeparator(SwingConstants.VERTICAL), BorderLayout.EAST);
-            tablesNamesPanel.add(name);
-            tableModels[i] = new SoldProductDisplayCollection(types[i]);
+            tableModels[i] = new SoldProductTypedCollection(types[i]);
             tables[i] = new DTablePanel(KaiceModel.getInstance(), tableModels[i]);
             tables[i].getTable().addMouseListener(new MouseListener(tables[i]));
             tables[i].setWidth(20);
             tables[i].resizeColumnWidth();
-            tablesPanel.add(tables[i]);
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(name, BorderLayout.NORTH);
+            panel.add(tables[i], BorderLayout.CENTER);
+            tablesPanel.add(panel);
         }
         
     }
@@ -92,7 +92,7 @@ class PanelChoseSoldProduct extends JPanel implements Observer {
     public void addSelection() {
         for (int i = 0; i < tables.length; i++) {
             DTablePanel table = tables[i];
-            SoldProductDisplayCollection tableModel = tableModels[i];
+            SoldProductTypedCollection tableModel = tableModels[i];
             CurrentTransaction tran = KaiceModel.getCurrentTransaction();
             int[] rows = table.getSelectedRows();
             for (int row : rows) {

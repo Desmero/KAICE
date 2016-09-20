@@ -23,7 +23,7 @@ import static fr.kaice.tools.generic.DTerminal.*;
  */
 public class KaiceModel extends Observable {
     
-    public static final boolean editor = true;
+    public static final boolean editor = false;
     public static final int ALL = 0;
     public static final int RAW_MATERIAL = 1;
     public static final int PURCHASED_PRODUCT = 2;

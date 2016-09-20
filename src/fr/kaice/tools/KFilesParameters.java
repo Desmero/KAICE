@@ -12,16 +12,14 @@ public class KFilesParameters {
     public static String ext = ".ser";
     public static String fileMembers = "Members";
     public static String fileRawMaterial = "RawMaterials";
+    public static String fileSoldProduct = "SoldProducts";
+    public static String filePurchasedProduct = "PurchasedProducts";
     
     public static String pathHistoric = globalPath + "/Historic";
-    public static String pathSoldProduct = globalPath + "/SoldProducts" + ext;
-    public static String pathPurchasedProduct = globalPath + "/PurchasedProducts" + ext;
     
     public static void setGlobalPath(String globalPath) {
         KFilesParameters.globalPath = globalPath;
         pathHistoric = globalPath + "/Historic";
-        pathSoldProduct = globalPath + "/SoldProducts" + ext;
-        pathPurchasedProduct = globalPath + "/PurchasedProducts" + ext;
     }
     
     public static String getMemberFile(int yearCode) {
@@ -30,5 +28,13 @@ public class KFilesParameters {
     
     public static String getRawMaterialFile() {
         return new StringBuilder(globalPath).append('/').append(fileRawMaterial).append(ext).toString();
+    }
+
+    public static String getSoldProductFile() {
+        return new StringBuilder(globalPath).append('/').append(fileSoldProduct).append(ext).toString();
+    }
+
+    public static String getPurchasedProductFile() {
+        return new StringBuilder(globalPath).append('/').append(filePurchasedProduct).append(ext).toString();
     }
 }

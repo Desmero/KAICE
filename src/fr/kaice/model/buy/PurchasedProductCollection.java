@@ -95,6 +95,12 @@ public class PurchasedProductCollection extends DTableModel {
         KaiceModel.update(KaiceModel.PURCHASED_PRODUCT);
     }
     
+    public void readPurchasedProduct(int id, String name, int purchasedPrice, int matId, int quantity) {
+        RawMaterial mat = KaiceModel.getRawMatCollection().getMat(matId);
+        PurchasedProduct product = new PurchasedProduct(id, name, purchasedPrice, mat, quantity);
+        map.put(id, product);
+    }
+    
     /**
      * Auto-generate a new free identification number for this collection of
      * {@link PurchasedProduct}.
@@ -114,7 +120,7 @@ public class PurchasedProductCollection extends DTableModel {
      */
     public void serialize() {
         try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathPurchasedProduct);
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.getPurchasedProductFile());
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();
@@ -128,16 +134,17 @@ public class PurchasedProductCollection extends DTableModel {
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
     public void deserialize() {
+        String fileName = KFilesParameters.getPurchasedProductFile();
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathPurchasedProduct);
+            FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             map = (HashMap) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(GREEN + KFilesParameters.pathPurchasedProduct + " read successful." + RESET);
+            System.out.println(GREEN + fileName + " read successful." + RESET);
             updateLists();
         } catch (IOException i) {
-            System.out.println(RED + KFilesParameters.pathPurchasedProduct + " read error : file not found." + RESET);
+            System.out.println(RED + fileName + " read error : file not found." + RESET);
             map = new HashMap<>();
         } catch (ClassNotFoundException c) {
             System.out.println(RED + "HashMap<Integer, PurchasedProduct> class not found" + RESET);
@@ -341,6 +348,6 @@ public class PurchasedProductCollection extends DTableModel {
             stringBuilder.append(product.getQuantity()).append(';');
             stringBuilder.append(product.isHidden()).append('\n');
         }
-        Converter.save(KFilesParameters.pathPurchasedProduct + ".txt", stringBuilder.toString());
+        Converter.save(KFilesParameters.getPurchasedProductFile() + ".txt", stringBuilder.toString());
     }
 }

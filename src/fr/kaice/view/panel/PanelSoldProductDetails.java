@@ -4,6 +4,7 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.PartialHistoric;
 import fr.kaice.model.sell.SoldProduct;
 import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
@@ -43,12 +44,13 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
         cost = new JLabel("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
         profit = new JLabel("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
 
-        table = new DTablePanel(KaiceModel.getInstance(), product, 6);
+        DTableModel tableModel = product.createTableModel();
+        table = new DTablePanel(KaiceModel.getInstance(), tableModel, 6);
     
         historic = new PartialHistoric(product);
         DTablePanel panelHistoric = new DTablePanel(KaiceModel.getInstance(), historic);
     
-        JTable tableMat = new JTable(product);
+        JTable tableMat = new JTable(tableModel);
         JScrollPane scrollPaneMat = new JScrollPane(tableMat);
         Dimension d = tableMat.getPreferredSize();
         scrollPaneMat.setPreferredSize(new Dimension(d.width, tableMat.getRowHeight() * 6));
@@ -98,7 +100,7 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
             cost.setText("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
             profit.setText("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
             title.setTitle("Vente : " + product.getName());
-            table.setNumberRow(product.getRowCount());
+            table.setNumberRow(product.getNumberCompo());
         }
     }
 }

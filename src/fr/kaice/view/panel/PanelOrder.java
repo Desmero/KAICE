@@ -42,7 +42,7 @@ public class PanelOrder extends JPanel {
                 int row = table.getSelectedRow();
                 WindowAskAdmin.generate(e2 -> {
                     KaiceModel.getOrderCollection().cancelOrder(row, cashBack.getIntValue());
-                    cashBack.setValue(0);
+                    cashBack.setValue(0.);
                 });
             }
         });

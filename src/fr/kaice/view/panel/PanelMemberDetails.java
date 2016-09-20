@@ -11,6 +11,7 @@ import fr.kaice.model.member.MemberCollection;
 import fr.kaice.tools.IdSpinner;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DTablePanel;
+import fr.kaice.tools.generic.FocusTextField;
 import fr.kaice.view.window.WindowAskAdmin;
 
 import javax.swing.*;
@@ -70,14 +71,14 @@ class PanelMemberDetails extends JPanel {
      */
     public PanelMemberDetails(int memberId, boolean edition) {
         this.edition = edition;
-        int col = 25;
+        int col = 10;
 
         id = new IdSpinner();
         id.setValue(memberId);
         id.addChangeListener(e -> updateId());
 
-        name = new JTextField(col);
-        firstName = new JTextField(col);
+        name = new FocusTextField(col);
+        firstName = new FocusTextField(col);
 
         pBirth = new JPanel(new GridLayout(1, 1));
         lBirthDate = new JLabel();
@@ -94,14 +95,14 @@ class PanelMemberDetails extends JPanel {
             gender = !gender;
             updateGender();
         });
-        studies = new JTextField(col);
+        studies = new FocusTextField(col);
         col = 35;
-        mailStreet = new JTextField(col);
-        mailPostalCode = new JTextField(col);
-        mailTown = new JTextField(col);
-        eMail = new JTextField(col);
+        mailStreet = new FocusTextField(col);
+        mailPostalCode = new FocusTextField(col);
+        mailTown = new FocusTextField(col);
+        eMail = new FocusTextField(col);
         newsLetter = new JCheckBox("newsLetter");
-        phone = new JTextField();
+        phone = new FocusTextField();
 
         edit = new JButton("Éditer");
         edit.addActionListener(e -> {
@@ -128,7 +129,11 @@ class PanelMemberDetails extends JPanel {
         this.add(jTabbedPane, BorderLayout.CENTER);
 
         JPanel details = new JPanel(new BorderLayout());
-        JPanel center = new JPanel();
+        JPanel center = new JPanel(new BorderLayout());
+        JPanel centerEast = new JPanel();
+        JPanel centerWest = new JPanel();
+        center.add(centerEast, BorderLayout.CENTER);
+        center.add(centerWest, BorderLayout.WEST);
         JPanel detailsEdit = new JPanel();
 
         allDetails.add(details, BorderLayout.NORTH);
@@ -136,11 +141,15 @@ class PanelMemberDetails extends JPanel {
         details.add(center, BorderLayout.CENTER);
         details.add(detailsEdit, BorderLayout.SOUTH);
 
-        GroupLayout groupLayout = new GroupLayout(center);
-        groupLayout.setAutoCreateContainerGaps(true);
-
-        GroupLayout.SequentialGroup vGroup = groupLayout.createSequentialGroup();
-        GroupLayout.SequentialGroup hGroup = groupLayout.createSequentialGroup();
+        GroupLayout groupLayoutEast = new GroupLayout(centerEast);
+        groupLayoutEast.setAutoCreateContainerGaps(true);
+        GroupLayout groupLayoutWest = new GroupLayout(centerWest);
+        groupLayoutWest.setAutoCreateContainerGaps(true);
+    
+        GroupLayout.SequentialGroup vGroupEast = groupLayoutEast.createSequentialGroup();
+        GroupLayout.SequentialGroup hGroupEast = groupLayoutEast.createSequentialGroup();
+        GroupLayout.SequentialGroup vGroupWest = groupLayoutEast.createSequentialGroup();
+        GroupLayout.SequentialGroup hGroupWest = groupLayoutEast.createSequentialGroup();
 
         JLabel lId = new JLabel("Id : ");
         JLabel lMailStret = new JLabel("Adresse : ");
@@ -153,32 +162,37 @@ class PanelMemberDetails extends JPanel {
         JLabel lGender = new JLabel("Sexe : ");
         JLabel lStudies = new JLabel("Filière : ");
         JLabel lPhone = new JLabel("Numero de Tel : ");
+    
+        vGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lId).addComponent(id));
+        vGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lName).addComponent(name));
+        vGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lFirstName).addComponent(firstName));
+        vGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lBirthDate).addComponent(pBirth));
+        vGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lGender).addComponent(pGender));
+        vGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lStudies).addComponent(studies));
+        vGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(lMailStret).addComponent(mailStreet));
+        vGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(lMailPostalCode).addComponent
+                (mailPostalCode));
+        vGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(lMailTown).addComponent(mailTown));
+        vGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(lEMail).addComponent(eMail));
+        vGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(newsLetter));
+        vGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(lPhone).addComponent(phone));
 
-        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lId).addComponent(id).addComponent(lMailStret)
-                .addComponent(mailStreet));
-        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lName).addComponent(name).addComponent
-                (lMailPostalCode).addComponent(mailPostalCode));
-        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lFirstName).addComponent(firstName).addComponent
-                (lMailTown).addComponent(mailTown));
-        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lBirthDate).addComponent(pBirth).addComponent
-                (lEMail).addComponent(eMail));
-        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lGender).addComponent(pGender).addComponent
-                (newsLetter));
-        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(lStudies).addComponent(studies).addComponent
-                (lPhone).addComponent(phone));
-
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(lId).addComponent(lName).addComponent
+        hGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(lId).addComponent(lName).addComponent
                 (lFirstName).addComponent(lBirthDate).addComponent(lGender).addComponent(lStudies));
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(id).addComponent(name).addComponent(firstName)
-                .addComponent(pBirth).addComponent(pGender).addComponent(studies));
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(lMailStret).addComponent(lMailPostalCode)
-                .addComponent(lMailTown).addComponent(lEMail).addComponent(lPhone));
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(mailStreet).addComponent(mailPostalCode)
-                .addComponent(mailTown).addComponent(eMail).addComponent(newsLetter).addComponent(phone));
+        hGroupWest.addGroup(groupLayoutWest.createParallelGroup().addComponent(id).addComponent(name).addComponent
+                (firstName).addComponent(pBirth).addComponent(pGender).addComponent(studies));
+        hGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(lMailStret).addComponent
+                (lMailPostalCode).addComponent(lMailTown).addComponent(lEMail).addComponent(lPhone));
+        hGroupEast.addGroup(groupLayoutEast.createParallelGroup().addComponent(mailStreet).addComponent
+                (mailPostalCode).addComponent(mailTown).addComponent(eMail).addComponent(newsLetter).addComponent
+                (phone));
 
-        groupLayout.setVerticalGroup(vGroup);
-        groupLayout.setHorizontalGroup(hGroup);
-        center.setLayout(groupLayout);
+        groupLayoutEast.setVerticalGroup(vGroupEast);
+        groupLayoutEast.setHorizontalGroup(hGroupEast);
+        centerEast.setLayout(groupLayoutEast);
+        groupLayoutWest.setVerticalGroup(vGroupWest);
+        groupLayoutWest.setHorizontalGroup(hGroupWest);
+        centerWest.setLayout(groupLayoutWest);
 
         detailsEdit.add(editValid);
         detailsEdit.add(edit);
@@ -336,9 +350,9 @@ class PanelMemberDetails extends JPanel {
             jTabbedPane.setEnabledAt(1, false);
             name.setText("...");
             firstName.setText("...");
-            Calendar cal = Calendar.getInstance();
-            cal.set(1900, 0, 1);
-            birthDate.setDate(cal.getTime());
+//            Calendar cal = Calendar.getInstance();
+//            cal.set(1900, 0, 1);
+            birthDate.setDate(new Date());
             lBirthDate.setText("../../....");
             lGender.setText("...");
             bGender.setText("...");

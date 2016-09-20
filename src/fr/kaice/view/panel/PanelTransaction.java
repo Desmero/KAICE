@@ -2,8 +2,10 @@ package fr.kaice.view.panel;
 
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.historic.Transaction;
+import fr.kaice.model.historic.TransactionTableModel;
 import fr.kaice.tools.generic.DFormat;
 import fr.kaice.tools.generic.DMonetarySpinner;
+import fr.kaice.tools.generic.DTableModel;
 import fr.kaice.tools.generic.DTablePanel;
 
 import javax.swing.*;
@@ -25,8 +27,9 @@ public class PanelTransaction extends JPanel {
      * @param tran {@link Transaction} - The transaction to visualise.
      */
     public PanelTransaction(Transaction tran) {
-
-        DTablePanel table = new DTablePanel(KaiceModel.getInstance(), tran);
+    
+        DTableModel tableModel = new TransactionTableModel(tran);
+        DTablePanel table = new DTablePanel(KaiceModel.getInstance(), tableModel);
 
         JPanel all = new JPanel(new BorderLayout());
         JPanel details = new JPanel();

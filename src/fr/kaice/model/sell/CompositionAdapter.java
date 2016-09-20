@@ -7,12 +7,12 @@ import java.util.Iterator;
 /**
  * Created by merkling on 11/08/16.
  */
-public class compositionAdapter implements Serializable, Iterable<compositionAdapter.Element> {
+public class CompositionAdapter implements Serializable, Iterable<CompositionAdapter.Element> {
     
     private static final long serialVersionUID = -4704593307846210023L;
     private ArrayList<Element> list;
     
-    public compositionAdapter() {
+    public CompositionAdapter() {
         list = new ArrayList<>();
     }
     

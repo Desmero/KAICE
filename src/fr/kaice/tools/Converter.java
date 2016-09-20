@@ -1,7 +1,11 @@
 package fr.kaice.tools;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Transaction;
 import fr.kaice.model.member.Member;
+import fr.kaice.model.sell.SoldProduct;
+import fr.kaice.model.sell.SoldProductCollection;
 import fr.kaice.tools.generic.DFormat;
 
 import java.io.*;
@@ -21,7 +25,7 @@ public class Converter {
         Writer writer = null;
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(file), "ISO-8859-1 "));
+                    new FileOutputStream(file), "ISO-8859-1"));
             writer.write(data);
             System.out.println(GREEN + "Writing file " + file + " success" + RESET);
         } catch (IOException ex) {
@@ -81,6 +85,102 @@ public class Converter {
             }
             KaiceModel.getRawMatCollection().updateDisplayList();
             KaiceModel.getRawMatCollection().serialize();
+            d.close();
+            System.out.println(GREEN + "Read file " + fileName + " success" + RESET);
+        } catch (FileNotFoundException e) {
+            System.err.println(fileName + " file not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(fileName + " read file error");
+            System.exit(1);
+        }
+    }
+    
+    public static void readSoldProduct() {
+        String fileName = KFilesParameters.getSoldProductFile() + ".txt";
+        try {
+            InputStream f = new FileInputStream(fileName);
+            InputStreamReader isr = new InputStreamReader(f);
+            BufferedReader d = new BufferedReader(isr);
+            String line;
+            String[] data;
+            line = d.readLine();
+            while (line != null) {
+                data = line.split(";");
+                SoldProduct product = KaiceModel.getSoldProdCollection().readSoldProduct(Integer.parseInt(data[0]),
+                        data[1],
+                        Integer
+                                .parseInt
+                                        (data[2]), SoldProductCollection.prodType.valueOf(data[3]), Boolean.parseBoolean(data[4]));
+                line = d.readLine();
+                for (int i = 5; i < data.length; i+=2) {
+                    product.setRawMaterial(Integer.parseInt(data[i]), Integer.parseInt(data[i+1]));
+                }
+            }
+            KaiceModel.getSoldProdCollection().updateDisplayList();
+            KaiceModel.getSoldProdCollection().serialize();
+            d.close();
+            System.out.println(GREEN + "Read file " + fileName + " success" + RESET);
+        } catch (FileNotFoundException e) {
+            System.err.println(fileName + " file not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(fileName + " read file error");
+            System.exit(1);
+        }
+    }
+    
+    public static void readPurchasedProduct() {
+        String fileName = KFilesParameters.getPurchasedProductFile() + ".txt";
+        try {
+            InputStream f = new FileInputStream(fileName);
+            InputStreamReader isr = new InputStreamReader(f);
+            BufferedReader d = new BufferedReader(isr);
+            String line;
+            String[] data;
+            line = d.readLine();
+            while (line != null) {
+                data = line.split(";");
+                KaiceModel.getPurchasedProdCollection().readPurchasedProduct(Integer.parseInt(data[0]), data[1],
+                        Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4]));
+                line = d.readLine();
+            }
+            KaiceModel.getPurchasedProdCollection().updateLists();
+            KaiceModel.getPurchasedProdCollection().serialize();
+            d.close();
+            System.out.println(GREEN + "Read file " + fileName + " success" + RESET);
+        } catch (FileNotFoundException e) {
+            System.err.println(fileName + " file not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(fileName + " read file error");
+            System.exit(1);
+        }
+    }
+    
+    public static void readHistoric() {
+        String fileName = KFilesParameters.pathHistoric + ".ser.txt";
+        try {
+            InputStream f = new FileInputStream(fileName);
+            InputStreamReader isr = new InputStreamReader(f);
+            BufferedReader d = new BufferedReader(isr);
+            String line;
+            String[] data;
+            line = d.readLine();
+            while (line != null) {
+                data = line.split(";");
+                Transaction transaction = KaiceModel.getHistoric().readTransaction(Integer.parseInt(data[0]),
+                        Transaction.transactionType.valueOf(data[1]), Integer.parseInt(data[2]), Integer.parseInt
+                                (data[3]), DFormat.FULL_DATE_FORMAT.parse(data[4]), Integer.parseInt(data[5]));
+                for (int i = 6; i < data.length; i+=4) {
+                    ArchivedProduct product = new ArchivedProduct(data[i], Integer.parseInt(data[i+1]), Integer
+                            .parseInt(data[i+2]), Integer.parseInt(data[i+3]));
+                    transaction.addArchivedProduct(product);
+                }
+                line = d.readLine();
+            }
+            KaiceModel.getHistoric().updateDisplayList();
+            KaiceModel.getHistoric().serialize();
             d.close();
             System.out.println(GREEN + "Read file " + fileName + " success" + RESET);
         } catch (FileNotFoundException e) {

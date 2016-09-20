@@ -11,6 +11,8 @@ import fr.kaice.view.window.WindowAskAdmin;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.awt.BorderLayout.*;
 
@@ -29,6 +31,9 @@ public class PanelNewHistoricLine extends JPanel {
     private JTextField tfText;
     private DMonetarySpinner msPrice;
     private DMonetarySpinner msCash;
+    private final Set<Character> pressed = new HashSet<>();
+    private String sName;
+    private String sFirstname;
     
     public PanelNewHistoricLine() {
         client = null;

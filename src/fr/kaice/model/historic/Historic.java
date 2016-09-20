@@ -168,10 +168,17 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         updateDisplayList();
     }
     
+    public Transaction readTransaction(Integer clientId, Transaction.transactionType type, int price, int paid, Date
+            date, int adminId) {
+        Transaction transaction = new Transaction(clientId, type, price, paid, date, adminId);
+        fullList.add(transaction);
+        return transaction;
+    }
+    
     /**
      * Serialize the historic, and save-it in a file.
      */
-    private void serialize() {
+    public void serialize() {
         String path = KFilesParameters.pathHistoric + KaiceModel.getActualYear() + KFilesParameters.ext;
         try {
             FileOutputStream fileOut = new FileOutputStream(path);
@@ -447,7 +454,8 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
             stringBuilder.append(transaction.getType()).append(';');
             stringBuilder.append(transaction.getPrice()).append(';');
             stringBuilder.append(transaction.getPaid()).append(';');
-            stringBuilder.append(transaction.getDate());
+            stringBuilder.append(DFormat.FULL_DATE_FORMAT.format(transaction.getDate())).append(';');
+            stringBuilder.append(transaction.getAdminId());
             for (ArchivedProduct product : transaction.getProductList()) {
                 stringBuilder.append(';').append(product.getName());
                 stringBuilder.append(';').append(product.getQuantity());

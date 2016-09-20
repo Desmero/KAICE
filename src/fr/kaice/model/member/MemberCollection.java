@@ -1,14 +1,15 @@
 package fr.kaice.model.member;
 
 import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.IColoredTableModel;
 import fr.kaice.tools.Converter;
 import fr.kaice.tools.KFilesParameters;
+import fr.kaice.tools.cells.CellRenderColoredRow;
 import fr.kaice.tools.exeption.AlreadyUsedIdException;
-import fr.kaice.tools.generic.DFormat;
-import fr.kaice.tools.generic.DTableColumnModel;
-import fr.kaice.tools.generic.DTableModel;
+import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import static fr.kaice.tools.generic.DTerminal.*;
  * @see AbstractTableModel
  * @see KaiceModel
  */
-public class MemberCollection extends DTableModel {
+public class MemberCollection extends DTableModel implements IColoredTableModel {
     
     private static final int COL_NUM_ID = 0;
     private static final int COL_NUM_NAME = 1;
@@ -131,9 +132,9 @@ public class MemberCollection extends DTableModel {
         newList.sort((arg0, arg1) -> {
             switch (sotMethod) {
                 case COL_NUM_NAME:
-                    return arg0.getName().compareTo(arg1.getName());
+                    return arg0.getName().toLowerCase().compareTo(arg1.getName().toLowerCase());
                 case COL_NUM_FIRST_NAME:
-                    return arg0.getFirstName().compareTo(arg1.getFirstName());
+                    return arg0.getFirstName().toLowerCase().compareTo(arg1.getFirstName().toLowerCase());
                 case COL_NUM_ID:
                 default:
                     return arg0.getMemberId() - arg1.getMemberId();
@@ -285,6 +286,10 @@ public class MemberCollection extends DTableModel {
     }
     
     public Member getSelectedAdmin() {
+        return selectedAdmin;
+    }
+    
+    public Member consumeSelectedAdmin() {
         Member admin = selectedAdmin;
         selectedAdmin = null;
         return admin;
@@ -343,15 +348,10 @@ public class MemberCollection extends DTableModel {
         KaiceModel.update(KaiceModel.ADMIN);
     }
     
-    public void setSelectedAdminByName(String name, String firstName) {
-        ArrayList<Member> list = getDisplayList(name, firstName, COL_NUM_ID, displayYear);
-        if (list.size() == 1 && list.get(0).isAdmin()) {
-            selectedAdmin = list.get(0);
-            KaiceModel.update(KaiceModel.ADMIN);
-        } else {
-            selectedAdmin = null;
-        }
+    public boolean isAdminSelected() {
+        return selectedAdmin != null;
     }
+    
     
     public boolean isAdminSet() {
         for (Member member : map.values()) {
@@ -367,12 +367,10 @@ public class MemberCollection extends DTableModel {
         Member member = null;
         if (list.size() == 1) {
             member = list.get(0);
+        } else if (list.size() == 0) {
+            member = new Member(0);
         }
         return member;
-    }
-    
-    public void resetSelectedAdmin() {
-        selectedAdmin = null;
     }
     
     @Override
@@ -386,12 +384,32 @@ public class MemberCollection extends DTableModel {
             case COL_NUM_ID:
                 return displayList.get(rowIndex).getMemberId();
             case COL_NUM_NAME:
-                return displayList.get(rowIndex).getName();
+                return displayList.get(rowIndex).getName().toUpperCase();
             case COL_NUM_FIRST_NAME:
-                return displayList.get(rowIndex).getFirstName();
+                String firstName = displayList.get(rowIndex).getFirstName().toLowerCase();
+                return firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
             default:
                 return null;
         }
+    }
+    
+    @Override
+    public DCellRender getColumnModel(int col) {
+        if (col == COL_NUM_ID) {
+            return new CellRenderColoredRow(colModel[col].getColClass(), colModel[col].isEditable(), totalLine, this);
+        }
+        return super.getColumnModel(col);
+    }
+    
+    @Override
+    public Color getRowColor(int row) {
+        if (KaiceModel.editor && displayList.get(row).isAdmin()) {
+            return DColor.BLUE;
+        }
+        if (!displayList.get(row).isAdult()) {
+            return DColor.RED;
+        }
+        return null;
     }
     
     /**

@@ -46,7 +46,7 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
     private static final int COL_NUM_ALERT = 3;
     private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
     private static final DTableColumnModel colQty = new DTableColumnModel("Stock", Integer.class, true);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, KaiceModel.editor);
     private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Integer.class, true);
 
     private Map<Integer, RawMaterial> map;
@@ -69,16 +69,17 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
     public void deserialize() {
+        String fileName = KFilesParameters.getRawMaterialFile();
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.getRawMaterialFile());
+            FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             map = (HashMap) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(GREEN + KFilesParameters.getRawMaterialFile() + " read successful." + RESET);
+            System.out.println(GREEN + fileName + " read successful." + RESET);
             updateDisplayList();
         } catch (IOException i) {
-            System.out.println(RED + KFilesParameters.getRawMaterialFile() + " read error : file not found." + RESET);
+            System.out.println(RED + fileName + " read error : file not found." + RESET);
             map = new HashMap<>();
         } catch (ClassNotFoundException c) {
             System.out.println(RED + "HashMap<Integer, RawMaterial> class not found" + RESET);
@@ -261,6 +262,15 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
         KaiceModel.update(KaiceModel.RAW_MATERIAL);
     }
     
+    public void removeRow(int row) {
+        RawMaterial material = displayList.get(row);
+        map.remove(material.getId());
+        serialize();
+        updateDisplayList();
+        KaiceModel.update(KaiceModel.RAW_MATERIAL);
+    }
+    
+    
     /**
      * Calculate the new stock and unit price for each {@link RawMaterial}.
      */
@@ -314,6 +324,9 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
                 break;
             case COL_NUM_ALERT:
                 mat.setAlert((int) aValue);
+                break;
+            case COL_NUM_PRICE:
+                mat.setUnitPrice((DMonetarySpinner.doubleToInt(((double) aValue))));
                 break;
         }
         KaiceModel.update(KaiceModel.RAW_MATERIAL);

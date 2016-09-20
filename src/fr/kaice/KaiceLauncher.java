@@ -29,6 +29,9 @@ public abstract class KaiceLauncher {
                 Converter.readUser(year);
             }
             Converter.readRawMaterial();
+            Converter.readSoldProduct();
+            Converter.readPurchasedProduct();
+            Converter.readHistoric();
         } else {
             KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear() - 1);
             KaiceModel.getMemberCollection().deserialize(KaiceModel.getActualYear());

@@ -124,7 +124,7 @@ public class Member implements Serializable {
      * @return The name of the {@link Member}.
      */
     public String getName() {
-        return name;
+        return name.toUpperCase();
     }
     
     /**
@@ -142,7 +142,7 @@ public class Member implements Serializable {
      * @return The first name of the {@link Member}.
      */
     public String getFirstName() {
-        return firstName;
+        return firstName.substring(0, 1).toUpperCase() + firstName.substring(1).toLowerCase();
     }
     
     /**
@@ -160,7 +160,7 @@ public class Member implements Serializable {
      * @return The full name of the {@link Member}.
      */
     public String getFullName() {
-        return firstName + " " + name;
+        return getFirstName() + " " + getName();
     }
     
     /**

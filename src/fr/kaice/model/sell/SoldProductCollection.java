@@ -87,21 +87,30 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * Load a serialized historic and deserialize-it. Erase completely the current collection.
      */
     public void deserialize() {
+        String fileName = KFilesParameters.getSoldProductFile();
         try {
-            FileInputStream fileIn = new FileInputStream(KFilesParameters.pathSoldProduct);
+            FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             map = (HashMap) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(GREEN + KFilesParameters.pathSoldProduct + " read successful." + RESET);
+            System.out.println(GREEN + fileName + " read successful." + RESET);
             updateDisplayList();
         } catch (IOException i) {
-            System.out.println(RED + KFilesParameters.pathSoldProduct + " read error : file not found." + RESET);
+            System.out.println(RED + fileName + " read error : file not found." + RESET);
             map = new HashMap<>();
         } catch (ClassNotFoundException c) {
             System.out.println(RED + "HashMap<Integer, SoldProduct> class not found" + RESET);
             c.printStackTrace();
         }
+    }
+    
+    public SoldProduct readSoldProduct(int id, String name, int salePrice, SoldProductCollection.prodType type, boolean
+            hidden) {
+        SoldProduct product = new SoldProduct(id, name, salePrice, type);
+        product.setHidden(hidden);
+        map.put(id, product);
+        return product;
     }
 
     /**
@@ -157,9 +166,9 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     /**
      * Serialize the historic, and save-it in a file.
      */
-    void serialize() {
+    public void serialize() {
         try {
-            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.pathSoldProduct);
+            FileOutputStream fileOut = new FileOutputStream(KFilesParameters.getSoldProductFile());
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();
@@ -197,7 +206,8 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @return All available product of the given type in a {@link ArrayList}.
      */
     ArrayList<SoldProduct> getAvailableProduct(prodType type) {
-        return displayList.stream().filter(prod -> prod.getType() == type && !prod.isHidden() && prod.isInStock()).collect(Collectors.toCollection(ArrayList::new));
+        return displayList.stream().filter(prod -> prod.getType() == type && !prod.isHidden() && prod.isInStock())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -294,7 +304,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @author Raph
      */
     public enum prodType {
-        FOOD("Nourriture"), DRINK("Boisson"), MISC("Autre");
+        FOOD("Nourriture"), CANDY("Friandise"), DRINK("Boisson"), MISC("Autre");
 
         private final String name;
 
@@ -306,7 +316,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         prodType(String name) {
             this.name = name;
         }
-
+        
         @Override
         public String toString() {
             return name;
@@ -320,17 +330,17 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             stringBuilder.append(product.getId()).append(';');
             stringBuilder.append(product.getName()).append(';');
             stringBuilder.append(product.getPrice()).append(';');
-            stringBuilder.append(product.getType()).append(';');
+            stringBuilder.append(product.getType().name()).append(';');
             stringBuilder.append(product.isHidden());
-            compositionAdapter compo = product.getListRawMat();
-            for (compositionAdapter.Element element : compo) {
+            CompositionAdapter compo = product.getListRawMat();
+            for (CompositionAdapter.Element element : compo) {
                 stringBuilder.append(';').append(element.getId());
                 stringBuilder.append(';').append(element.getQty());
                 
             }
             stringBuilder.append('\n');
         }
-        Converter.save(KFilesParameters.pathSoldProduct + ".txt", stringBuilder.toString());
+        Converter.save(KFilesParameters.getSoldProductFile() + ".txt", stringBuilder.toString());
     }
     
 }

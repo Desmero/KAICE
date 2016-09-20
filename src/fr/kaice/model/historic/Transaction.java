@@ -3,7 +3,6 @@ package fr.kaice.model.historic;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.member.Member;
 import fr.kaice.tools.generic.DMonetarySpinner;
-import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 import fr.kaice.view.panel.PanelTransaction;
 
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static fr.kaice.model.historic.TransactionTableModel.*;
 import static fr.kaice.tools.generic.DColor.*;
 
 /**
@@ -32,19 +32,8 @@ import static fr.kaice.tools.generic.DColor.*;
  * @author Raphaël Merkling
  * @version 2.2
  */
-public class Transaction extends DTableModel implements Serializable {
-
-    private static final transient int COL_NUM_ID = -1;
-    private static final transient int COL_NUM_NAME = 0;
-    private static final transient int COL_NUM_UNIT_PRICE = 1;
-    private static final transient int COL_NUM_QTY = 2;
-    private static final transient int COL_NUM_PRICE = 3;
-    private static final transient int COL_COUNT = 4;
-    private static final transient DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
-    private static final transient DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final transient DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
-    private static final transient DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
-    private static final transient DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+public class Transaction implements Serializable {
+    
     private static final long serialVersionUID = -8468280991560540628L;
     private final List<ArchivedProduct> productList;
     private final transactionType type;
@@ -54,7 +43,7 @@ public class Transaction extends DTableModel implements Serializable {
     private final Date date;
     private final int adminId;
     private transient PanelTransaction details;
-
+    
     /**
      * Create a new {@link Transaction}.
      *
@@ -66,25 +55,28 @@ public class Transaction extends DTableModel implements Serializable {
      * @param date     {@link Date} - The date of the transaction.
      */
     public Transaction(Integer clientId, transactionType type, int price, int paid, Date date) {
+        this(clientId, type, price, paid, date, null);
+    }
+    
+    public Transaction(Integer clientId, transactionType type, int price, int paid, Date date, Integer adminId) {
         this.clientId = clientId;
         this.type = type;
         this.price = price;
         this.paid = paid;
         this.date = date;
-        Member member = KaiceModel.getMemberCollection().getSelectedAdmin();
-        if (member != null) {
-            this.adminId = member.getMemberId();
+        if (adminId != null) {
+            this.adminId = adminId;
         } else {
-            this.adminId = 0;
+            Member member = KaiceModel.getMemberCollection().consumeSelectedAdmin();
+            if (member != null) {
+                this.adminId = member.getMemberId();
+            } else {
+                this.adminId = 0;
+            }
         }
-        colModel = new DTableColumnModel[COL_COUNT];
-        colModel[COL_NUM_NAME] = colName;
-        colModel[COL_NUM_UNIT_PRICE] = colUnitPrice;
-        colModel[COL_NUM_QTY] = colQty;
-        colModel[COL_NUM_PRICE] = colPrice;
         productList = new ArrayList<>();
     }
-
+    
     /**
      * Add an existing {@link ArchivedProduct} to the collection.
      *
@@ -93,7 +85,7 @@ public class Transaction extends DTableModel implements Serializable {
     public void addArchivedProduct(ArchivedProduct prod) {
         productList.add(prod);
     }
-
+    
     public boolean containsProdId(int id) {
         for (ArchivedProduct prod :
                 productList) {
@@ -101,7 +93,7 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return false;
     }
-
+    
     /**
      * Return the full name of the client.
      *
@@ -117,11 +109,11 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return member.getFullName();
     }
-
+    
     public Integer getClientId() {
         return clientId;
     }
-
+    
     /**
      * Return the cash paid for the {@link Transaction}.
      *
@@ -130,7 +122,7 @@ public class Transaction extends DTableModel implements Serializable {
     public int getPaid() {
         return paid;
     }
-
+    
     /**
      * Return the {@link Date} of the {@link Transaction}.
      *
@@ -139,7 +131,7 @@ public class Transaction extends DTableModel implements Serializable {
     public Date getDate() {
         return date;
     }
-
+    
     /**
      * Return the {@link transactionType} of the {@link Transaction}.
      *
@@ -148,7 +140,7 @@ public class Transaction extends DTableModel implements Serializable {
     public transactionType getType() {
         return type;
     }
-
+    
     /**
      * Return the {@link Color} to display for the {@link Transaction}.
      *
@@ -165,45 +157,26 @@ public class Transaction extends DTableModel implements Serializable {
     public int getAdminId() {
         return adminId;
     }
-
+    
     public String getName() {
         return type.getTitle();
     }
-
+    
     public PanelTransaction getDetails() {
         if (details == null) {
             details = new PanelTransaction(this);
         }
         return details;
     }
-
-    @Override
-    public void actionCell(int row, int column) {
-        int id = productList.get(row).getId();
-        switch (type) {
-            case SELL:
-            case CANCEL:
-                KaiceModel.getInstance().setDetails(KaiceModel.getSoldProdCollection().getSoldProduct(id).getDetails());
-                break;
-            case BUY:
-                KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection().getProd(id).getDetails());
-                break;
-            case ADD:
-            case SUB:
-                KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMat(id).getDetails());
-                break;
-            case ENR:
-                break;
-            default:
-        }
+    
+    public ArchivedProduct getProductAtRow(int row) {
+        return productList.get(row);
     }
-
-    @Override
-    public int getRowCount() {
+    
+    public int getSize() {
         return productList.size();
     }
-
-    @Override
+    
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (rowIndex == productList.size()) {
             switch (columnIndex) {
@@ -216,7 +189,7 @@ public class Transaction extends DTableModel implements Serializable {
             }
         } else {
             ArchivedProduct prod = productList.get(rowIndex);
-
+            
             switch (columnIndex) {
                 case COL_NUM_ID:
                     return prod.getId();
@@ -234,7 +207,7 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return null;
     }
-
+    
     /**
      * Return the price in cents of the {@link Transaction}.
      *
@@ -243,7 +216,7 @@ public class Transaction extends DTableModel implements Serializable {
     public int getPrice() {
         return price;
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -256,7 +229,7 @@ public class Transaction extends DTableModel implements Serializable {
         }
         return sb.toString();
     }
-
+    
     /**
      * This enum represent the type of transaction. This type is mostly a graphical distinction. <br/> This enum
      * contains : <br/> - {@link transactionType#SELL} : for {@linkplain fr.kaice.model.sell.SoldProduct SoldProduct}
@@ -276,32 +249,32 @@ public class Transaction extends DTableModel implements Serializable {
         SELL_CHANGE("Changement de prix", PURPLE),
         ENR("Inscription", YELLOW),
         MISC ("Opération diver", GRAY);
-
+        
         private boolean display;
         private final Color color;
         private final String title;
-
+        
         transactionType(String title, Color color) {
             this.title = title;
             this.color = color;
             this.display = true;
         }
-    
+        
         public Color getColor() {
             return color;
         }
-    
+        
         public String getTitle() {
             return title;
         }
-    
+        
         public boolean isDisplay() {
             return display;
         }
-
+        
         public void changeDisplay() {
             display = !display;
         }
     }
-
+    
 }

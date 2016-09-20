@@ -17,7 +17,7 @@ class DMonetarySpinnerModel extends SpinnerNumberModel {
      * @param stepSize double - The difference between elements of the sequence.
      */
     DMonetarySpinnerModel(double stepSize) {
-        super(0.00, 0.00, null, stepSize);
+        super(0.00, null, null, stepSize);
     }
     
 }

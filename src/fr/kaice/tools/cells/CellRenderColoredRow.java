@@ -37,8 +37,11 @@ public class CellRenderColoredRow extends DCellRender {
         if (totalLine && row == table.getRowCount() - 1) {
             return DColor.GRAY;
         }
-        return tableModel.getRowColor(row);
-        // return DFunction.colorFusion(color1, super.getColor(table, row, col, l));
+        Color color = tableModel.getRowColor(row);
+        if (color == null) {
+            color = super.getColor(table, row, col, l);
+        }
+        return color;
     }
     
 }

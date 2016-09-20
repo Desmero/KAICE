@@ -75,9 +75,9 @@ class PanelNewSoldProduct extends JPanel {
             reset();
         });
         name.setColumns(10);
-        type.addItem(prodType.DRINK);
-        type.addItem(prodType.FOOD);
-        type.addItem(prodType.MISC);
+        for (prodType prodType : SoldProductCollection.prodType.class.getEnumConstants()) {
+            type.addItem(prodType);
+        }
         type.setSelectedItem(prodType.MISC);
 
         JPanel all = new JPanel(new BorderLayout());
