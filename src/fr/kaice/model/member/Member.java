@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import static fr.kaice.tools.local.French.*;
+
 
 /**
  * This class represent one member of the association. <br/>
@@ -46,8 +48,8 @@ public class Member implements Serializable {
      * @param memberId int - membership number.
      */
     public Member(int memberId) {
-        this(memberId, "[Nom]", "[Prénom]", true, new Date(), "XX XX XX XX XX", "[Études]", "[Rue]", "[Code postal]",
-                "[Commune]", "[Adresse e-mail]", false);
+        this(memberId, EMP_NAME, EMP_FIRST_NAME, true, new Date(), EMP_PHONE_NUM, EMP_STUDIES, EMP_MAIL_STREET,
+                EMP_MAIL_PC, EMP_MAIL_TOWN, EMP_E_MAIL, false);
     }
     
     /**
@@ -72,38 +74,38 @@ public class Member implements Serializable {
         this.memberId = memberId;
         this.name = name;
         if (this.name.equals("")) {
-            this.name = "[Nom]";
+            this.name = EMP_NAME;
         }
         this.firstName = firstName;
         if (this.firstName.equals("")) {
-            this.firstName = "[Prénom]";
+            this.firstName = EMP_FIRST_NAME;
         }
         this.gender = gender;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         if (this.phoneNumber.equals("")) {
-            this.phoneNumber = "XX XX XX XX XX";
+            this.phoneNumber = EMP_PHONE_NUM;
         }
         this.studies = studies;
         if (this.studies.equals("")) {
-            this.studies = "[Études]";
+            this.studies = EMP_STUDIES;
         }
         this.mailStreet = mailStreet;
         if (this.mailStreet.equals("")) {
-            this.mailStreet = "[Rue]";
+            this.mailStreet = EMP_MAIL_STREET;
         }
         this.mailPostalCode = mailPostalCode;
         if (this.mailPostalCode.equals("")) {
-            this.mailPostalCode = "[Code postal]";
+            this.mailPostalCode = EMP_MAIL_PC;
         }
         this.mailTown = mailTown;
         if (this.mailTown.equals("")) {
-            this.mailTown = "[Commune]";
+            this.mailTown = EMP_MAIL_TOWN;
         }
         this.mailTown = mailTown;
         this.eMail = eMail;
         if (this.eMail.equals("")) {
-            this.eMail = "[Adresse e-mail]";
+            this.eMail = EMP_E_MAIL;
         }
         this.newsLetter = newsLetter;
         this.admin = false;

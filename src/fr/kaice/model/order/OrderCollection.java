@@ -13,14 +13,21 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static fr.kaice.tools.local.French.COL_ARTICLE;
+import static fr.kaice.tools.local.French.COL_CLIENT;
+import static fr.kaice.tools.local.French.COL_ORDER_ARRANGE;
+
 /**
  * This class store all {@link Order} paid but not delivered.
  * This should be construct only by {@link KaiceModel}, and one time.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 3 columns : <br/>
- * - "Ordre", witch display numbers only used for ordinate delivery (non editable {@link Integer});<br/>
- * - "Client", witch display {@link Member}'s names (non editable {@link String});<br/>
- * - "Article", witch display {@link SoldProduct}'s names (non editable {@link String}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_ORDER_ARRANGE}", witch display numbers only used for ordinate delivery (non editable
+ * {@link Integer});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_CLIENT}", witch display {@link Member}'s names (non editable {@link String});
+ * <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_ARTICLE}", witch display {@link SoldProduct}'s names (non editable
+ * {@link String}).<br/>
  * The table entries is sorted by chronological creation of orders.
  *
  * @author Raphaël Merkling
@@ -35,9 +42,9 @@ public class OrderCollection extends DTableModel {
     private static final int COL_NUM_FIRST_ORDER = 0;
     private static final int COL_NUM_FIRST_MEMBER = 1;
     private static final int COL_NUM_FIRST_PRODUCT = 2;
-    private static final DTableColumnModel colOrder = new DTableColumnModel("Ordre", Integer.class, false);
-    private static final DTableColumnModel colMember = new DTableColumnModel("Client", String.class, false);
-    private static final DTableColumnModel colProduct = new DTableColumnModel("Article", String.class, false);
+    private static final DTableColumnModel colOrder = new DTableColumnModel(COL_ORDER_ARRANGE, Integer.class, false);
+    private static final DTableColumnModel colMember = new DTableColumnModel(COL_CLIENT, String.class, false);
+    private static final DTableColumnModel colProduct = new DTableColumnModel(COL_ARTICLE, String.class, false);
     private final ArrayList<Order> list;
     
     /**
@@ -104,7 +111,6 @@ public class OrderCollection extends DTableModel {
      */
     public void validOrders(int[] rows) {
         for (int i = rows.length - 1; i >= 0; i--) {
-            System.out.println("2 " + rows[i]);
             list.remove(rows[i]);
         }
         KaiceModel.update(KaiceModel.ORDER);

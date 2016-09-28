@@ -51,6 +51,7 @@ public abstract class KaiceLauncher {
         } else {
 //            KaiceModel.getHistoric().serializeAll();
             new MainWindow();
+//            new WindowStock();
             KaiceModel.update(KaiceModel.ALL);
         }
         

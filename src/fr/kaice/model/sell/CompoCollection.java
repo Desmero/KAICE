@@ -10,13 +10,16 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This class store the {@link RawMaterial} that compose a {@link SoldProduct}.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 3 columns : <br/>
- * - "Nom", witch display {@link RawMaterial}'s names (non editable {@link String});<br/>
- * - "Prix", witch display unitary price (non editable {@link Double});<br/>
- * - "Quantité", witch display the use quantity (editable {@link Integer});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display {@link RawMaterial}'s names (non editable
+ * {@link String}); <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PRICE}", witch display unitary price (non editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_QUANTITY}", witch display the use quantity (editable {@link Integer});<br/>
  * And a summary of all {@link RawMaterial} on the last line.
  * The table entries are sorted by names.
  *
@@ -34,9 +37,9 @@ public class CompoCollection extends DTableModel {
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_PRICE = 1;
     private static final int COL_NUM_QTY = 2;
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
+    private static final DTableColumnModel colName = new DTableColumnModel(COL_NAME, String.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, false);
+    private static final DTableColumnModel colQty = new DTableColumnModel(COL_QUANTITY, Integer.class, true);
     private final HashMap<RawMaterial, Integer> composition;
     
     /**
@@ -120,7 +123,7 @@ public class CompoCollection extends DTableModel {
                 case COL_NUM_ID:
                     return null;
                 case COL_NUM_NAME:
-                    return "Total :";
+                    return TOTAL_LINE;
                 case COL_NUM_PRICE:
                     int price = getTotalPrice();
                     return DMonetarySpinner.intToDouble(price);

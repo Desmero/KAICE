@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import static fr.kaice.tools.local.French.*;
 import static java.awt.BorderLayout.*;
 
 /**
@@ -33,12 +34,13 @@ public class PanelNewHistoricLine extends JPanel {
     private DMonetarySpinner msCash;
     private final Set<Character> pressed = new HashSet<>();
     private String sName;
-    private String sFirstname;
+    private String sFirstName;
     
     public PanelNewHistoricLine() {
         client = null;
         
-        PanelTitle title = new PanelTitle("Nouvelle entrée", e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        PanelTitle title = new PanelTitle(TITLE_NEW_HISTORIC_LINE, e -> KaiceModel.getInstance().setDetails(new JPanel
+                ()));
         JPanel all = new JPanel(new BorderLayout());
         JPanel allD = new JPanel();
         JPanel client = new JPanel();
@@ -50,7 +52,7 @@ public class PanelNewHistoricLine extends JPanel {
         this.add(allD, CENTER);
         this.add(ctrl, SOUTH);
         
-        JButton accept = new JButton("Valider");
+        JButton accept = new JButton(B_VALID);
         accept.addActionListener(e -> WindowAskAdmin.generate(e2 -> valid()));
         ctrl.add(accept);
         
@@ -60,16 +62,17 @@ public class PanelNewHistoricLine extends JPanel {
         all.add(details, EAST);
         
         int col = 10;
-        JLabel lName = new JLabel("Nom : "), lFirstName = new JLabel("Prénom : "), lId = new JLabel("Num adhérent : ");
+        JLabel lName = new JLabel(TF_NAME), lFirstName = new JLabel(TF_FIRST_NAME), lId = new JLabel(
+                TF_MEMBERSHIP_NUM);
         tfName = new JTextField(col);
         tfName.addActionListener(e -> selectClient());
         tfFirstName = new JTextField(col);
         tfFirstName.addActionListener(e -> selectClient());
         sId = new IdSpinner();
         sId.addChangeListener(e -> selectClient(sId.getValue()));
-        rbMember = new JRadioButton("Membre", true);
-        rbCens = new JRadioButton("Cens");
-        rbNull = new JRadioButton("Aucun");
+        rbMember = new JRadioButton(RB_MEMBER, true);
+        rbCens = new JRadioButton(RB_CENS);
+        rbNull = new JRadioButton(RB_NULL);
         ButtonGroup clientButtonGroup = new ButtonGroup();
         clientButtonGroup.add(rbMember);
         clientButtonGroup.add(rbCens);
@@ -78,8 +81,8 @@ public class PanelNewHistoricLine extends JPanel {
         rbCens.addActionListener(e -> updateClientType());
         rbNull.addActionListener(e -> updateClientType());
         
-        client.setBorder(BorderFactory.createTitledBorder("Client"));
-        details.setBorder(BorderFactory.createTitledBorder("Détails"));
+        client.setBorder(BorderFactory.createTitledBorder(TITLE_MEMBERS));
+        details.setBorder(BorderFactory.createTitledBorder(TITLE_DETAILS));
         
         GroupLayout groupLayoutClient = new GroupLayout(client);
         groupLayoutClient.setAutoCreateContainerGaps(false);
@@ -106,7 +109,7 @@ public class PanelNewHistoricLine extends JPanel {
         groupLayoutClient.setHorizontalGroup(hGroupClient);
         client.setLayout(groupLayoutClient);
         
-        JLabel lText = new JLabel("Texte : "), lPrice = new JLabel("Prix : "), lCash = new JLabel("Espece : ");
+        JLabel lText = new JLabel(TF_TEXT), lPrice = new JLabel(TF_PRICE), lCash = new JLabel(TF_CASH);
         tfText = new JTextField(10);
         msPrice = new DMonetarySpinner(0.1);
         msCash = new DMonetarySpinner(0.1);

@@ -18,6 +18,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display the {@link CurrentTransaction} and the {@link PanelChoseSoldProduct}.
  * The interface allow to add or remove a {@link SoldProduct} from the current transaction, set a client {@link Member},
@@ -41,10 +43,10 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     private final JTextField memberName;
     private final JTextField memberFirstName;
     private final IdSpinner memberId;
-    private final JButton valide;
+    private final JButton valid;
     private final Set<Character> pressed = new HashSet<>();
     private String sName;
-    private String sFirstname;
+    private String sFirstName;
     
     /**
      * Create a new {@link PanelCurrentTransaction}.
@@ -56,12 +58,12 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         cash = new DMonetarySpinner(0.1);
         cash.addChangeListener(e -> KaiceModel.update(KaiceModel.TRANSACTION));
         cashBack = new JLabel();
-        cashBackText = new JLabel("Rendu : ");
-        total = new JLabel("Total : 0.00 " + DFormat.EURO);
+        cashBackText = new JLabel(TF_CASH_BACK);
+        total = new JLabel(TF_TOTAL + "0.00 " + DFormat.EURO);
         total.setBorder(new LineBorder(Color.RED));
         total.setFont(new Font(total.getFont().getFontName(), Font.BOLD, 20));
         sName = "";
-        sFirstname = "";
+        sFirstName = "";
     
         memberName = new JTextField();
         memberName.setColumns(10);
@@ -75,7 +77,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
                 pressed.add(e.getKeyChar());
                 if (pressed.size() == 1) {
                     memberName.setText(sName);
-                    memberFirstName.setText(sFirstname);
+                    memberFirstName.setText(sFirstName);
                 }
             }
         
@@ -100,7 +102,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
                 pressed.add(e.getKeyChar());
                 if (pressed.size() == 1) {
                     memberName.setText(sName);
-                    memberFirstName.setText(sFirstname);
+                    memberFirstName.setText(sFirstName);
                 }
             }
         
@@ -108,7 +110,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
             public void keyReleased(KeyEvent e) {
                 pressed.remove(e.getKeyChar());
                 if (pressed.size() == 0) {
-                    sFirstname = memberFirstName.getText();
+                    sFirstName = memberFirstName.getText();
                     selectMember();
                 }
             }
@@ -119,19 +121,19 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         memberId.setPreferredSize(dimId);
         memberId.addChangeListener(e -> selectMemberId());
         
-        JButton add = new JButton("Ajouter");
+        JButton add = new JButton(B_ADD);
         add.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/downArrow.png")));
         add.addActionListener(e -> product.addSelection());
-        JButton rem = new JButton("Retirer");
+        JButton rem = new JButton(B_REM);
         rem.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/upArrow.png")));
         rem.addActionListener(e -> {
             removeProduct();
             KaiceModel.update(KaiceModel.TRANSACTION);
         });
-        valide = new JButton("Valider");
-        valide.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/valid.png")));
-        valide.addActionListener(e -> WindowAskAdmin.generate(e2 -> valid()));
-        JButton cancel = new JButton("Annuler");
+        valid = new JButton(B_VALID);
+        valid.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/valid.png")));
+        valid.addActionListener(e -> WindowAskAdmin.generate(e2 -> valid()));
+        JButton cancel = new JButton(B_CANCEL);
         cancel.setIcon(new ImageIcon(getClass().getResource("/fr/kaice/images/cancel.png")));
         cancel.addActionListener(e -> reset());
         JButton clearMember = new JButton();
@@ -180,20 +182,20 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         ctrlSeparator.add(ctrlMember, BorderLayout.CENTER);
         ctrlSeparator.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
         
-        ctrlButton.add(valide);
+        ctrlButton.add(valid);
         ctrlButton.add(cancel);
         ctrlButton.add(add);
         ctrlButton.add(rem);
     
-        ctrlMember.add(new JLabel("Nom : "));
+        ctrlMember.add(new JLabel(TF_NAME));
         ctrlMember.add(memberName);
-        ctrlMember.add(new JLabel("Prénom : "));
+        ctrlMember.add(new JLabel(TF_FIRST_NAME));
         ctrlMember.add(memberFirstName);
-        ctrlMember.add(new JLabel("Id : "));
+        ctrlMember.add(new JLabel(TF_MEMBERSHIP_NUM));
         ctrlMember.add(memberId);
         ctrlMember.add(clearMember);
         
-        ctrlPrice.add(new JLabel("Espece : "));
+        ctrlPrice.add(new JLabel(TF_CASH));
         ctrlPrice.add(cash);
         ctrlPrice.add(cashBackText);
         ctrlPrice.add(cashBack);
@@ -203,7 +205,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     }
     
     private void selectMember() {
-        if (sName.equals("") && sFirstname.equals("")) {
+        if (sName.equals("") && sFirstName.equals("")) {
             memberId.setValue(0);
         } else {
             Member admin = KaiceModel.getMemberCollection().getMemberByName(memberName.getText(), memberFirstName.getText());
@@ -216,7 +218,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     
     private void clearMember() {
         sName = "";
-        sFirstname = "";
+        sFirstName = "";
         KaiceModel.getMemberCollection().setSelectedMemberById(0);
     }
     
@@ -248,12 +250,11 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
         int price = tran.getPrice();
         int add = cash.getIntValue() - price;
         if (res == JOptionPane.YES_OPTION && add < 0) {
-            res = JOptionPane.showConfirmDialog(null,
-                    "Le payment en espece est inssufisant, voulez-vous débiter le compte ?", "Espece insuffisant",
+            res = JOptionPane.showConfirmDialog(null, DIALOG_TEXT_INSUFFICIENT_CASH, DIALOG_NAME_INSUFFICIENT_CASH,
                     JOptionPane.YES_NO_OPTION, 2);
             if (res == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(this, "Pensez à débiter le compte dans le carnet de comptes, merci",
-                        "Comptes", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, DIALOG_TEXT_ACCOUNT, DIALOG_NAME_ACCOUNT, JOptionPane
+                        .WARNING_MESSAGE);
             } else {
                 return;
             }
@@ -271,7 +272,7 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
     private void reset() {
         cash.setValue(0.);
         sName = "";
-        sFirstname = "";
+        sFirstName = "";
         KaiceModel.getCurrentTransaction().reset();
         KaiceModel.getMemberCollection().clearSelectedMember();
         KaiceModel.update(KaiceModel.TRANSACTION);
@@ -298,19 +299,19 @@ public class PanelCurrentTransaction extends JPanel implements Observer {
             Member mem = KaiceModel.getMemberCollection().getSelectedMember();
             if (mem == null) {
                 memberName.setText(sName);
-                memberFirstName.setText(sFirstname);
+                memberFirstName.setText(sFirstName);
                 memberId.setValue(0);
-                valide.setEnabled(false);
+                valid.setEnabled(false);
             } else {
                 int nameCaret = sName.length() + mem.getName().toLowerCase().indexOf(sName.toLowerCase());
                 memberName.setText(mem.getName());
                 memberName.setCaretPosition(nameCaret);
-                int firstNameCaret = sFirstname.length() + mem.getFirstName().toLowerCase().indexOf(sFirstname
+                int firstNameCaret = sFirstName.length() + mem.getFirstName().toLowerCase().indexOf(sFirstName
                         .toLowerCase());
                 memberFirstName.setText(mem.getFirstName());
                 memberFirstName.setCaretPosition(firstNameCaret);
                 memberId.setValue(mem.getMemberId());
-                valide.setEnabled(true);
+                valid.setEnabled(true);
             }
             currentTran.setNumberRow(tran.getRowCount()+1);
         }

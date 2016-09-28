@@ -10,6 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display all {@linkplain fr.kaice.model.member.Member Member} contains in the
  * {@linkplain fr.kaice.model.member.MemberCollection MemberCollection} known by {@link KaiceModel}.
@@ -31,7 +33,7 @@ public class PanelMember extends JPanel {
      */
     public PanelMember() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getMemberCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), eMail = new JButton("E-mails");
+        JButton add = new JButton(B_ADD), view = new JButton(B_VIEW), eMail = new JButton(B_E_MAIL);
         JPanel ctrl = new JPanel();
         JPanel select = new JPanel(new BorderLayout());
         JPanel search = new JPanel(new GridLayout(3, 2));
@@ -50,7 +52,7 @@ public class PanelMember extends JPanel {
                 KaiceModel.getInstance().setDetails(new PanelMemberDetails(memberId));
             }
         });
-        eMail.addActionListener(e -> KaiceModel.getInstance().setDetails(geteMailList()));
+        eMail.addActionListener(e -> KaiceModel.getInstance().setDetails(getEMailList()));
         
         table.getTable().addMouseListener(new MouseAdapter() {
             @Override
@@ -98,13 +100,13 @@ public class PanelMember extends JPanel {
         this.add(ctrl, BorderLayout.SOUTH);
         
         select.add(search, BorderLayout.CENTER);
-        select.setBorder(BorderFactory.createTitledBorder("Recherche"));
+        select.setBorder(BorderFactory.createTitledBorder(SUB_TITLE_SEARCH));
         
-        search.add(new JLabel("Nom :"));
+        search.add(new JLabel(TF_NAME));
         search.add(name);
-        search.add(new JLabel("Prénom :"));
+        search.add(new JLabel(TF_FIRST_NAME));
         search.add(firstName);
-        search.add(new JLabel("Année :"));
+        search.add(new JLabel(TF_YEAR));
         search.add(year);
 
         ctrl.add(add);
@@ -112,7 +114,7 @@ public class PanelMember extends JPanel {
         ctrl.add(eMail);
     }
     
-    private PanelEMailList geteMailList() {
+    private PanelEMailList getEMailList() {
         if (eMailList == null) {
             eMailList = new PanelEMailList();
         }

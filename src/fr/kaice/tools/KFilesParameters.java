@@ -14,6 +14,7 @@ public class KFilesParameters {
     public static String fileRawMaterial = "RawMaterials";
     public static String fileSoldProduct = "SoldProducts";
     public static String filePurchasedProduct = "PurchasedProducts";
+    public static String folderProductIcon = "logo";
     
     public static String pathHistoric = globalPath + "/Historic";
     
@@ -36,5 +37,9 @@ public class KFilesParameters {
 
     public static String getPurchasedProductFile() {
         return new StringBuilder(globalPath).append('/').append(filePurchasedProduct).append(ext).toString();
+    }
+    
+    public static String getSoldProductIconFolder() {
+        return new StringBuilder(globalPath).append('/').append(folderProductIcon).toString();
     }
 }

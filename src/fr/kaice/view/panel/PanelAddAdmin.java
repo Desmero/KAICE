@@ -7,6 +7,7 @@ import fr.kaice.tools.IdSpinner;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.*;
 import static java.awt.BorderLayout.*;
 
 /**
@@ -22,7 +23,7 @@ public class PanelAddAdmin extends JPanel {
     
     public PanelAddAdmin() {
         member = null;
-        PanelTitle title = new PanelTitle("Nouveau caissier", e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        PanelTitle title = new PanelTitle(TITLE_NEW_CASHIER, e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel center = new JPanel();
         JPanel ctrl = new JPanel();
         
@@ -41,11 +42,11 @@ public class PanelAddAdmin extends JPanel {
             update();
         });
         
-        JLabel name = new JLabel("Nom : ");
-        JLabel firstName = new JLabel("Prénom : ");
-        JLabel id = new JLabel("Numero de membre : ");
+        JLabel name = new JLabel(TF_NAME);
+        JLabel firstName = new JLabel(TF_FIRST_NAME);
+        JLabel id = new JLabel(TF_MEMBERSHIP_NUM);
         
-        accept = new JButton("Ajouter caissier");
+        accept = new JButton(B_ADD_CASHIER);
         accept.addActionListener(e -> {
             member.changeAdminState();
             KaiceModel.getInstance().setDetails(new JPanel());
@@ -92,9 +93,9 @@ public class PanelAddAdmin extends JPanel {
             memberFirstName.setText(member.getFirstName());
             memberId.setValue(member.getMemberId());
             if (member.isAdmin()) {
-                accept.setText("Supprimer caissier");
+                accept.setText(B_REM_CASHIER);
             } else {
-                accept.setText("Ajouter caissier");
+                accept.setText(B_ADD_CASHIER);
             }
             accept.setEnabled(true);
         } else {

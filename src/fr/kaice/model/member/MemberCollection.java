@@ -18,15 +18,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static fr.kaice.tools.generic.DTerminal.*;
+import static fr.kaice.tools.local.French.COL_FIRST_NAME;
+import static fr.kaice.tools.local.French.COL_NAME;
+import static fr.kaice.tools.local.French.COL_NUM;
 
 /**
  * This class store all {@link Member} of the current year.
  * This should be construct only by {@link KaiceModel}, and one time.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 3 columns : <br/>
- * - "Num", witch display membership numbers (non editable {@link Integer});<br/>
- * - "Nam", witch display names (non editable {@link String});<br/>
- * - "Prénom", witch display first names(non editable {@link String}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NUM}", witch display membership numbers (non editable {@link Integer});
+ * <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display names (non editable {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_FIRST_NAME}", witch display first names(non editable {@link String}).<br/>
  * The table entries can ne sorted by dates, names or firs names.
  *
  * @author Raphaël Merkling
@@ -41,9 +45,9 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
     private static final int COL_NUM_ID = 0;
     private static final int COL_NUM_NAME = 1;
     private static final int COL_NUM_FIRST_NAME = 2;
-    private static final DTableColumnModel colId = new DTableColumnModel("Num", Integer.class, false);
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final DTableColumnModel colFirstName = new DTableColumnModel("Prénom", String.class, false);
+    private static final DTableColumnModel colId = new DTableColumnModel(COL_NUM, Integer.class, false);
+    private static final DTableColumnModel colName = new DTableColumnModel(COL_NAME, String.class, false);
+    private static final DTableColumnModel colFirstName = new DTableColumnModel(COL_FIRST_NAME, String.class, false);
     private Map<Integer, Member> map;
     private List<Member> displayList;
     private Member selectedMember;
@@ -81,15 +85,13 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
             ArrayList<Member> list = (ArrayList<Member>) in.readObject();
             in.close();
             fileIn.close();
-            System.out.println(GREEN + filePath + " read " +
-                    "successful." + RESET);
+            System.out.println(GREEN + filePath + " read successful." + RESET);
             for (Member member : list) {
                 map.put(member.getMemberId(), member);
             }
             silentUpdateDisplayList();
         } catch (IOException i) {
-            System.out.println(RED + filePath + " read error : " +
-                    "file not found." + RESET);
+            System.out.println(RED + filePath + " read error : file not found." + RESET);
         } catch (ClassNotFoundException c) {
             System.out.println(RED + "ArrayList<Member> class not found" + RESET);
             c.printStackTrace();

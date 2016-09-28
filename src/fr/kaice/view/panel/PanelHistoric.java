@@ -8,6 +8,9 @@ import fr.kaice.tools.generic.TimePeriodChooser;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.B_ADD;
+import static fr.kaice.tools.local.French.B_VIEW;
+
 /**
  * This panel display the {@linkplain fr.kaice.model.historic.Historic Historic} table known by {@link KaiceModel}.
  * The interface allow to visualise the details of a {@link Transaction}.
@@ -26,7 +29,7 @@ public class PanelHistoric extends JPanel {
     public PanelHistoric() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getHistoric());
         TimePeriodChooser dateChooser = new TimePeriodChooser(KaiceModel.getHistoric());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
+        JButton add = new JButton(B_ADD), view = new JButton(B_VIEW);
         JPanel ctrl = new JPanel();
     
         if (KaiceModel.editor) {

@@ -17,15 +17,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This class repertories the {@link SoldProduct} and theirs quantities of the current not ended transaction.
  * This should be construct only by {@link KaiceModel}, and one time.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 4 columns : <br/>
- * - "Article", witch display {@link SoldProduct}'s names (non editable {@link String});<br/>
- * - "Prix unitaire", witch display unitary prices (non editable {@link Double});<br/>
- * - "Quantité", witch display the sold quantities (editable {@link Integer});<br/>
- * - "Prix", witch display total sold prices (non editable {@link Double}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_ARTICLE}", witch display {@link SoldProduct}'s names (non editable
+ * {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_UNIT_PRICE}", witch display unitary prices (non editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_QUANTITY}", witch display the sold quantities (editable {@link Integer});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PRICE}", witch display total sold prices (non editable {@link Double}).<br/>
  * And a summary of all {@link SoldProduct} on the last line.
  *
  * @author Raphaél Merkling
@@ -41,10 +44,10 @@ public class CurrentTransaction extends DTableModel {
     private static final int COL_NUM_UNIT_PRICE = 1;
     private static final int COL_NUM_QTY = 2;
     private static final int COL_NUM_PRICE = 3;
-    private static final DTableColumnModel colArticle = new DTableColumnModel("Article", String.class, false);
-    private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final DTableColumnModel colArticle = new DTableColumnModel(COL_ARTICLE, String.class, false);
+    private static final DTableColumnModel colUnitPrice = new DTableColumnModel(COL_UNIT_PRICE, Double.class, false);
+    private static final DTableColumnModel colQty = new DTableColumnModel(COL_QUANTITY, Integer.class, true);
+    private static final DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, false);
     private final HashMap<SoldProduct, Integer> listArticles;
     
     

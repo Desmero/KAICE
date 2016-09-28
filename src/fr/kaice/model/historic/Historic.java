@@ -18,15 +18,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static fr.kaice.tools.generic.DTerminal.*;
+import static fr.kaice.tools.local.French.*;
 
 /**
- * This class store all past {@link Transaction}. This should be construct only by {@link KaiceModel}, and one time. It
- * extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/> In a table, it display 5 columns : <br/>
- * - "Date", witch display dates (non editable {@link Date});<br/> - "Client", witch display clients's name (non
- * editable {@link String});<br/> - "Transaction", witch display the names of all products concerned, the color of the
- * cell depends of the {@link Transaction#type} (non editable {@link Double});<br/> - "Prix", witch display prices
- * (editable {@link Double});<br/> - "Espece", witch display given cash (nne editable {@link Double}).<br/> And a
- * summary of all {@link Transaction} on the last line. The table entries are sorted by dates.
+ * This class store all past {@link Transaction}.
+ * This should be construct only by {@link KaiceModel}, and one time.
+ * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/> In a table, it display 5 columns :
+ * <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_DATE}", witch display dates (non editable {@link Date});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_CLIENT}", witch display clients's name (non editable {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_TRANSACTION}", witch display the names of all products concerned, the color of the
+ * cell depends of the {@link Transaction#type} (non editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PRICE}", witch display prices (editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_CASH}", witch display given cash (non editable {@link Double}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_CASHIER}", witch display the cashier's name (non editable {@link String})
+ * .<br/>
+ * And a summary of all {@link Transaction} on the last line. The table entries are sorted by dates.
  *
  * @author Raphaël Merkling
  * @version 2.2
@@ -43,12 +50,12 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
     private static final int COL_NUM_PRICE = 3;
     private static final int COL_NUM_CASH = 4;
     private static final int COL_NUM_ADMIN = 5;
-    private static final DTableColumnModel colDate = new DTableColumnModel("Date", String.class, false);
-    private static final DTableColumnModel colClient = new DTableColumnModel("Client", String.class, false);
-    private static final DTableColumnModel colTran = new DTableColumnModel("Transaction", String.class, false);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
-    private static final DTableColumnModel colAdmin = new DTableColumnModel("Caissier", String.class, false);
+    private static final DTableColumnModel colDate = new DTableColumnModel(COL_DATE, String.class, false);
+    private static final DTableColumnModel colClient = new DTableColumnModel(COL_CLIENT, String.class, false);
+    private static final DTableColumnModel colTran = new DTableColumnModel(COL_TRANSACTION, String.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, false);
+    private static final DTableColumnModel colCash = new DTableColumnModel(COL_CASH, Double.class, false);
+    private static final DTableColumnModel colAdmin = new DTableColumnModel(COL_CASHIER, String.class, false);
     private final List<Transaction> displayList;
     private final List<Transaction> displayPartialList;
     private List<Transaction> fullList;
@@ -127,7 +134,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         }
     }
     
-    private ArrayList<Transaction> getYeatList() {
+    private ArrayList<Transaction> getYearList() {
         Calendar calStart = Calendar.getInstance();
         calStart.set(Calendar.DAY_OF_MONTH, 1);
         calStart.set(Calendar.HOUR_OF_DAY, 0);
@@ -183,7 +190,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         try {
             FileOutputStream fileOut = new FileOutputStream(path);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(getYeatList());
+            out.writeObject(getYearList());
             out.close();
             fileOut.close();
         } catch (IOException i) {
@@ -221,7 +228,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
                 }
                 FileOutputStream fileOut = new FileOutputStream(rep + "/" + fileName);
                 ObjectOutputStream out = new ObjectOutputStream(fileOut);
-                out.writeObject(getDayHistroric(cal.getTime()));
+                out.writeObject(getDayHistoric(cal.getTime()));
                 out.close();
                 fileOut.close();
             } catch (IOException i) {
@@ -231,7 +238,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         }
     }
     
-    private ArrayList<Transaction> getDayHistroric(Date date) {
+    private ArrayList<Transaction> getDayHistoric(Date date) {
         Calendar calStart = Calendar.getInstance(), calEnd = Calendar.getInstance();
         calStart.setTime(date);
         calStart.set(Calendar.HOUR, 0);
@@ -348,9 +355,9 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
         if (rowIndex == displayList.size()) {
             switch (columnIndex) {
                 case COL_NUM_CLIENT:
-                    return "Total :";
+                    return TOTAL_LINE;
                 case COL_NUM_TRAN:
-                    return "" + rowIndex + " opérations";
+                    return "" + rowIndex + _TRANSACTION;
                 case COL_NUM_PRICE:
                     return DMonetarySpinner.intToDouble(getTotalDisplayPrice());
                 case COL_NUM_CASH:
@@ -369,19 +376,19 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
                 if (isDisplayTypeNames()) {
                     switch (transaction.getType()) {
                         case ADD:
-                            return "Ajout stock : " + displayList.get(rowIndex).toString();
+                            return TR_ADD + displayList.get(rowIndex).toString();
                         case SUB:
-                            return "Retrait stock : " + displayList.get(rowIndex).toString();
+                            return TR_SUB + displayList.get(rowIndex).toString();
                         case CANCEL:
-                            return "Vente annulée : " + displayList.get(rowIndex).toString();
+                            return TR_CANCEL + displayList.get(rowIndex).toString();
                         case SELL:
-                            return "Vente : " + displayList.get(rowIndex).toString();
+                            return TR_SELL + displayList.get(rowIndex).toString();
                         case BUY:
-                            return "Courses : " + displayList.get(rowIndex).toString();
+                            return TR_BUY + displayList.get(rowIndex).toString();
                         case ENR:
-                            return "Inscription : " + displayList.get(rowIndex).toString();
+                            return TR_ENR + displayList.get(rowIndex).toString();
                         case MISC:
-                            return "Entrée manuelle : " + displayList.get(rowIndex).toString();
+                            return TR_MISC + displayList.get(rowIndex).toString();
                         default:
                             return displayList.get(rowIndex).toString();
                     }

@@ -233,19 +233,19 @@ public class KaiceModel extends Observable {
                 System.out.println("ALL");
                 break;
             case RAW_MATERIAL:
-                System.out.println("RAW_MATERIAL");
+                System.out.println("TAB_RAW_MATERIAL");
                 break;
             case PURCHASED_PRODUCT:
-                System.out.println("PURCHASED_PRODUCT");
+                System.out.println("TAB_PURCHASED_PRODUCT");
                 break;
             case SOLD_PRODUCT:
-                System.out.println("SOLD_PRODUCT");
+                System.out.println("TAB_SOLD_PRODUCT");
                 break;
             case MEMBER:
                 System.out.println("MEMBER");
                 break;
             case HISTORIC:
-                System.out.println("HISTORIC");
+                System.out.println("TAB_HISTORIC");
                 break;
             case DETAILS:
                 System.out.println("DETAILS");
@@ -254,7 +254,7 @@ public class KaiceModel extends Observable {
                 System.out.println("ORDER");
                 break;
             case TRANSACTION:
-                System.out.println("TRANSACTION");
+                System.out.println("COL_TRANSACTION");
                 break;
             case RESTOCK:
                 System.out.println("RESTOCK");

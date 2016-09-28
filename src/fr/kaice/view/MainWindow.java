@@ -10,6 +10,8 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This class is the main window of the programme KAICE. <br/>
  * All the mains components a fixed, except a {@link JPanel} in the center down of the window who is selected by the
@@ -29,7 +31,7 @@ public class MainWindow extends JFrame implements Observer {
      * Create a new {@link MainWindow}.
      */
     public MainWindow() {
-        super("KAICE v2.0");
+        super(PROGRAMME_NAME);
         
         KaiceModel.getInstance().addObserver(this);
         
@@ -57,52 +59,52 @@ public class MainWindow extends JFrame implements Observer {
         west.add(splitWestIn, BorderLayout.CENTER);
         
         JTabbedPane tabbedPaneTransaction = new JTabbedPane();
-        tabbedPaneTransaction.add("Ventes", new PanelCurrentTransaction());
-        tabbedPaneTransaction.add("Achats", new PanelPurchasedProduct());
+        tabbedPaneTransaction.add(TAB_SELLING, new PanelCurrentTransaction());
+        tabbedPaneTransaction.add(TAB_BUYING, new PanelPurchasedProduct());
         JTabbedPane tabbedPaneLists = new JTabbedPane();
-        tabbedPaneLists.add("Produits bruts", new PanelRawMaterial());
-        tabbedPaneLists.add("Articles en vente", new PanelSoldProduct());
-        tabbedPaneLists.add("Articles achetés", new PanelPurchasedProductVal());
-        tabbedPaneLists.add("Historique", new PanelHistoric());
+        tabbedPaneLists.add(TAB_RAW_MATERIAL, new PanelRawMaterial());
+        tabbedPaneLists.add(TAB_SOLD_PRODUCT, new PanelSoldProduct());
+        tabbedPaneLists.add(TAB_PURCHASED_PRODUCT, new PanelPurchasedProductVal());
+        tabbedPaneLists.add(TAB_HISTORIC, new PanelHistoric());
         
-        transaction.add(new PanelTitle("Transactions"), BorderLayout.NORTH);
+        transaction.add(new PanelTitle(TITLE_TRANSACTION), BorderLayout.NORTH);
         transaction.add(tabbedPaneTransaction, BorderLayout.CENTER);
         details.add(KaiceModel.getInstance().getDetails(), BorderLayout.CENTER);
-        order.add(new PanelTitle("Commandes"), BorderLayout.NORTH);
+        order.add(new PanelTitle(TITLE_ORDER), BorderLayout.NORTH);
         order.add(new PanelOrder(), BorderLayout.CENTER);
-        lists.add(new PanelTitle("Listes"), BorderLayout.NORTH);
+        lists.add(new PanelTitle(TITLE_LISTS), BorderLayout.NORTH);
         lists.add(tabbedPaneLists, BorderLayout.CENTER);
-        members.add(new PanelTitle("Membres"), BorderLayout.NORTH);
+        members.add(new PanelTitle(TITLE_MEMBERS), BorderLayout.NORTH);
         members.add(new PanelMember(), BorderLayout.CENTER);
         
         JMenuBar menuBar = new JMenuBar();
         
-        JMenu menuFile = new JMenu("Fichier");
+        JMenu menuFile = new JMenu(M_FILE);
         menuBar.add(menuFile);
-        JMenuItem miExport = new JMenuItem("Exporter");
+        JMenuItem miExport = new JMenuItem(MF_EXPORT);
 //        menuFile.add(miExport);
 //        menuFile.add(new JPopupMenu.Separator());
-        JMenuItem miExit = new JMenuItem("Quitter");
+        JMenuItem miExit = new JMenuItem(MF_EXIT);
         miExit.addActionListener(new CloseListener(this));
         menuFile.add(miExit);
         
-        JMenu menuEdit = new JMenu("Édition");
+        JMenu menuEdit = new JMenu(M_EDIT);
         menuBar.add(menuEdit);
-        JMenuItem miAddAdmin = new JMenuItem("Ajouter un caissier");
+        JMenuItem miAddAdmin = new JMenuItem(ME_ADD_CASHIER);
         miAddAdmin.addActionListener(e -> WindowAskAdmin.generate(e2 -> KaiceModel.getInstance().setDetails(new PanelAddAdmin())));
         menuEdit.add(miAddAdmin);
         menuEdit.add(new JPopupMenu.Separator());
-        JMenuItem miOption = new JMenuItem("Préférences");
+        JMenuItem miOption = new JMenuItem(ME_OPTION);
         miOption.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelOption()));
         menuEdit.add(miOption);
         
-        JMenu menuView = new JMenu("Affichage");
+        JMenu menuView = new JMenu(M_VIEW);
         menuBar.add(menuView);
-        JMenuItem miHidden = new JCheckBoxMenuItem("Produits masqués");
+        JMenuItem miHidden = new JCheckBoxMenuItem(MV_HIDDEN);
         miHidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
         menuView.add(miHidden);
         
-        JMenu menuHelp = new JMenu("Aide");
+        JMenu menuHelp = new JMenu(M_HELP);
         menuBar.add(menuHelp);
         
         this.setJMenuBar(menuBar);

@@ -105,6 +105,10 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
         }
     }
     
+    public List<SoldProduct> getList() {
+        return displayList;
+    }
+    
     public SoldProduct readSoldProduct(int id, String name, int salePrice, SoldProductCollection.prodType type, boolean
             hidden) {
         SoldProduct product = new SoldProduct(id, name, salePrice, type);
@@ -304,17 +308,24 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @author Raph
      */
     public enum prodType {
-        FOOD("Nourriture"), CANDY("Friandise"), DRINK("Boisson"), MISC("Autre");
+        FOOD("Nourriture", DColor.RED), CANDY("Friandise", DColor.YELLOW), DRINK("Boisson", DColor.BLUE), MISC
+                ("Autre", DColor.GREEN);
 
         private final String name;
-
+        private final Color color;
+        
         /**
          * Create a new element of the enumeration {@link prodType} with a display name.
          *
          * @param name {@link String} - The display name of the type.
          */
-        prodType(String name) {
+        prodType(String name, Color color) {
+            this.color = color;
             this.name = name;
+        }
+        
+        public Color getColor() {
+            return color;
         }
         
         @Override

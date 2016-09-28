@@ -7,6 +7,8 @@ import fr.kaice.tools.generic.DMonetarySpinner;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.B_VALID;
+
 /**
  * This panel allow the user to create a new {@linkplain fr.kaice.model.buy.PurchasedProduct PurchasedProduct} and store
  * it in the {@linkplain fr.kaice.model.buy.PurchasedProductCollection PurchasedProductCollection} known by the
@@ -32,7 +34,7 @@ class PanelNewPurchasedProduct extends JPanel {
      */
     PanelNewPurchasedProduct() {
         
-        JButton accept = new JButton("Valide");
+        JButton accept = new JButton(B_VALID);
         name = new JTextField();
         price = new DMonetarySpinner(0.01);
         quantity = new JSpinner(new SpinnerNumberModel(1, 0, null, 1));
@@ -74,7 +76,7 @@ class PanelNewPurchasedProduct extends JPanel {
     
         centerField.add(center);
         
-        center.add(new JLabel("Nom de l'articler :"));
+        center.add(new JLabel("Nom de l'article :"));
         center.add(name);
         center.add(new JLabel("Prix :"));
         center.add(price);

@@ -8,6 +8,8 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static fr.kaice.tools.local.French.TITLE_E_MAIL_LIST;
+import static fr.kaice.tools.local.French.CB_SUBSCRIBERS_ONLY;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
@@ -38,7 +40,7 @@ public class PanelEMailList extends JPanel implements Observer {
         emails = new JTextArea();
         emails.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(emails);
-        PanelTitle title = new PanelTitle("Liste des addresses e-mails", e -> KaiceModel.getInstance().setDetails(new
+        PanelTitle title = new PanelTitle(TITLE_E_MAIL_LIST, e -> KaiceModel.getInstance().setDetails(new
                 JPanel()));
         
         JPanel ctrl = new JPanel();
@@ -48,7 +50,7 @@ public class PanelEMailList extends JPanel implements Observer {
         this.add(scrollPane, CENTER);
         this.add(ctrl, SOUTH);
         
-        newsLetterOnly = new JCheckBox("Afficher seulement les adresses des abonnés", true);
+        newsLetterOnly = new JCheckBox(CB_SUBSCRIBERS_ONLY, true);
         newsLetterOnly.addActionListener(e -> KaiceModel.update(KaiceModel.DETAILS));
         ctrl.add(newsLetterOnly);
     }
