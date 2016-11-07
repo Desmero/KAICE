@@ -11,6 +11,8 @@ import fr.kaice.tools.generic.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * Created by merkling on 14/08/16.
  */
@@ -21,11 +23,11 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
     private static final int COL_NUM_TRAN = 2;
     private static final int COL_NUM_PRICE = 3;
     private static final int COL_NUM_CASH = 4;
-    private static final DTableColumnModel colDate = new DTableColumnModel("Date", String.class, false);
-    private static final DTableColumnModel colClient = new DTableColumnModel("Client", String.class, false);
-    private static final DTableColumnModel colTran = new DTableColumnModel("Transaction", String.class, false);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static final DTableColumnModel colCash = new DTableColumnModel("Espece", Double.class, false);
+    private static final DTableColumnModel colDate = new DTableColumnModel(COL_DATE, String.class, false);
+    private static final DTableColumnModel colClient = new DTableColumnModel(COL_CLIENT, String.class, false);
+    private static final DTableColumnModel colTran = new DTableColumnModel(COL_TRANSACTION, String.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, false);
+    private static final DTableColumnModel colCash = new DTableColumnModel(COL_CASH, Double.class, false);
     private ArrayList<Transaction> displayList;
     private historicType type;
     private int price;
@@ -97,9 +99,9 @@ public class PartialHistoric extends DTableModel implements IColoredTableModel {
         if (rowIndex == displayList.size()) {
             switch (columnIndex) {
                 case COL_NUM_CLIENT:
-                    return "Total :";
+                    return TOTAL_LINE;
                 case COL_NUM_TRAN:
-                    return "" + rowIndex + " opérations";
+                    return "" + rowIndex + _TRANSACTION;
                 case COL_NUM_PRICE:
                     return DMonetarySpinner.intToDouble(price);
                 case COL_NUM_CASH:

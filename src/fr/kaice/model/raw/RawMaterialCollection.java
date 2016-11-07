@@ -19,16 +19,18 @@ import java.util.List;
 import java.util.Map;
 
 import static fr.kaice.tools.generic.DTerminal.*;
+import static fr.kaice.tools.local.French.*;
 
 /**
  * This class store all {@link RawMaterial} the programme need to know.
  * This should be construct only by {@link KaiceModel}, and one time.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 4 columns : <br/>
- * - "Nom", witch display {@link RawMaterial}'s names (editable {@link String});<br/>
- * - "Stock", witch display currents stocks (editable {@link Integer});<br/>
- * - "Prix", witch display unit prices (non editable {@link Double}).<br/>
- * - "Alert", witch display alert values(editable {@link Integer}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display {@link RawMaterial}'s names (editable
+ * {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_STOCK}", witch display currents stocks (editable {@link Integer});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PRICE}", witch display unit prices (non editable {@link Double}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_ALERT}", witch display alert values(editable {@link Integer}).<br/>
  * The table entries are sorted by names.
  *
  * @author Raphaël Merkling
@@ -44,10 +46,10 @@ public class RawMaterialCollection extends DTableModel implements IHiddenCollect
     private static final int COL_NUM_QTY = 1;
     private static final int COL_NUM_PRICE = 2;
     private static final int COL_NUM_ALERT = 3;
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Stock", Integer.class, true);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, KaiceModel.editor);
-    private static final DTableColumnModel colAlert = new DTableColumnModel("Alert", Integer.class, true);
+    private static final DTableColumnModel colName = new DTableColumnModel(COL_NAME, String.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel(COL_QUANTITY, Integer.class, true);
+    private static final DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, KaiceModel.editor);
+    private static final DTableColumnModel colAlert = new DTableColumnModel(COL_ALERT, Integer.class, true);
 
     private Map<Integer, RawMaterial> map;
     private List<RawMaterial> displayList;

@@ -7,6 +7,10 @@ import fr.kaice.tools.generic.DTablePanel;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.B_ADD;
+import static fr.kaice.tools.local.French.B_HIDE;
+import static fr.kaice.tools.local.French.B_VIEW;
+
 /**
  * This panel display all {@linkplain fr.kaice.model.buy.PurchasedProduct PurchasedProduct} contains in the
  * {@link PurchasedProductCollectionVar} known by {@link KaiceModel}.
@@ -26,7 +30,7 @@ public class PanelPurchasedProductVal extends JPanel {
      */
     public PanelPurchasedProductVal() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), new PurchasedProductCollectionVar());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), hide = new JButton("Cacher");
+        JButton add = new JButton(B_ADD), view = new JButton(B_VIEW), hide = new JButton(B_HIDE);
         JPanel ctrl = new JPanel();
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));

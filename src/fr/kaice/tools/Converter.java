@@ -26,6 +26,7 @@ public class Converter {
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(file), "ISO-8859-1"));
+//                    new FileOutputStream(file), "UTF-8"));
             writer.write(data);
             System.out.println(GREEN + "Writing file " + file + " success" + RESET);
         } catch (IOException ex) {
@@ -50,7 +51,7 @@ public class Converter {
                         , DFormat.DATE_ONLY.parse(data[4]), data[5], data[6], data[7], data[8], data[9], data[10],
                         Boolean.parseBoolean(data[11]));
                 if (Boolean.parseBoolean(data[12])) {
-                    member.changeAdminState();
+                    member.setCode(0);
                 }
                 KaiceModel.getMemberCollection().addReadMember(member);
                 line = d.readLine();

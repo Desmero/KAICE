@@ -14,6 +14,8 @@ public class KFilesParameters {
     public static String fileRawMaterial = "RawMaterials";
     public static String fileSoldProduct = "SoldProducts";
     public static String filePurchasedProduct = "PurchasedProducts";
+    
+    public static String folderBack = "back";
     public static String folderProductIcon = "logo";
     
     public static String pathHistoric = globalPath + "/Historic";
@@ -23,8 +25,17 @@ public class KFilesParameters {
         pathHistoric = globalPath + "/Historic";
     }
     
+    public static String getBackFolder() {
+        return new StringBuilder(globalPath).append('/').append(folderBack).toString();
+    }
+    
     public static String getMemberFile(int yearCode) {
         return new StringBuilder(globalPath).append('/').append(fileMembers).append(yearCode).append(ext).toString();
+    }
+    
+    public static String getMemberBack(int yearCode) {
+        return new StringBuilder(globalPath).append('/').append(folderBack).append('/').append(fileMembers)
+                .append(yearCode).append(ext).toString();
     }
     
     public static String getRawMaterialFile() {

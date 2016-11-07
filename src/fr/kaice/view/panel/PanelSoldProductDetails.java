@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display all information about a {@link SoldProduct}.
  * The interface allow to edit a member the composition of the product.
@@ -38,11 +40,11 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
         this.product = product;
         KaiceModel.getInstance().addObserver(this);
 
-        type = new JLabel("Type : " + product.getType());
-        qty = new JLabel("Quantité : " + product.getQuantity());
-        price = new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-        cost = new JLabel("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
-        profit = new JLabel("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
+        type = new JLabel(TF_TYPE + product.getType());
+        qty = new JLabel(TF_QUANTITY + product.getQuantity());
+        price = new JLabel(TF_PRICE + DMonetarySpinner.intToString(product.getPrice()));
+        cost = new JLabel(TF_COST + DMonetarySpinner.intToString(product.getBuyPrice()));
+        profit = new JLabel(TF_PROFIT + DMonetarySpinner.intToString(product.getProfit()));
 
         DTableModel tableModel = product.createTableModel();
         table = new DTablePanel(KaiceModel.getInstance(), tableModel, 6);
@@ -56,13 +58,13 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
         scrollPaneMat.setPreferredSize(new Dimension(d.width, tableMat.getRowHeight() * 6));
 
         JPanel all = new JPanel(new BorderLayout());
-        title = new PanelTitle("Vente : " + product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        title = new PanelTitle(TITLE_DETAILS_SOLD_PRODUCT + product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel detail = new JPanel();
         JPanel center = new JPanel(new BorderLayout());
     
         JTabbedPane jTabbedPane = new JTabbedPane();
-        jTabbedPane.add("Membre", all);
-        jTabbedPane.add("Historique", panelHistoric);
+        jTabbedPane.add(TAB_MEMBER, all);
+        jTabbedPane.add(TAB_HISTORIC, panelHistoric);
     
         this.setLayout(new BorderLayout());
         this.add(title, BorderLayout.NORTH);
@@ -94,12 +96,12 @@ public class PanelSoldProductDetails extends JPanel implements Observer {
             historic.update();
         }
         if (KaiceModel.isPartModified(KaiceModel.SOLD_PRODUCT)) {
-            type.setText("Type : " + product.getType());
-            qty.setText("Quantité : " + product.getQuantity());
-            price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-            cost.setText("Coût : " + DMonetarySpinner.intToString(product.getBuyPrice()));
-            profit.setText("Bénéfice : " + DMonetarySpinner.intToString(product.getProfit()));
-            title.setTitle("Vente : " + product.getName());
+            type.setText(TF_TYPE + product.getType());
+            qty.setText(TF_QUANTITY + product.getQuantity());
+            price.setText(TF_PRICE + DMonetarySpinner.intToString(product.getPrice()));
+            cost.setText(TF_COST + DMonetarySpinner.intToString(product.getBuyPrice()));
+            profit.setText(TF_PROFIT + DMonetarySpinner.intToString(product.getProfit()));
+            title.setTitle(TITLE_DETAILS_SOLD_PRODUCT + product.getName());
             table.setNumberRow(product.getNumberCompo());
         }
     }

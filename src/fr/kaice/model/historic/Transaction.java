@@ -14,6 +14,7 @@ import java.util.List;
 
 import static fr.kaice.model.historic.TransactionTableModel.*;
 import static fr.kaice.tools.generic.DColor.*;
+import static fr.kaice.tools.local.French.*;
 
 /**
  * This class represent one trade (buy, sell, stock change, ...).<br/><br/>
@@ -23,11 +24,14 @@ import static fr.kaice.tools.generic.DColor.*;
  * <br/><br/>
  * <p>
  * It extends {@link DTableModel}, a custom {@linkplain javax.swing.table.AbstractTableModel
- * AbstractTableModel}.<br/><br/> In a table, it display the {@link ArchivedProduct} collection with 4 columns : <br/> -
- * "Nom", witch display names (non editable {@link String});<br/> - "Prix unitaire", witch display unitary price (non
- * editable {@link Double});<br/> - "Quantité", witch display the bought quantity (non editable {@link Integer});<br/> -
- * "Prix", witch display the total price (non editable {@link Double}).<br/> And a summary of all {@link
- * ArchivedProduct} on the last line.
+ * AbstractTableModel}.<br/><br/>
+ * In a table, it display the {@link ArchivedProduct} collection with 4 columns : <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display names (non editable {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_UNIT_PRICE}", witch display unitary price (non editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_QUANTITY}", witch display the bought quantity (non editable {@link Integer});
+ * <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PRICE}", witch display the total price (non editable {@link Double}).<br/>
+ * And a summary of all {@link ArchivedProduct} on the last line.
  *
  * @author Raphaël Merkling
  * @version 2.2
@@ -181,7 +185,7 @@ public class Transaction implements Serializable {
         if (rowIndex == productList.size()) {
             switch (columnIndex) {
                 case COL_NUM_NAME:
-                    return "Total";
+                    return TOTAL_LINE;
                 case COL_NUM_PRICE:
                     return DMonetarySpinner.intToDouble(getPrice());
                 default:
@@ -241,22 +245,26 @@ public class Transaction implements Serializable {
      * transactionType#ENR} : for {@linkplain Member Member}s's enrolment.
      */
     public enum transactionType {
-        SELL("Vente", GREEN),
-        CANCEL("Annulation de vente", ORANGE),
-        ADD("Augmentation des stocks", CYAN),
-        SUB("Réduction des stocks", RED),
-        BUY("Courses", BLUE),
-        SELL_CHANGE("Changement de prix", PURPLE),
-        ENR("Inscription", YELLOW),
-        MISC ("Opération diver", GRAY);
+        SELL(TR_SELL, GREEN, TR_FULL_NAME_SELL),
+        CANCEL(TR_CANCEL, ORANGE, TR_FULL_NAME_CANCEL),
+        ADD(TR_ADD, CYAN, TR_FULL_NAME_ADD),
+        SUB(TR_SUB, RED, TR_FULL_NAME_SUB),
+        BUY(TR_BUY, BLUE, TR_FULL_NAME_BUY),
+        SELL_CHANGE(TR_SELL_CHANGE, PINK, TR_FULL_NAME_SELL_CHANGE),
+        ENR(TR_ENR, YELLOW, TR_FULL_NAME_ENR),
+        CODE_CHANGE(TR_ADMIN_CHANGE, PURPLE, TR_FULL_ADMIN_CHANGE),
+        DEPOSIT(TR_DEPOSIT, WHITE, TR_FULL_DEPOSIT),
+        MISC(TR_MISC, GRAY, TR_FULL_NAME_MISC);
         
         private boolean display;
         private final Color color;
         private final String title;
+        private final String fullName;
         
-        transactionType(String title, Color color) {
+        transactionType(String title, Color color, String fullName) {
             this.title = title;
             this.color = color;
+            this.fullName = fullName;
             this.display = true;
         }
         
@@ -266,6 +274,10 @@ public class Transaction implements Serializable {
         
         public String getTitle() {
             return title;
+        }
+        
+        public String getFullName() {
+            return fullName;
         }
         
         public boolean isDisplay() {

@@ -10,8 +10,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static fr.kaice.tools.local.French.B_CANCEL;
+import static fr.kaice.tools.local.French.B_VALID;
+
 /**
- * This panel display all the not yet delivred {@linkplain fr.kaice.model.order.Order Order} contains in the
+ * This panel display all the not yet delivered {@linkplain fr.kaice.model.order.Order Order} contains in the
  * {@linkplain fr.kaice.model.order.OrderCollection OrderCollection} known by {@link KaiceModel}.
  * The interface allow to remove or valid orders.
  *
@@ -29,7 +32,7 @@ public class PanelOrder extends JPanel {
      */
     public PanelOrder() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getOrderCollection());
-        JButton valid = new JButton("Valider"), rem = new JButton("Annuler");
+        JButton valid = new JButton(B_VALID), rem = new JButton(B_CANCEL);
         JPanel ctrl = new JPanel();
         DMonetarySpinner cashBack = new DMonetarySpinner(0.1);
         

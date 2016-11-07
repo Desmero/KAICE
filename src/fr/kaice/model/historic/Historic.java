@@ -374,24 +374,7 @@ public class Historic extends DTableModel implements PeriodGetter, IColoredTable
                 return transaction.getClient();
             case COL_NUM_TRAN:
                 if (isDisplayTypeNames()) {
-                    switch (transaction.getType()) {
-                        case ADD:
-                            return TR_ADD + displayList.get(rowIndex).toString();
-                        case SUB:
-                            return TR_SUB + displayList.get(rowIndex).toString();
-                        case CANCEL:
-                            return TR_CANCEL + displayList.get(rowIndex).toString();
-                        case SELL:
-                            return TR_SELL + displayList.get(rowIndex).toString();
-                        case BUY:
-                            return TR_BUY + displayList.get(rowIndex).toString();
-                        case ENR:
-                            return TR_ENR + displayList.get(rowIndex).toString();
-                        case MISC:
-                            return TR_MISC + displayList.get(rowIndex).toString();
-                        default:
-                            return displayList.get(rowIndex).toString();
-                    }
+                    return transaction.getType().getFullName() + displayList.get(rowIndex).toString();
                 } else {
                     return displayList.get(rowIndex).toString();
                 }

@@ -118,7 +118,7 @@ class PanelMemberDetails extends JPanel {
             update();
         }));
 
-        title = new PanelTitle(TITLE_DETAILS, e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        title = new PanelTitle(TITLE_DETAILS_MEMBER, e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel allDetails = new JPanel(new BorderLayout());
         historic = new JPanel(new BorderLayout());
 

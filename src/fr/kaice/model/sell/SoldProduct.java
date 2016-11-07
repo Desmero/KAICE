@@ -132,7 +132,7 @@ public class SoldProduct implements GenericProduct, Serializable {
             material.rebackStock(element.getQty());
         }
         RawMaterialCollection rawColl = KaiceModel.getRawMatCollection();
-        // TODO veify this is not useless
+        // TODO verify this is not useless
         rawColl.updateDisplayList();
         rawColl.serialize();
         KaiceModel.update(RAW_MATERIAL);

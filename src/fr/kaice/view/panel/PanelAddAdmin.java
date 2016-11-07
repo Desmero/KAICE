@@ -3,6 +3,7 @@ package fr.kaice.view.panel;
 import fr.kaice.model.KaiceModel;
 import fr.kaice.model.member.Member;
 import fr.kaice.tools.IdSpinner;
+import fr.kaice.tools.generic.DColor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +19,10 @@ public class PanelAddAdmin extends JPanel {
     private final JTextField memberName;
     private final JTextField memberFirstName;
     private final IdSpinner memberId;
+    private final JPasswordField passNumber;
     private Member member;
-    private JButton accept;
+    private final JButton accept;
+    private final JButton changeCode;
     
     public PanelAddAdmin() {
         member = null;
@@ -41,18 +44,20 @@ public class PanelAddAdmin extends JPanel {
             member = KaiceModel.getMemberCollection().getMember(memberId.getValue());
             update();
         });
+        passNumber = new JPasswordField();
         
         JLabel name = new JLabel(TF_NAME);
         JLabel firstName = new JLabel(TF_FIRST_NAME);
         JLabel id = new JLabel(TF_MEMBERSHIP_NUM);
+        JLabel pswd = new JLabel(TF_PASSWORD_REG);
         
         accept = new JButton(B_ADD_CASHIER);
-        accept.addActionListener(e -> {
-            member.changeAdminState();
-            KaiceModel.getInstance().setDetails(new JPanel());
-            KaiceModel.getMemberCollection().serialize();
-        });
+        accept.addActionListener(e -> valid());
         accept.setEnabled(false);
+        changeCode = new JButton(B_CHANGE_CASHIER_CODE);
+        changeCode.addActionListener(e -> changeCode());
+        changeCode.setEnabled(false);
+        changeCode.setVisible(false);
         
         GroupLayout groupLayout = new GroupLayout(center);
         groupLayout.setAutoCreateGaps(true);
@@ -64,9 +69,12 @@ public class PanelAddAdmin extends JPanel {
         vGroup.addGroup(groupLayout.createParallelGroup().addComponent(name).addComponent(memberName));
         vGroup.addGroup(groupLayout.createParallelGroup().addComponent(firstName).addComponent(memberFirstName));
         vGroup.addGroup(groupLayout.createParallelGroup().addComponent(id).addComponent(memberId));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(pswd).addComponent(passNumber));
         
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(name).addComponent(firstName).addComponent(id));
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(memberName).addComponent(memberFirstName).addComponent(memberId));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(name).addComponent(firstName).addComponent(id)
+                .addComponent(pswd));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(memberName).addComponent(memberFirstName)
+                .addComponent(memberId).addComponent(passNumber));
         
         groupLayout.setVerticalGroup(vGroup);
         groupLayout.setHorizontalGroup(hGroup);
@@ -79,7 +87,31 @@ public class PanelAddAdmin extends JPanel {
         this.add(ctrl, SOUTH);
         
         ctrl.add(accept);
+        ctrl.add(changeCode);
         
+    }
+    
+    private void valid() {
+        boolean isAdmin = (member != null) && (member.isAdmin());
+        if (isAdmin) {
+            member.removeAdminRight();
+            KaiceModel.getInstance().setDetails(new JPanel());
+            KaiceModel.getMemberCollection().serialize();
+        } else {
+            changeCode();
+        }
+    }
+    
+    private void changeCode() {
+        String pswd = new String(passNumber.getPassword());
+        try {
+            int pscd = Integer.parseInt(pswd);
+            member.addAdminRight(pscd);
+            KaiceModel.getInstance().setDetails(new JPanel());
+            KaiceModel.getMemberCollection().serialize();
+        } catch (NumberFormatException e) {
+            passNumber.setBackground(DColor.RED);
+        }
     }
     
     private void selectAdmin() {
@@ -88,18 +120,20 @@ public class PanelAddAdmin extends JPanel {
     }
     
     private void update() {
-        if (member != null) {
+        boolean isNotNull = member != null;
+        if (isNotNull) {
             memberName.setText(member.getName());
             memberFirstName.setText(member.getFirstName());
             memberId.setValue(member.getMemberId());
-            if (member.isAdmin()) {
+            boolean isAdmin = member.isAdmin();
+            if (isAdmin) {
                 accept.setText(B_REM_CASHIER);
             } else {
                 accept.setText(B_ADD_CASHIER);
             }
-            accept.setEnabled(true);
-        } else {
-            accept.setEnabled(false);
+            changeCode.setEnabled(isAdmin);
+            changeCode.setVisible(isAdmin);
         }
+        accept.setEnabled(isNotNull);
     }
 }

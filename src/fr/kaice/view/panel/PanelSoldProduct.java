@@ -7,6 +7,8 @@ import fr.kaice.tools.generic.DTablePanel;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display all {@link SoldProduct} contains in the
  * {@linkplain fr.kaice.model.sell.SoldProductCollection SoldProductCollection} known by {@link KaiceModel}.
@@ -26,7 +28,7 @@ public class PanelSoldProduct extends JPanel {
      */
     public PanelSoldProduct() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getSoldProdCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), hide = new JButton("Cacher");
+        JButton add = new JButton(B_ADD), view = new JButton(B_VIEW), hide = new JButton(B_HIDE);
         JPanel ctrl = new JPanel();
         
         add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewSoldProduct()));
@@ -37,7 +39,7 @@ public class PanelSoldProduct extends JPanel {
             }
         });
         if (KaiceModel.editor) {
-            hide.setText("Supprimer");
+            hide.setText(B_DELETE);
             hide.addActionListener(e -> KaiceModel.getSoldProdCollection().removeRow(table.getSelectedRow()));
         } else {
             hide.addActionListener(e -> KaiceModel.getSoldProdCollection().hideRow(table.getSelectedRow()));

@@ -11,6 +11,9 @@ import fr.kaice.tools.generic.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +21,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static fr.kaice.tools.generic.DTerminal.*;
-import static fr.kaice.tools.local.French.COL_FIRST_NAME;
-import static fr.kaice.tools.local.French.COL_NAME;
-import static fr.kaice.tools.local.French.COL_NUM;
+import static fr.kaice.tools.local.French.*;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * This class store all {@link Member} of the current year.
@@ -184,11 +186,15 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
     public void serialize() {
         serialize(KaiceModel.getActualYear());
     }
-        /**
-         * Serialize the members collection, and save-it in a file.
-         */
-        public void serialize(int yearCode) {
+    
+    /**
+     * Serialize the members collection, and save-it in a file.
+     */
+    public void serialize(int yearCode) {
         try {
+            Path source = FileSystems.getDefault().getPath(KFilesParameters.getMemberFile(yearCode));
+            Path dest = FileSystems.getDefault().getPath(KFilesParameters.getMemberBack(yearCode));
+            Files.copy(source, dest, REPLACE_EXISTING);
             FileOutputStream fileOut = new FileOutputStream(KFilesParameters.getMemberFile(yearCode));
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(getYearList(yearCode));
@@ -405,7 +411,7 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
     
     @Override
     public Color getRowColor(int row) {
-        if (KaiceModel.editor && displayList.get(row).isAdmin()) {
+        if ((KaiceModel.editor || true) && displayList.get(row).isAdmin()) {
             return DColor.BLUE;
         }
         if (!displayList.get(row).isAdult()) {
@@ -423,10 +429,10 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
     public String getEMailList(boolean newsLetterOnly) {
         StringBuilder sb = new StringBuilder();
         map.values().stream().filter(u -> (!newsLetterOnly || u.isNewsLetter()) && u.isValidEmailAddress())
-        .forEachOrdered(u -> {
-            String eMail = u.getEMail();
-            sb.append(eMail).append("\n");
-        });
+                .forEachOrdered(u -> {
+                    String eMail = u.getEMail();
+                    sb.append(eMail).append("\n");
+                });
         return sb.toString();
     }
     
@@ -462,7 +468,7 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
     
     public void saveText(int yearCode) {
         StringBuilder stringBuilder = new StringBuilder();
-    
+        
         for (Member member : getYearList(yearCode)) {
             stringBuilder.append(member.getMemberId()).append(';');
             stringBuilder.append(member.getName()).append(';');

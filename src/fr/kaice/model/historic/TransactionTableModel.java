@@ -4,6 +4,8 @@ import fr.kaice.model.KaiceModel;
 import fr.kaice.tools.generic.DTableColumnModel;
 import fr.kaice.tools.generic.DTableModel;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * Created by merkling on 18/09/16.
  */
@@ -15,11 +17,11 @@ public class TransactionTableModel extends DTableModel{
     static final transient int COL_NUM_QTY = 2;
     static final transient int COL_NUM_PRICE = 3;
     static final transient int COL_COUNT = 4;
-    private static final transient DTableColumnModel colId = new DTableColumnModel("Id", Integer.class, false);
-    private static final transient DTableColumnModel colName = new DTableColumnModel("Nom", String.class, false);
-    private static final transient DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, false);
-    private static final transient DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, false);
-    private static final transient DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
+    private static final transient DTableColumnModel colId = new DTableColumnModel(COL_ID, Integer.class, false);
+    private static final transient DTableColumnModel colName = new DTableColumnModel(COL_NAME, String.class, false);
+    private static final transient DTableColumnModel colQty = new DTableColumnModel(COL_QUANTITY, Integer.class, false);
+    private static final transient DTableColumnModel colUnitPrice = new DTableColumnModel(COL_UNIT_PRICE, Double.class, false);
+    private static final transient DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, false);
     private final Transaction transaction;
     
     public TransactionTableModel(Transaction transaction) {

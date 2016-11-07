@@ -9,6 +9,8 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This class is a {@link JPanel} who display some {@link JDateChooser} in order to select a period of time.
  *
@@ -26,7 +28,7 @@ public class TimePeriodChooser extends JPanel {
     private static final int ALL = 4;
     private final JDateChooser start;
     private final JDateChooser end;
-    private final JComboBox<String> selec;
+    private final JComboBox<String> select;
     
     /**
      * Create a new {@link TimePeriodChooser}.
@@ -43,13 +45,13 @@ public class TimePeriodChooser extends JPanel {
         end.addPropertyChangeListener(listener);
         end.setPreferredSize(new Dimension(w, h));
         
-        selec = new JComboBox<>();
-        selec.addItem("Aujourd'hui");
-        selec.addItem("Cette semaine");
-        selec.addItem("Ce mois");
-        selec.addItem("Cette année");
-        selec.addItem("Tout");
-        selec.addActionListener(e -> updateDate(selec.getSelectedIndex()));
+        select = new JComboBox<>();
+        select.addItem(TIME_DAY);
+        select.addItem(TIME_WEEK);
+        select.addItem(TIME_MONTH);
+        select.addItem(TIME_YEAR);
+        select.addItem(TIME_ALL);
+        select.addActionListener(e -> updateDate(select.getSelectedIndex()));
         
         JPanel top = new JPanel();
         JPanel bot = new JPanel();
@@ -59,12 +61,12 @@ public class TimePeriodChooser extends JPanel {
         this.add(top, BorderLayout.CENTER);
         this.add(bot, BorderLayout.SOUTH);
         
-        top.add(new JLabel("Début : "));
+        top.add(new JLabel(DC_START));
         top.add(start);
-        top.add(new JLabel("Fin : "));
+        top.add(new JLabel(DC_END));
         top.add(end);
-        bot.add(new JLabel("Préselecction : "));
-        bot.add(selec);
+        bot.add(new JLabel(CB_PRESELECT));
+        bot.add(select);
         updateDate(DAY);
     }
     
@@ -129,7 +131,7 @@ public class TimePeriodChooser extends JPanel {
             default:
                 return;
         }
-        selec.setSelectedIndex(selection);
+        select.setSelectedIndex(selection);
         calEnd.add(Calendar.SECOND, -1);
         start.setDate(calStart.getTime());
         end.setDate(calEnd.getTime());

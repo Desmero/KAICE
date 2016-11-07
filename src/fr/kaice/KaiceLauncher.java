@@ -24,6 +24,10 @@ public abstract class KaiceLauncher {
         if (!saveRep.exists()) {
             saveRep.mkdir();
         }
+        File backRep = new File(KFilesParameters.getBackFolder());
+        if (!backRep.exists()) {
+            backRep.mkdir();
+        }
         if (args.length > 1 && args[1].equals("-r")) {
             for (int year = 15; year <= KaiceModel.getActualYear(); year++) {
                 Converter.readUser(year);

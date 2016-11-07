@@ -10,13 +10,14 @@ import java.awt.*;
  */
 public abstract class DColor {
     
-    public static final Color PURPLE = new Color(255, 102, 255);
+    public static final Color PINK = new Color(255, 102, 255);
     public static final Color RED = new Color(255, 102, 102);
     public static final Color ORANGE = new Color(255, 178, 102);
     public static final Color YELLOW = new Color(255, 255, 102);
     public static final Color GREEN = new Color(102, 255, 102);
     public static final Color CYAN = new Color(102, 255, 255);
     public static final Color BLUE = new Color(102, 102, 255);
+    public static final Color PURPLE = new Color(178, 102, 255);
     
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color LIGHT_GRAY = new Color(224, 224, 224);

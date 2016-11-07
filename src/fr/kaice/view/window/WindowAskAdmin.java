@@ -16,6 +16,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import static fr.kaice.tools.local.French.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.SOUTH;
 
@@ -27,14 +28,15 @@ public class WindowAskAdmin extends JDialog implements Observer {
     private final JTextField memberName;
     private final JTextField memberFirstName;
     private final IdSpinner memberId;
+    private final JPasswordField password;
     private final JButton accept;
     private ActionListener listener;
     private final Set<Character> pressed = new HashSet<>();
     private String sName;
-    private String sFirstname;
+    private String sFirstName;
     
     private WindowAskAdmin(ActionListener listener) {
-        super((JFrame) null, "Identification", true);
+        super((JFrame) null, WIN_TITLE_AUTHENTICATION, true);
         
         this.listener = listener;
         this.setResizable(true);
@@ -44,7 +46,7 @@ public class WindowAskAdmin extends JDialog implements Observer {
         JPanel ctrl = new JPanel();
         
         sName = "";
-        sFirstname = "";
+        sFirstName = "";
     
         memberName = new JTextField();
         memberName.setColumns(10);
@@ -58,7 +60,7 @@ public class WindowAskAdmin extends JDialog implements Observer {
                 pressed.add(e.getKeyChar());
                 if (pressed.size() == 1) {
                     memberName.setText(sName);
-                    memberFirstName.setText(sFirstname);
+                    memberFirstName.setText(sFirstName);
                 }
             }
     
@@ -71,7 +73,7 @@ public class WindowAskAdmin extends JDialog implements Observer {
                 }
             }
         });
-        memberName.addActionListener(e -> valid(e));
+        memberName.addActionListener(e -> selectPassField());
         memberFirstName = new JTextField();
         memberFirstName.setColumns(10);
         memberFirstName.addKeyListener(new KeyListener() {
@@ -84,7 +86,7 @@ public class WindowAskAdmin extends JDialog implements Observer {
                 pressed.add(e.getKeyChar());
                 if (pressed.size() == 1) {
                     memberName.setText(sName);
-                    memberFirstName.setText(sFirstname);
+                    memberFirstName.setText(sFirstName);
                 }
             }
     
@@ -92,26 +94,29 @@ public class WindowAskAdmin extends JDialog implements Observer {
             public void keyReleased(KeyEvent e) {
                 pressed.remove(e.getKeyChar());
                 if (pressed.size() == 0) {
-                    sFirstname = memberFirstName.getText();
+                    sFirstName = memberFirstName.getText();
                     selectAdmin();
                 }
             }
         });
-        memberFirstName.addActionListener(e -> valid(e));
+        memberFirstName.addActionListener(e -> selectPassField());
         memberId = new IdSpinner();
         Dimension dimId = memberFirstName.getPreferredSize();
         dimId.setSize(80, dimId.getHeight());
         memberId.setPreferredSize(dimId);
         memberId.addChangeListener(e -> selectAdminId());
+        password = new JPasswordField();
+        password.addActionListener(e -> valid(e));
         
-        JLabel name = new JLabel("Nom : ");
-        JLabel firstName = new JLabel("Prénom : ");
-        JLabel id = new JLabel("Numero de membre : ");
+        JLabel name = new JLabel(TF_NAME);
+        JLabel firstName = new JLabel(TF_FIRST_NAME);
+        JLabel id = new JLabel(TF_MEMBERSHIP_NUM);
+        JLabel pass = new JLabel(TF_PASSWORD);
         
-        accept = new JButton("Valider");
+        accept = new JButton(B_VALID);
         accept.addActionListener(e -> valid(e));
         accept.setEnabled(false);
-        JButton cancel = new JButton("Annuler");
+        JButton cancel = new JButton(B_CANCEL);
         cancel.addActionListener(new CloseListener(this));
         cancel.addActionListener(e -> removeObserver());
         
@@ -125,9 +130,12 @@ public class WindowAskAdmin extends JDialog implements Observer {
         vGroup.addGroup(groupLayout.createParallelGroup().addComponent(name).addComponent(memberName));
         vGroup.addGroup(groupLayout.createParallelGroup().addComponent(firstName).addComponent(memberFirstName));
         vGroup.addGroup(groupLayout.createParallelGroup().addComponent(id).addComponent(memberId));
+        vGroup.addGroup(groupLayout.createParallelGroup().addComponent(pass).addComponent(password));
         
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(name).addComponent(firstName).addComponent(id));
-        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(memberName).addComponent(memberFirstName).addComponent(memberId));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(name).addComponent(firstName).addComponent(id)
+                .addComponent(pass));
+        hGroup.addGroup(groupLayout.createParallelGroup().addComponent(memberName).addComponent(memberFirstName)
+                .addComponent(memberId).addComponent(password));
         
         groupLayout.setVerticalGroup(vGroup);
         groupLayout.setHorizontalGroup(hGroup);
@@ -162,7 +170,7 @@ public class WindowAskAdmin extends JDialog implements Observer {
     }
 
     private void selectAdmin() {
-        if (sName.equals("") && sFirstname.equals("")) {
+        if (sName.equals("") && sFirstName.equals("")) {
             memberId.setValue(0);
         } else {
             Member admin = KaiceModel.getMemberCollection().getMemberByName(memberName.getText(), memberFirstName.getText());
@@ -177,9 +185,19 @@ public class WindowAskAdmin extends JDialog implements Observer {
         KaiceModel.getMemberCollection().setSelectedAdminById(memberId.getValue());
     }
     
+    private void selectPassField() {
+        password.requestFocus();
+        selectAdmin();
+    }
+    
     private void valid(ActionEvent e) {
         selectAdminId();
-        if (KaiceModel.getMemberCollection().isAdminSelected()) {
+        String pass = new String(password.getPassword());
+        if (pass.equals("")) {
+            pass = "0";
+        }
+        if (KaiceModel.getMemberCollection().isAdminSelected() && KaiceModel.getMemberCollection().getSelectedAdmin()
+                .checkPassWord(pass)) {
             listener.actionPerformed(e);
             removeObserver();
             this.dispose();
@@ -192,7 +210,7 @@ public class WindowAskAdmin extends JDialog implements Observer {
             Member mem = KaiceModel.getMemberCollection().getSelectedAdmin();
             if (mem == null) {
                 memberName.setText(sName);
-                memberFirstName.setText(sFirstname);
+                memberFirstName.setText(sFirstName);
                 memberId.setValue(0);
                 accept.setEnabled(false);
             } else {

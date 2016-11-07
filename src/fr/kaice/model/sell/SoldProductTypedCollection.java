@@ -8,13 +8,19 @@ import fr.kaice.tools.generic.DTableModel;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
+import static fr.kaice.tools.local.French.COL_ARTICLE;
+import static fr.kaice.tools.local.French.COL_DISP;
+import static fr.kaice.tools.local.French.COL_PRICE;
+
 /**
  * This class repertories all {@link SoldProduct} of one {@linkplain SoldProductCollection.prodType type}.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 3 columns : <br/>
- * - "Article", witch display {@link SoldProduct}'s names (non editable {@link String});<br/>
- * - "Prix", witch display total sold prices (non editable {@link Double}).<br/>
- * - "Disp.", witch display the available quantities (non editable {@link Integer});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_ARTICLE}", witch display {@link SoldProduct}'s names (non editable
+ * {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PRICE}", witch display total sold prices (non editable {@link Double}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_DISP}", witch display the available quantities (non editable
+ * {@link Integer});<br/>
  * The table entries are sorted by names.
  *
  * @author Raphaël Merkling
@@ -29,9 +35,9 @@ public class SoldProductTypedCollection extends DTableModel {
     private static final int COL_NUM_ARTICLE = 0;
     private static final int COL_NUM_PRICE = 1;
     private static final int COL_NUM_QTY = 2;
-    private static final DTableColumnModel colArticle = new DTableColumnModel("Article", String.class, false);
-    private static final DTableColumnModel colPrice = new DTableColumnModel("Prix", Double.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Disp.", Integer.class, false);
+    private static final DTableColumnModel colArticle = new DTableColumnModel(COL_ARTICLE, String.class, false);
+    private static final DTableColumnModel colPrice = new DTableColumnModel(COL_PRICE, Double.class, false);
+    private static final DTableColumnModel colQty = new DTableColumnModel(COL_DISP, Integer.class, false);
     private final SoldProductCollection.prodType type;
     private ArrayList<SoldProduct> collection;
     

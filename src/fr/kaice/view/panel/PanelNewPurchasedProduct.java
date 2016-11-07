@@ -7,7 +7,7 @@ import fr.kaice.tools.generic.DMonetarySpinner;
 import javax.swing.*;
 import java.awt.*;
 
-import static fr.kaice.tools.local.French.B_VALID;
+import static fr.kaice.tools.local.French.*;
 
 /**
  * This panel allow the user to create a new {@linkplain fr.kaice.model.buy.PurchasedProduct PurchasedProduct} and store
@@ -61,7 +61,7 @@ class PanelNewPurchasedProduct extends JPanel {
         });
         
         this.setLayout(new BorderLayout());
-        PanelTitle title = new PanelTitle("Nouvel article à l'achat", e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        PanelTitle title = new PanelTitle(TITLE_BUY_NEW_ARTICLE, e -> KaiceModel.getInstance().setDetails(new JPanel()));
         JPanel centerPlace = new JPanel(new GridLayout(1, 2));
         JPanel centerField = new JPanel();
         JPanel center = new JPanel(new GridLayout(4, 2));
@@ -76,13 +76,13 @@ class PanelNewPurchasedProduct extends JPanel {
     
         centerField.add(center);
         
-        center.add(new JLabel("Nom de l'article :"));
+        center.add(new JLabel(TF_ARTICLE_NAME));
         center.add(name);
-        center.add(new JLabel("Prix :"));
+        center.add(new JLabel(TF_PRICE));
         center.add(price);
-        center.add(new JLabel("Produit :"));
+        center.add(new JLabel(TF_PRODUCT));
         center.add(material);
-        center.add(new JLabel("Quantité :"));
+        center.add(new JLabel(TF_QUANTITY));
         center.add(quantity);
         
         ctrl.add(accept);

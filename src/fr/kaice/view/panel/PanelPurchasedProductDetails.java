@@ -11,6 +11,8 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * Created by merkling on 14/08/16.
  */
@@ -30,13 +32,14 @@ public class PanelPurchasedProductDetails extends JPanel implements Observer {
         JPanel details = new JPanel();
         
         if (product.getRawMat() != null) {
-            prod = new JLabel("Produit : " + product.getRawMat().getName());
+            prod = new JLabel(TF_PRODUCT + product.getRawMat().getName());
         } else {
-            prod = new JLabel("Produit : Aucun");
+            prod = new JLabel(TF_PRODUCT + NO_PROD);
         }
-        qty = new JLabel("Quantité : " + product.getQuantity());
-        price = new JLabel("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-        title = new PanelTitle("Achat : " + product.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        qty = new JLabel(TF_QUANTITY + product.getQuantity());
+        price = new JLabel(TF_PRICE + DMonetarySpinner.intToString(product.getPrice()));
+        title = new PanelTitle(TITLE_DETAILS_PURCHASE_PRODUCT + product.getName(), e -> KaiceModel.getInstance().setDetails(new
+                JPanel()));
         
         this.setLayout(new BorderLayout());
         this.add(title, BorderLayout.NORTH);
@@ -59,13 +62,13 @@ public class PanelPurchasedProductDetails extends JPanel implements Observer {
         }
         if (KaiceModel.isPartModified(KaiceModel.PURCHASED_PRODUCT)) {
             if (product.getRawMat() != null) {
-                prod = new JLabel("Produit : " + product.getRawMat().getName());
+                prod = new JLabel(TF_PRODUCT + product.getRawMat().getName());
             } else {
-                prod = new JLabel("Produit : Aucun");
+                prod = new JLabel(TF_PRODUCT + NO_PROD);
             }
-            qty.setText("Quantité : " + product.getQuantity());
-            price.setText("Prix : " + DMonetarySpinner.intToString(product.getPrice()));
-            title.setTitle("Achat : " + product.getName());
+            qty.setText(TF_QUANTITY + product.getQuantity());
+            price.setText(TF_PRICE + DMonetarySpinner.intToString(product.getPrice()));
+            title.setTitle(TITLE_DETAILS_PURCHASE_PRODUCT + product.getName());
         }
     }
 }

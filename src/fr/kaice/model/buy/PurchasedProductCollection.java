@@ -16,16 +16,19 @@ import java.io.*;
 import java.util.*;
 
 import static fr.kaice.tools.generic.DTerminal.*;
+import static fr.kaice.tools.local.French.*;
 
 /**
  * This class store all {@link PurchasedProduct} the programme need to know.
  * This should be construct only by {@link KaiceModel}, and one time.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 4 columns : <br/>
- * - "Nom", witch display names (editable {@link String});<br/>
- * - "Prix unitaire", witch display unitary prices (editable {@link Double});<br/>
- * - "Quantit?", witch display the bought quantities (editable {@link Integer});<br/>
- * - "Prix total", witch display total bought prices (non editable {@link Double}).<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display names (editable {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_UNIT_PRICE}", witch display unitary prices (editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_QUANTITY}", witch display the bought quantities (editable {@link Integer});
+ * <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_TOTAL_PRICE}", witch display total bought prices (non editable
+ * {@link Double}).<br/>
  * The table entries are sorted by names.
  *
  * @author Raphaël Merkling
@@ -43,10 +46,10 @@ public class PurchasedProductCollection extends DTableModel {
     private static final int COL_NUM_RAW_QTY = 5;
     private static final int COL_NUM_TOTAL_PRICE = 3;
     private static final int COL_NUM_UNIT_PRICE = 1;
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité", Integer.class, true);
-    private static final DTableColumnModel colTotalPrice = new DTableColumnModel("Prix total", Double.class, false);
-    private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
+    private static final DTableColumnModel colName = new DTableColumnModel(COL_NAME, String.class, true);
+    private static final DTableColumnModel colQty = new DTableColumnModel(COL_QUANTITY, Integer.class, true);
+    private static final DTableColumnModel colTotalPrice = new DTableColumnModel(COL_TOTAL_PRICE, Double.class, false);
+    private static final DTableColumnModel colUnitPrice = new DTableColumnModel(COL_UNIT_PRICE, Double.class, true);
     private List<PurchasedProduct> displayList;
     private Map<Integer, PurchasedProduct> map;
     private List<PurchasedProduct> variantList;
@@ -307,8 +310,8 @@ public class PurchasedProductCollection extends DTableModel {
             resetBought();
             return true;
         } else {
-            JOptionPane.showMessageDialog(null, "La somme pay? ne correspond pas au prix calcul?",
-                    "Prix", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, DIALOG_TEXT_SHOPPING_PRICE, DIALOG_NAME_SHOPPING_PRICE, JOptionPane
+                    .WARNING_MESSAGE);
             return false;
         }
     }

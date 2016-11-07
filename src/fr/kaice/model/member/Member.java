@@ -1,5 +1,9 @@
 package fr.kaice.model.member;
 
+import fr.kaice.model.KaiceModel;
+import fr.kaice.model.historic.ArchivedProduct;
+import fr.kaice.model.historic.Transaction;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +44,7 @@ public class Member implements Serializable {
     private String mailTown;
     private String eMail;
     private boolean newsLetter;
-    private boolean admin;
+    private int admin;
     
     /**
      * Create an empty member with a given id. All field are filled with generic string.
@@ -108,7 +112,7 @@ public class Member implements Serializable {
             this.eMail = EMP_E_MAIL;
         }
         this.newsLetter = newsLetter;
-        this.admin = false;
+        this.admin = -1;
     }
     
     /**
@@ -328,11 +332,37 @@ public class Member implements Serializable {
     }
     
     public boolean isAdmin() {
-        return admin;
+        return admin >= 0;
+    }
+
+    public void removeAdminRight() {
+        if (isAdmin()) {
+            admin = -1;
+            Transaction tran = new Transaction(this.memberId, Transaction.transactionType.CODE_CHANGE, 0, 0, new Date());
+            ArchivedProduct archProd = new ArchivedProduct(TR_ADMIN_CHANGE_REM + " " + this.getFullName(), 0, 0, -1);
+            tran.addArchivedProduct(archProd);
+            KaiceModel.getHistoric().addTransaction(tran);
+        }
     }
     
-    public void changeAdminState() {
-        this.admin = !admin;
+    public void addAdminRight(int newCode) {
+        admin = newCode;
+        Transaction tran = new Transaction(this.memberId, Transaction.transactionType.CODE_CHANGE, 0, 0, new Date());
+        ArchivedProduct archProd = new ArchivedProduct(TR_ADMIN_CHANGE_CODE + " " + this.getFullName(), 0, 0, -1);
+        tran.addArchivedProduct(archProd);
+        KaiceModel.getHistoric().addTransaction(tran);
+    }
+    
+    public void setCode(int newCode) {
+        admin = newCode;
+    }
+    
+    public boolean checkPassWord(String pass) {
+        try {
+            return admin == Integer.parseInt(pass);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
     
     /**

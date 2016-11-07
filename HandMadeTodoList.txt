@@ -4,9 +4,6 @@ KAICE Todo list :
 
   - PurchasedProduct : warning (unused method)
 
-  - Member : Set the current member in the current transaction (not in the members collection)
-           : Only create new member of the current year
-
   - update : reduce the historic update calls
 
   - javadoc : alert all update
@@ -16,3 +13,6 @@ KAICE Todo list :
 
   - others : change tabulation order in Member details
            : erase the square in the tri-states checkbox
+
+  - modification du prix des inscriptions
+  - modification de la gestion des purchasedProducts

@@ -11,6 +11,8 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * Created by Raphael on 20/08/2016.
  */
@@ -27,10 +29,10 @@ public class PanelRawMaterialDetails extends JPanel implements Observer{
         JPanel all = new JPanel(new BorderLayout());
         JPanel details = new JPanel();
 
-        title = new PanelTitle("Stock : " + material.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
-        price = new JLabel("Prix : " + DMonetarySpinner.intToString(material.getPrice()));
-        qty = new JLabel("Quantité : " + material.getStock());
-        alert = new JLabel("Alerte : " + material.getAlert());
+        title = new PanelTitle(TF_STOCK + material.getName(), e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        price = new JLabel(TF_PRICE + DMonetarySpinner.intToString(material.getPrice()));
+        qty = new JLabel(TF_QUANTITY + material.getStock());
+        alert = new JLabel(TF_ALERT + material.getAlert());
 
         this.setLayout(new BorderLayout());
         this.add(title, BorderLayout.NORTH);
@@ -60,10 +62,10 @@ public class PanelRawMaterialDetails extends JPanel implements Observer{
             historic.update();
         }
         if (KaiceModel.isPartModified(KaiceModel.RAW_MATERIAL)) {
-            title.setTitle("Stock : " + material.getName());
-            price.setText("Prix : " + DMonetarySpinner.intToString(material.getPrice()));
-            qty.setText("Quantité : " + material.getStock());
-            alert.setText("Alerte : " + material.getAlert());
+            title.setTitle(TF_STOCK + material.getName());
+            price.setText(TF_PRICE + DMonetarySpinner.intToString(material.getPrice()));
+            qty.setText(TF_QUANTITY + material.getStock());
+            alert.setText(TF_ALERT + material.getAlert());
         }
     }
 }

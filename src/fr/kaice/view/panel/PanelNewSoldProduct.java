@@ -14,6 +14,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel allow the user to create a new {@link SoldProduct} and store it in the
  * {@linkplain fr.kaice.model.sell.SoldProductCollection SoldProductCollection} known by the {@link KaiceModel}
@@ -36,7 +38,7 @@ class PanelNewSoldProduct extends JPanel {
      * Create a new {@link PanelNewSoldProduct}
      */
     public PanelNewSoldProduct() {
-        JButton accept = new JButton("Valider");
+        JButton accept = new JButton(B_VALID);
         JButton add = new JButton();
         JButton rem = new JButton();
         name = new JTextField();
@@ -81,7 +83,8 @@ class PanelNewSoldProduct extends JPanel {
         type.setSelectedItem(prodType.MISC);
 
         JPanel all = new JPanel(new BorderLayout());
-        PanelTitle title = new PanelTitle("Nouvel article en vente", e -> KaiceModel.getInstance().setDetails(new JPanel()));
+        PanelTitle title = new PanelTitle(TITLE_SELL_NEW_ARTICLE, e -> KaiceModel.getInstance().setDetails(new JPanel
+                ()));
         JPanel param = new JPanel();
         JPanel ctrl = new JPanel();
         JPanel compo = new JPanel(new BorderLayout());
@@ -97,11 +100,11 @@ class PanelNewSoldProduct extends JPanel {
         all.add(spListRaw, BorderLayout.WEST);
         all.add(compo, BorderLayout.CENTER);
 
-        param.add(new Label("Nom : "));
+        param.add(new Label(TF_NAME));
         param.add(name);
-        param.add(new Label("Prix : "));
+        param.add(new Label(TF_PRICE));
         param.add(price);
-        param.add(new Label("Type : "));
+        param.add(new Label(TF_TYPE));
         param.add(type);
 
         ctrl.add(accept);

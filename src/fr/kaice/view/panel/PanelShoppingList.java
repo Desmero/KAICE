@@ -7,10 +7,9 @@ import fr.kaice.tools.ShoppingCheckBox;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
+
+import static fr.kaice.tools.local.French.TITLE_SHOPPING_LIST;
 
 /**
  * This panel display the list of {@link RawMaterial} below the alert level, and how much are needed to reach twice the
@@ -39,6 +38,8 @@ class PanelShoppingList extends JPanel implements Observer {
         JScrollPane scroll = new JScrollPane(list);
         
         HashMap<RawMaterial, Integer> map = KaiceModel.getRawMatCollection().getShoppingList();
+        ArrayList<RawMaterial> mapSet = new ArrayList<>(map.keySet());
+        mapSet.sort((arg0, arg1) -> arg0.getName().compareTo(arg1.getName()));
         
         GroupLayout groupLayout = new GroupLayout(list);
         groupLayout.setAutoCreateGaps(true);
@@ -51,12 +52,19 @@ class PanelShoppingList extends JPanel implements Observer {
         
         int line = 1;
         boolean addLine;
-        
-        for (RawMaterial mat : map.keySet()) {
+        hPGroupList.add(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING));
+        for (RawMaterial mat : mapSet) {
+            
+            JLabel label = new JLabel(mat.getName());
+    
             ArrayList<PurchasedProduct> matList = KaiceModel.getPurchasedProdCollection().getContainers(mat);
-            int i = 0;
+            int i = 1;
             addLine = false;
             GroupLayout.ParallelGroup vPGroup = groupLayout.createParallelGroup();
+            if (matList.size() > 0) {
+                hPGroupList.get(0).addComponent(label);
+                vPGroup.addComponent(label);
+            }
             for (PurchasedProduct product : matList) {
                 if (hPGroupList.size() <= i) {
                     hPGroupList.add(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING));
@@ -85,7 +93,8 @@ class PanelShoppingList extends JPanel implements Observer {
         
         this.removeAll();
         this.setLayout(new BorderLayout());
-        this.add(new PanelTitle("Liste des courses", e -> KaiceModel.getInstance().setDetails(new JPanel())), BorderLayout.NORTH);
+        this.add(new PanelTitle(TITLE_SHOPPING_LIST, e -> KaiceModel.getInstance().setDetails(new JPanel())),
+                BorderLayout.NORTH);
         this.add(scroll, BorderLayout.CENTER);
         
         this.setMinimumSize(new Dimension(this.getWidth(), Integer.min(200, line * 28)));

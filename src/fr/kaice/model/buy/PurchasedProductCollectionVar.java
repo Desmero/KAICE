@@ -7,15 +7,20 @@ import fr.kaice.tools.generic.*;
 
 import javax.swing.table.AbstractTableModel;
 
+import static fr.kaice.tools.local.French.*;
+
 
 /**
  * This class is NOT a real collection, just an variant way to display data of {@link PurchasedProductCollection}
  * <br/><br/>
  * <p>
- * In a table, it display 2 columns : <br/> - "Nom", witch display names (editable {@link String});<br/> - "Prix
- * unitaire", witch display unitary price (editable {@link Double});<br/> - "Produit brute", witch display corresponding
- * {@link fr.kaice.model.raw.RawMaterial} (not editable {@link String}); <br/> - "Quantit?", witch display raw
- * material's quantity(editable {@link Integer}). <br/> The table entries are sorted by names.
+ * In a table, it display 2 columns : <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display names (editable {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_UNIT_PRICE}", witch display unitary price (editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_RAW_MATERIAL}", witch display corresponding {@link fr.kaice.model.raw.RawMaterial}
+ * (not editable {@link String}); <br/>
+ * - "{@value fr.kaice.tools.local.French#COL_QUANTITY}", witch display raw material's quantity(editable {@link Integer}).
+ * <br/> The table entries are sorted by names.
  *
  * @author Raphaël Merkling
  * @version 1.0
@@ -29,10 +34,10 @@ public class PurchasedProductCollectionVar extends DTableModel implements IHidde
     private static final int COL_NUM_UNIT_PRICE = 1;
     private static final int COL_NUM_RAW_MATERIAL = 2;
     private static final int COL_NUM_RAW_QTY = 3;
-    private static final DTableColumnModel colName = new DTableColumnModel("Nomenclature", String.class, true);
-    private static final DTableColumnModel colUnitPrice = new DTableColumnModel("Prix unitaire", Double.class, true);
-    private static final DTableColumnModel colRawMaterial = new DTableColumnModel("Produit brut", String.class, false);
-    private static final DTableColumnModel colRawQty = new DTableColumnModel("Quantité", Integer.class, true);
+    private static final DTableColumnModel colName = new DTableColumnModel(COL_ITEM_NAME, String.class, true);
+    private static final DTableColumnModel colUnitPrice = new DTableColumnModel(COL_UNIT_PRICE, Double.class, true);
+    private static final DTableColumnModel colRawMaterial = new DTableColumnModel(COL_RAW_MATERIAL, String.class, false);
+    private static final DTableColumnModel colRawQty = new DTableColumnModel(COL_QUANTITY, Integer.class, true);
     
     /**
      * Construct a {@link PurchasedProductCollectionVar}.

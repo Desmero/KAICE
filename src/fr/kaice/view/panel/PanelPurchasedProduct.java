@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display all {@linkplain fr.kaice.model.buy.PurchasedProduct PurchasedProduct} contains in the
  * {@link PurchasedProductCollection} known by {@link KaiceModel}.
@@ -36,22 +38,22 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
     public PanelPurchasedProduct() {
         KaiceModel.getInstance().addObserver(this);
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getPurchasedProdCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser");
-        JButton valid = new JButton("Valider"), cancel = new JButton("Annuler");
-        JButton shopping = new JButton("Liste de courses");
+        // JButton add = new JButton(B_ADD), view = new JButton(B_VIEW);
+        JButton valid = new JButton(B_VALID), cancel = new JButton(B_CANCEL);
+        JButton shopping = new JButton(B_SHOPPING_LIST);
         paid = new DMonetarySpinner(0.01);
-        JCheckBox cash = new JCheckBox("Paiement liquide");
+        JCheckBox cash = new JCheckBox(CB_CASH_PAYMENT);
         JPanel ctrl = new JPanel(new BorderLayout());
         JPanel tablePanel = new JPanel(new BorderLayout());
-        JPanel tableCtrl = new JPanel();
+        // JPanel tableCtrl = new JPanel();
         JPanel paidCtrl = new JPanel();
         JPanel tradCtrl = new JPanel();
         panelShoppingList = new PanelShoppingList();
         price = new JLabel("0.00 " + DFormat.EURO);
         
-        add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
-        view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection()
-                .getProductAtRow(table.getSelectedRow()).getDetails()));
+        // add.addActionListener(e -> KaiceModel.getInstance().setDetails(new PanelNewPurchasedProduct()));
+        // view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getPurchasedProdCollection()
+        //         .getProductAtRow(table.getSelectedRow()).getDetails()));
         valid.addActionListener(e -> WindowAskAdmin.generate(e2 -> reset(KaiceModel.getPurchasedProdCollection()
                 .validBought(paid.getIntValue(), cash.isSelected()))));
         cancel.addActionListener(e -> {
@@ -67,18 +69,18 @@ public class PanelPurchasedProduct extends JPanel implements Observer {
         this.add(ctrl, BorderLayout.SOUTH);
         
         tablePanel.add(table, BorderLayout.CENTER);
-        tablePanel.add(tableCtrl, BorderLayout.SOUTH);
+        // tablePanel.add(tableCtrl, BorderLayout.SOUTH);
         
-        tableCtrl.add(add);
-        tableCtrl.add(view);
+        // tableCtrl.add(add);
+        // tableCtrl.add(view);
         
         ctrl.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.NORTH);
         ctrl.add(paidCtrl, BorderLayout.CENTER);
         ctrl.add(tradCtrl, BorderLayout.SOUTH);
         
-        paidCtrl.add(new JLabel("Prix calculé : "));
+        paidCtrl.add(new JLabel(TF_CALCULATED_PRICE));
         paidCtrl.add(price);
-        paidCtrl.add(new JLabel("Prix paiée : "));
+        paidCtrl.add(new JLabel(TF_PAID_PRICE));
         paidCtrl.add(paid);
         paidCtrl.add(cash);
         

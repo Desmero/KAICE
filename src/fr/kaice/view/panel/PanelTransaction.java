@@ -11,6 +11,8 @@ import fr.kaice.tools.generic.DTablePanel;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display all information about a {@link Transaction}.
  *
@@ -40,10 +42,10 @@ public class PanelTransaction extends JPanel {
         all.add(details, BorderLayout.NORTH);
         all.add(table, BorderLayout.CENTER);
 
-        details.add(new JLabel("Client : " + tran.getClient()));
-        details.add(new JLabel("Date : " + DFormat.format(tran.getDate())));
-        details.add(new JLabel("Prix : " + DMonetarySpinner.intToString(tran.getPrice())));
-        details.add(new JLabel("Espece : " + DMonetarySpinner.intToString(tran.getPaid())));
-        details.add(new JLabel("Caissier : " + KaiceModel.getMemberCollection().getMember(tran.getAdminId())));
+        details.add(new JLabel(TF_CLIENT + tran.getClient()));
+        details.add(new JLabel(TF_DATE + DFormat.format(tran.getDate())));
+        details.add(new JLabel(TF_PRICE + DMonetarySpinner.intToString(tran.getPrice())));
+        details.add(new JLabel(TF_CASH + DMonetarySpinner.intToString(tran.getPaid())));
+        details.add(new JLabel(TF_CASHIER + KaiceModel.getMemberCollection().getMember(tran.getAdminId())));
     }
 }

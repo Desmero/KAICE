@@ -6,6 +6,8 @@ import fr.kaice.tools.generic.DTablePanel;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.*;
+
 /**
  * This panel display all {@linkplain fr.kaice.model.raw.RawMaterial RawMaterial} contains in the
  * {@linkplain fr.kaice.model.raw.RawMaterialCollection RawMaterialCollection} known by {@link KaiceModel}.
@@ -25,12 +27,12 @@ public class PanelRawMaterial extends JPanel {
      */
     public PanelRawMaterial() {
         DTablePanel table = new DTablePanel(KaiceModel.getInstance(), KaiceModel.getRawMatCollection());
-        JButton add = new JButton("Ajouter"), view = new JButton("Visualiser"), hide = new JButton("Cacher");
+        JButton add = new JButton(B_ADD), view = new JButton(B_VIEW), hide = new JButton(B_HIDE);
         JPanel ctrl = new JPanel();
         
         add.addActionListener(arg0 -> {
             String s = (String) JOptionPane.showInputDialog(null,
-                    "Nom du produit : ", "Nouveau produit", -1, null, null,
+                    DIALOG_TEXT_NEW_RAW_MATERIAL, DIALOG_NAME_NEW_RAW_MATERIAL, -1, null, null,
                     null);
             if (s != null) {
                 KaiceModel.getRawMatCollection().addNewRawMaterial(s);
@@ -38,7 +40,7 @@ public class PanelRawMaterial extends JPanel {
         });
         view.addActionListener(e -> KaiceModel.getInstance().setDetails(KaiceModel.getRawMatCollection().getMaterialAtRow(table.getSelectedRow()).getDetails()));
         if (KaiceModel.editor) {
-            hide.setText("Supprimer");
+            hide.setText(B_DELETE);
             hide.addActionListener(e -> KaiceModel.getRawMatCollection().removeRow(table.getSelectedRow()));
         } else {
             hide.addActionListener(e -> KaiceModel.getRawMatCollection().hideRow(table.getSelectedRow()));

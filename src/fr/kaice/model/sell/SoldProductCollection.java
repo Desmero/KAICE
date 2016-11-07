@@ -18,17 +18,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static fr.kaice.tools.generic.DTerminal.*;
+import static fr.kaice.tools.local.French.*;
 
 /**
  * This class store all {@link SoldProduct} the programme need to know.
  * This should be construct only by {@link KaiceModel}, and one time.
  * It extends {@link DTableModel}, a custom {@link AbstractTableModel}.<br/><br/>
  * In a table, it display 4 columns : <br/>
- * - "Nom", witch display {@link SoldProduct}'s names (editable {@link String});<br/>
- * - "Prix de vente", witch display sell prices (editable {@link Double});<br/>
- * - "Prix d'achat", witch display buy prices (editable {@link Double});<br/>
- * - "Bénéfices", witch display benefits (editable {@link Double});<br/>
- * - "Quantité", witch display the available quantities (editable {@link Integer});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_NAME}", witch display {@link SoldProduct}'s names (editable
+ * {@link String});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_SELL_PRICE}", witch display sell prices (editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_BUY_PRICE}", witch display buy prices (editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_PROFIT}", witch display benefits (editable {@link Double});<br/>
+ * - "{@value fr.kaice.tools.local.French#COL_QUANTITY}", witch display the available quantities (editable
+ * {@link Integer});<br/>
  * The table entries are sorted by names.
  *
  * @author Raphaël Merkling
@@ -43,13 +46,13 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
     private static final int COL_NUM_NAME = 0;
     private static final int COL_NUM_SELL_PRICE = 1;
     private static final int COL_NUM_BUY_PRICE = 2;
-    private static final int COL_NUM_BENEFIT = 3;
+    private static final int COL_NUM_PROFIT = 3;
     private static final int COL_NUM_QTY = 4;
-    private static final DTableColumnModel colName = new DTableColumnModel("Nom", String.class, true);
-    private static final DTableColumnModel colSellPrice = new DTableColumnModel("Prix de vente", Double.class, true);
-    private static final DTableColumnModel colBuyPrice = new DTableColumnModel("Prix d'achat", Double.class, false);
-    private static final DTableColumnModel colBenef = new DTableColumnModel("Bénéfices", Double.class, false);
-    private static final DTableColumnModel colQty = new DTableColumnModel("Quantité disponible", Integer.class, false);
+    private static final DTableColumnModel colName = new DTableColumnModel(COL_NAME, String.class, true);
+    private static final DTableColumnModel colSellPrice = new DTableColumnModel(COL_SELL_PRICE, Double.class, true);
+    private static final DTableColumnModel colBuyPrice = new DTableColumnModel(COL_BUY_PRICE, Double.class, false);
+    private static final DTableColumnModel colProfit = new DTableColumnModel(COL_PROFIT, Double.class, false);
+    private static final DTableColumnModel colQty = new DTableColumnModel(COL_QUANTITY, Integer.class, false);
     private Map<Integer, SoldProduct> map;
     private List<SoldProduct> displayList;
 
@@ -58,7 +61,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      */
     public SoldProductCollection() {
         colModel = new DTableColumnModel[5];
-        colModel[COL_NUM_BENEFIT] = colBenef;
+        colModel[COL_NUM_PROFIT] = colProfit;
         colModel[COL_NUM_BUY_PRICE] = colBuyPrice;
         colModel[COL_NUM_NAME] = colName;
         colModel[COL_NUM_QTY] = colQty;
@@ -221,8 +224,8 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @return {@link DColor#RED} if the product is unavailable.
      */
     public Color getRowColor(int row) {
-        Integer qtty = displayList.get(row).getQuantity();
-        if (qtty != null && qtty == 0) {
+        Integer qty = displayList.get(row).getQuantity();
+        if (qty != null && qty == 0) {
             return DColor.RED;
         } else {
             return null;
@@ -251,7 +254,7 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
                 return DMonetarySpinner.intToDouble(prod.getPrice());
             case COL_NUM_BUY_PRICE:
                 return DMonetarySpinner.intToDouble(prod.getBuyPrice());
-            case COL_NUM_BENEFIT:
+            case COL_NUM_PROFIT:
                 return DMonetarySpinner.intToDouble(prod.getProfit());
             case COL_NUM_QTY:
                 return prod.getQuantity();
@@ -270,11 +273,9 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
             case COL_NUM_SELL_PRICE:
                 WindowAskAdmin.generate(e -> {
                     prod.setSalePrice(DMonetarySpinner.doubleToInt((double) aValue));
-                    Transaction tran = new Transaction(-1, Transaction.transactionType.SELL_CHANGE,
-                            0,
-                            0, new Date());
-                    tran.addArchivedProduct(new ArchivedProduct("MAJ prix : " + prod.getName() + " " + aValue + " " +
-                    DFormat.EURO, 0, 0, prod.getId()));
+                    Transaction tran = new Transaction(-1, Transaction.transactionType.SELL_CHANGE, 0, 0, new Date());
+                    // TODO string
+                    tran.addArchivedProduct(new ArchivedProduct(prod.getName() + " " + aValue + " " + DFormat.EURO, 0, 0, prod.getId()));
                     KaiceModel.getHistoric().addTransaction(tran);
                     KaiceModel.update(KaiceModel.HISTORIC);
                 });
@@ -308,8 +309,8 @@ public class SoldProductCollection extends DTableModel implements IHiddenCollect
      * @author Raph
      */
     public enum prodType {
-        FOOD("Nourriture", DColor.RED), CANDY("Friandise", DColor.YELLOW), DRINK("Boisson", DColor.BLUE), MISC
-                ("Autre", DColor.GREEN);
+        FOOD(TYPE_FOOD, DColor.RED), CANDY(TYPE_CANDY, DColor.YELLOW), DRINK(TYPE_DRINK, DColor.BLUE), MISC
+                (TYPE_MISC, DColor.GREEN);
 
         private final String name;
         private final Color color;

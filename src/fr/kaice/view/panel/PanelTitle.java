@@ -25,7 +25,7 @@ public class PanelTitle extends JPanel {
     }
 
     /**
-     * Creat a {@link PanelTitle} with a title string and a button to the right
+     * Create a {@link PanelTitle} with a title string and a button to the right
      *
      * @param title           {@link String} - The title to display.
      * @param redButtonAction {@link ActionListener} - The action listener of the button.

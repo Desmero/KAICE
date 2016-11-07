@@ -7,6 +7,7 @@ import fr.kaice.tools.generic.DMonetarySpinner;
 import javax.swing.*;
 import java.awt.*;
 
+import static fr.kaice.tools.local.French.*;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 
@@ -19,17 +20,17 @@ public class PanelOption extends JPanel {
     
         JPanel divers = new JPanel();
     
-        JCheckBox fullName = new JCheckBox("Ajouter les types", KaiceModel.getHistoric().isDisplayTypeNames());
+        JCheckBox fullName = new JCheckBox(CB_ADD_TYPE, KaiceModel.getHistoric().isDisplayTypeNames());
         fullName.addActionListener(e -> {
             KaiceModel.getHistoric().changeDisplayTypeNames();
             updateHistoric();
         });
-        JCheckBox admin = new JCheckBox("Afficher les caissiers", true);
+        JCheckBox admin = new JCheckBox(CB_DISPLAY_CASHIER, true);
         admin.addActionListener(e -> {
             KaiceModel.getHistoric().changeDisplayAdmin();
             updateHistoric();
         });
-        JCheckBox hidden = new JCheckBox("Afficher les produits cachés", KaiceModel.getInstance().isShowHidden());
+        JCheckBox hidden = new JCheckBox(CB_DISPLAY_HIDDEN_ITMES, KaiceModel.getInstance().isShowHidden());
         hidden.addActionListener(e -> KaiceModel.getInstance().changeShowHiddenState());
         DMonetarySpinner enrPrice = new DMonetarySpinner(0.5);
         enrPrice.setEnabled(false);
@@ -72,11 +73,11 @@ public class PanelOption extends JPanel {
     
     
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add("Divers", divers);
-        tabbedPane.add("Historique", hist);
+        tabbedPane.add(TAB_MISC, divers);
+        tabbedPane.add(TAB_HISTORIC, hist);
     
         this.setLayout(new BorderLayout());
-        this.add(new PanelTitle("Options", e -> KaiceModel.getInstance().setDetails(new JPanel())), NORTH);
+        this.add(new PanelTitle(TITLE_OPTION, e -> KaiceModel.getInstance().setDetails(new JPanel())), NORTH);
         this.add(tabbedPane, CENTER);
         
         
