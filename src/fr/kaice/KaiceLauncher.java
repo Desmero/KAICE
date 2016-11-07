@@ -7,6 +7,9 @@ import fr.kaice.view.MainWindow;
 
 import java.io.File;
 
+import static fr.kaice.model.KaiceModel.cens;
+import static fr.kaice.model.KaiceModel.memberNull;
+
 /**
  * The class KaiceLauncher is the starting point of the program KAICE.
  * (KAICE Automatise l'Intendance de CENS Éfficacement)
@@ -17,6 +20,10 @@ import java.io.File;
 public abstract class KaiceLauncher {
     
     public static void main(String[] args) {
+        cens.setName("CENS");
+        cens.setFirstName("");
+        memberNull.setName("...");
+        memberNull.setFirstName("...");
         if (args.length > 0) {
             KFilesParameters.setGlobalPath(args[0]);
         }

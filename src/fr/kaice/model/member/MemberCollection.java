@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static fr.kaice.model.KaiceModel.cens;
+import static fr.kaice.model.KaiceModel.memberNull;
 import static fr.kaice.tools.generic.DTerminal.*;
 import static fr.kaice.tools.local.French.*;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -327,6 +329,11 @@ public class MemberCollection extends DTableModel implements IColoredTableModel 
      */
     public void setSelectedMemberById(int id) {
         selectedMember = map.get(id);
+        if (id == cens.getMemberId()) {
+            selectedMember = cens;
+        } else if (id == memberNull.getMemberId()) {
+            selectedMember = memberNull;
+        }
         KaiceModel.update(KaiceModel.TRANSACTION);
     }
     

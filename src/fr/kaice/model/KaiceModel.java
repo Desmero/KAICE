@@ -2,6 +2,7 @@ package fr.kaice.model;
 
 import fr.kaice.model.buy.PurchasedProductCollection;
 import fr.kaice.model.historic.Historic;
+import fr.kaice.model.member.Member;
 import fr.kaice.model.member.MemberCollection;
 import fr.kaice.model.order.OrderCollection;
 import fr.kaice.model.raw.RawMaterialCollection;
@@ -47,7 +48,9 @@ public class KaiceModel extends Observable {
     private static final boolean[] change = new boolean[12];
     private boolean showHidden;
     private JPanel details;
-
+    public static final Member cens = new Member(-1);
+    public static final Member memberNull = new Member(0);
+    
     private KaiceModel() {
         details = new JPanel();
         showHidden = false;

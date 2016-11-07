@@ -347,7 +347,11 @@ public class PurchasedProductCollection extends DTableModel {
             stringBuilder.append(product.getId()).append(';');
             stringBuilder.append(product.getName()).append(';');
             stringBuilder.append(product.getPrice()).append(';');
-            stringBuilder.append(product.getRawMat().getId()).append(';');
+            if (product.getRawMat() == null) {
+                stringBuilder.append(-1).append(';');
+            } else {
+                stringBuilder.append(product.getRawMat().getId()).append(';');
+            }
             stringBuilder.append(product.getQuantity()).append(';');
             stringBuilder.append(product.isHidden()).append('\n');
         }

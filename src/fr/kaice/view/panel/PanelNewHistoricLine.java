@@ -33,8 +33,6 @@ public class PanelNewHistoricLine extends JPanel {
     private DMonetarySpinner msPrice;
     private DMonetarySpinner msCash;
     private final Set<Character> pressed = new HashSet<>();
-    private String sName;
-    private String sFirstName;
     
     public PanelNewHistoricLine() {
         client = null;

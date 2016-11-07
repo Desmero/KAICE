@@ -20,7 +20,7 @@ public class IdSpinner extends JSpinner {
      * The super {@link JSpinner} is initialize with : <code>new SpinnerNumberModel(0, 0, null, 1)</code>
      */
     public IdSpinner() {
-        super(new SpinnerNumberModel(0, 0, null, 1));
+        super(new SpinnerNumberModel(0, -1, null, 1));
         construct();
     }
     
